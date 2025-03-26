@@ -1,6 +1,7 @@
 // Registration.js
 import React from 'react'
-//import Navbar from '../components/Navbar'; // This is for a navbar if I knew how Michael was making his
+import { useState } from "react";
+//import Navbar from '../components/Navbar'; // This is for a navbar from my individual if I knew how Michael was making his
 const Registration = () => {
     // This is some boiler plate for the Registration page
     // Const
