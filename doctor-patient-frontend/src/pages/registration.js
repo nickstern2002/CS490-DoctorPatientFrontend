@@ -4,18 +4,141 @@ import { useState } from "react";
 //import Navbar from '../components/Navbar'; // This is for a navbar from my individual if I knew how Michael was making his
 const Registration = () => {
     // This is some boiler plate for the Registration page
-    // Const
+    // Use State Variables
     const [selectedRole, setSelectedRole] = useState(null);
     const [roleChosen, setRoleChosen] = useState(false);
+    // The text fields variables TODO
+    const [email, setEmail] = useState('');
+    const [passWord, setpassWord] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [address, setAddress] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [zipcode, setZipCode] = useState('');
+    //
+    const [liscenseNumber, setLiscenseNumber] = useState('');
+    const [name, setName] = useState('');
+    const [ssn, setSSN] = useState('');
 
+    //
     const handleRoleClick = (role) => {
         setSelectedRole(role);
         setRoleChosen(true);
         //alert(`You selected: ${role}`);
     };
 
-    // 
+    // Backend request for Registration
+    // All post requests for them at the below route
+    // '/api/register/patient', methods=['POST']
+    // '/api/register/doctor', methods=['POST']
+    // '/api/register/pharmacy', methods=['POST']
+    const regPatient = async () => {
+      const requestData = {
+        email: email,
+        password: passWord,
+        first_name: firstName,
+        last_name: lastName,
+        address: address,
+        phone_number: phoneNumber,
+        zip_code: zipcode,
+      };
+  
+      try {
+        // Sending POST request (I know that its weird right now, we might change type later)
+        const response = await fetch('http://localhost:5000/api/register/patient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData), // Convert the data to JSON
+        });
+        // close enough for now
+        if (response.ok) {
+          alert('Registration Successful');
+          const data = await response.json();
+          console.log("Data:", data)
+        } 
+        else {
+          const data = await response.json();
+          console.log("Data but went wrong:", data)
+        }
+      } catch (error) {
+        setMessage('Error: ' + error.message); 
+      }
+  };
+  //
+  const regDoctor = async () => {
+    const requestData = {
+      email: email,
+      password: passWord,
+      liscense_number: liscenseNumber,
+      first_name: firstName,
+      last_name: lastName,
+      address: address,
+      phone_number: phoneNumber,
+      ssn: ssn,
+    };
 
+    try {
+      // Sending POST request (I know that its weird right now, we might change type later)
+      const response = await fetch('http://localhost:5000/api/register/doctor', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData), // Convert the data to JSON
+      });
+      // close enough for now
+      if (response.ok) {
+        alert('Registration Successful');
+        const data = await response.json();
+        console.log("Data:", data)
+      } 
+      else {
+        const data = await response.json();
+        console.log("Data but went wrong:", data)
+      }
+    } catch (error) {
+      setMessage('Error: ' + error.message); 
+    }
+  };
+  //
+  const regPharmacy = async () => {
+    const requestData = {
+      email: email,
+      password: passWord,
+      name: name,
+      address: address,
+      zip_code: zipcode,
+      phone_number: phoneNumber,
+      liscense_number: liscenseNumber,
+    };
+
+    try {
+      // Sending POST request (I know that its weird right now, we might change type later)
+      const response = await fetch('http://localhost:5000/api/register/pharmacy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData), // Convert the data to JSON
+      });
+      // close enough for now
+      if (response.ok) {
+        alert('Registration Successful');
+        const data = await response.json();
+        console.log("Data:", data)
+      } 
+      else {
+        const data = await response.json();
+        console.log("Data but went wrong:", data)
+      }
+    } catch (error) {
+      setMessage('Error: ' + error.message); 
+    }
+  };
+  //
+  // I should add the require to the fields but I'm lazy rn
   return (
     <div className='flex flex-col items-center justify-center min-h-screen bg-blue-100'>
       {!roleChosen && (
@@ -60,11 +183,15 @@ const Registration = () => {
                     type="text"
                     placeholder="FIRST NAME"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
                   />
                   <input
                     type="text"
                     placeholder="LAST NAME"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
                   />
                 </div>
               </div>
@@ -74,6 +201,8 @@ const Registration = () => {
                     type="text"
                     placeholder="ADDRESS"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
                   />
                 </div>
               </div>
@@ -83,6 +212,8 @@ const Registration = () => {
                     type="text"
                     placeholder="PHONE NUMBER"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
               </div>
@@ -92,10 +223,12 @@ const Registration = () => {
                     type="text"
                     placeholder="ZIP CODE"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={zipcode}
+                    onChange={(e) => setZipCode(e.target.value)}
                   />
                 </div>
               </div>
-              <button className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition">
+              <button className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" onClick={() => regPatient()}>
                 REGISTER
               </button>
             </div>
@@ -109,11 +242,15 @@ const Registration = () => {
                     type="text"
                     placeholder="FIRST NAME"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
                   />
                   <input
                     type="text"
                     placeholder="LAST NAME"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
                   />
                 </div>
               </div>
@@ -123,6 +260,8 @@ const Registration = () => {
                     type="text"
                     placeholder="ADDRESS"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
                   />
                 </div>
               </div>
@@ -132,6 +271,8 @@ const Registration = () => {
                     type="text"
                     placeholder="PHONE NUMBER"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
               </div>
@@ -141,6 +282,8 @@ const Registration = () => {
                     type="text"
                     placeholder="ZIP CODE"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={zipcode}
+                    onChange={(e) => setZipCode(e.target.value)}
                   />
                 </div>
               </div>
@@ -150,6 +293,8 @@ const Registration = () => {
                     type="text"
                     placeholder="LISCENCE NUMBER"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={liscenseNumber}
+                    onChange={(e) => setLiscenseNumber(e.target.value)}
                   />
                 </div>
               </div>
@@ -159,10 +304,12 @@ const Registration = () => {
                     type="text"
                     placeholder="SSN"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={ssn}
+                    onChange={(e) => setSSN(e.target.value)}
                   />
                 </div>
               </div>
-              <button className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition">
+              <button className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" onClick={() => regDoctor()}>
                 REGISTER
               </button>
             </div>
@@ -176,6 +323,8 @@ const Registration = () => {
                     type="text"
                     placeholder="NAME"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </div>
               </div>
@@ -185,6 +334,8 @@ const Registration = () => {
                     type="text"
                     placeholder="ADDRESS"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
                   />
                 </div>
               </div>
@@ -194,6 +345,8 @@ const Registration = () => {
                     type="text"
                     placeholder="PHONE NUMBER"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
               </div>
@@ -203,6 +356,8 @@ const Registration = () => {
                     type="text"
                     placeholder="ZIP CODE"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={zipcode}
+                    onChange={(e) => setZipCode(e.target.value)}
                   />
                 </div>
               </div>
@@ -212,10 +367,12 @@ const Registration = () => {
                     type="text"
                     placeholder="LISCENCE NUMBER"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    value={liscenseNumber}
+                    onChange={(e) => setLiscenseNumber(e.target.value)}
                   />
                 </div>
               </div>
-              <button className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition">
+              <button className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" onClick={() => regPharmacy()}>
                 REGISTER
               </button>
             </div>
