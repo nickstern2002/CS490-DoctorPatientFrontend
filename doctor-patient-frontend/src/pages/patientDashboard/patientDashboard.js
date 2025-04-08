@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import './patientDashboard.css';
 import BookAppointmentModal from "./BookAppointmentModal";
+import WeightChart from "./WeightChart";
 
 function PatientDashboard() {
     const { user_id } = useParams(); // grabs the user_id from the URL
@@ -20,6 +21,9 @@ function PatientDashboard() {
     // States for payments
     const [doctorPayments, setDoctorPayments] = useState([]);
     const [pharmacyPayments, setPharmacyPayments] = useState([]);
+
+    // States for Metrics Graphs
+    const [weightData, setWeightData] = useState([]);
 
     // Function to trigger booking modal
     const openBookingModal = (doctor_id) => {
@@ -90,6 +94,20 @@ function PatientDashboard() {
             });
     };
 
+    // Example: Fetch metrics for the weight chart when metrics tab is active.
+    useEffect(() => {
+        if (activeTab === "metrics") {
+            fetch(`http://localhost:5000/api/patient-dashboard/metrics/graph-data?user_id=${user_id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.weight_data) {
+                        setWeightData(data.weight_data);
+                    }
+                })
+                .catch(error => console.error('Error fetching weight data:', error));
+        }
+    }, [activeTab, user_id]);
+
     // Render content based on the active tab.
     const renderDashboardData = () => {
         if (activeTab === "dashboard") {
@@ -140,7 +158,7 @@ function PatientDashboard() {
             return (
                 <div>
                     <h3>Metrics</h3>
-                    <p>Metrics content goes here...</p>
+                    <WeightChart weightData={weightData} />
                 </div>
             );
         } else if (activeTab === "payments") {

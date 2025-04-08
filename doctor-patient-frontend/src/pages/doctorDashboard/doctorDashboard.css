@@ -1,5 +1,5 @@
 .top-bar {
-    background-color: #333;
+    background-color: #2a8eed;
     color: white;
     padding: 1rem;
     width: 100%;
@@ -100,3 +100,17 @@
     text-align: center;
 }
 
+.modal button {
+    background-color: #21a3bd;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.modal button:hover {
+    background-color: #1a87a3;
+}
