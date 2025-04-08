@@ -1,0 +1,25 @@
+.about-section {
+    background-color: white;             
+    border: 2px solid #2a8eed;           
+    border-radius: 12px;                 
+    padding: 2rem 2rem;                  
+    text-align: center;
+    max-width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+  
+  .about-title {
+    font-size: 2.5rem;
+    color: #2a8eed;
+    margin-bottom: 1rem;
+  }
+  
+  .about-description {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    color: #444;
+    line-height: 1.6;
+  }

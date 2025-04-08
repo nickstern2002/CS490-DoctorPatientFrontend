@@ -7,7 +7,7 @@ function HeroSection() {
       <div className="hero-content">
         <div className="hero-text">
           <h1>Find The Best Doctor For <span className="highlight">YOU</span></h1>
-          <p>Become healthier with advice from the best doctors in the country!</p>
+          <p>Use <strong>Smart EatZ</strong> to connect with qualified doctors who care about your health.</p>
           <button className="hero-btn">Get Started</button>
         </div>
 
@@ -16,7 +16,6 @@ function HeroSection() {
         </div>
       </div>
 
-      {/* Blue stat bar */}
       <div className="hero-stats">
         <div className="stat-box"><h2>24/7</h2><p>Online Support</p></div>
         <div className="divider" />
