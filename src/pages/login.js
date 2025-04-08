@@ -1,7 +1,7 @@
 // Login.js
 import React from 'react'
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 //import Navbar from '../components/Navbar'; // This is for a navbar if I knew how Michael was making his
 const Login = () => {
  // This is some boiler plate for the login page
@@ -12,6 +12,8 @@ const Login = () => {
  //
  const [error, setError] = useState('');
  const [loading, setLoading] = useState(false);
+ //for navigating to the dashboards
+ const navigate = useNavigate();
  // 
  const LoginUser = async (userName, passWord) => {
     const requestData = {
@@ -33,6 +35,9 @@ const Login = () => {
         alert('Login Successful');
         const data = await response.json();
         console.log("Data:", data)
+        if(data.user.user_type === 'patient'){
+          navigate('/patient');
+        }
       } 
       else {
         const data = await response.json();

@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import { useParams } from 'react-router-dom';
 import './patientDashboard.css';
 import BookAppointmentModal from "./BookAppointmentModal";
 import WeightChart from "./WeightChart";
 import CalorieChart from "./CalorieChart";
 
 function PatientDashboard() {
-    const { user_id } = useParams(); // grabs the user_id from the URL
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    const user_id = user ? user.user_id : null;
     const [activeTab, setActiveTab] = useState("dashboard"); // "dashboard", "appointments", "metrics", "payments"
     const [patientDetails, setPatientDetails] = useState(null);
     const [firstName, setFirstName] = useState("");
