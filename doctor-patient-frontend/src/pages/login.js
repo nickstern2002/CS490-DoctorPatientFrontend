@@ -1,5 +1,7 @@
 // Login.js
 import React from 'react'
+import { useState } from "react";
+import { Link } from 'react-router-dom';
 //import Navbar from '../components/Navbar'; // This is for a navbar if I knew how Michael was making his
 const Login = () => {
  // This is some boiler plate for the login page
@@ -37,7 +39,8 @@ const Login = () => {
         console.log("Data but went wrong:", data)
       }
     } catch (error) {
-      setMessage('Error: ' + error.message); 
+      //setMessage('Error: ' + error.message); 
+      console.log('Error: ' + error.message);
     }
 };
 
@@ -87,9 +90,12 @@ const Login = () => {
             LOGIN
           </button>
 
-          {/* Forgot Password Link */}
-          <p className="text-sm text-black mt-4 cursor-pointer hover:underline">
-            Forgot password?
+          {/* Now Return to Landing Page */}
+          {/* WAS Forgot Password Link: Forgot password? */}
+          <p>
+            <Link to={"/"} className="text-sm text-black mt-4 cursor-pointer hover:underline" >
+              Return to Home Page
+            </Link>
           </p>
         </div>
       </div>

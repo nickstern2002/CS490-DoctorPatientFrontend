@@ -1,6 +1,7 @@
 // Registration.js
 import React from 'react'
 import { useState } from "react";
+import { Link } from 'react-router-dom';
 //import Navbar from '../components/Navbar'; // This is for a navbar from my individual if I knew how Michael was making his
 const Registration = () => {
     // This is some boiler plate for the Registration page
@@ -63,7 +64,8 @@ const Registration = () => {
           console.log("Data but went wrong:", data)
         }
       } catch (error) {
-        setMessage('Error: ' + error.message); 
+        //setMessage('Error: ' + error.message); 
+        console.log('Error: ' + error.message);
       }
   };
   //
@@ -99,7 +101,8 @@ const Registration = () => {
         console.log("Data but went wrong:", data)
       }
     } catch (error) {
-      setMessage('Error: ' + error.message); 
+      //setMessage('Error: ' + error.message); 
+      console.log('Error: ' + error.message);
     }
   };
   //
@@ -134,7 +137,8 @@ const Registration = () => {
         console.log("Data but went wrong:", data)
       }
     } catch (error) {
-      setMessage('Error: ' + error.message); 
+      //setMessage('Error: ' + error.message); 
+      console.log('Error: ' + error.message);
     }
   };
   //
@@ -171,6 +175,12 @@ const Registration = () => {
               </button>
             ))}
           </div>
+          {/* Now Return to Landing Page */}
+          <p>
+            <Link to={"/"} className="text-sm text-black mt-4 cursor-pointer hover:underline" >
+              Return to Home Page
+            </Link>
+          </p>
         </div>
       )}
       {roleChosen && (<div className='bg-white p-6 rounded-xl shadow-lg text-center'>
