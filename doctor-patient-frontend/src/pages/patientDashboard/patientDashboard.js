@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import './patientDashboard.css';
 import BookAppointmentModal from "./BookAppointmentModal";
 import WeightChart from "./WeightChart";
+import CalorieChart from "./CalorieChart";
 
 function PatientDashboard() {
     const { user_id } = useParams(); // grabs the user_id from the URL
@@ -23,7 +24,9 @@ function PatientDashboard() {
     const [pharmacyPayments, setPharmacyPayments] = useState([]);
 
     // States for Metrics Graphs
+    const [latestHeight, setLatestHeight] = useState(null);
     const [weightData, setWeightData] = useState([]);
+    const [calorieData, setCalorieData] = useState([]);
 
     // Function to trigger booking modal
     const openBookingModal = (doctor_id) => {
@@ -94,7 +97,19 @@ function PatientDashboard() {
             });
     };
 
-    // Example: Fetch metrics for the weight chart when metrics tab is active.
+    // Gets patients latest recorded height
+    useEffect(() => {
+        fetch(`http://localhost:5000/api/patient-dashboard/metrics/latest-height?user_id=${user_id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.latest_height) {
+                    setLatestHeight(data.latest_height);
+                }
+            })
+            .catch(error => console.error("Error fetching latest height:", error));
+    }, [user_id])
+
+    // Fetch metrics data when metrics tab is active
     useEffect(() => {
         if (activeTab === "metrics") {
             fetch(`http://localhost:5000/api/patient-dashboard/metrics/graph-data?user_id=${user_id}`)
@@ -103,10 +118,13 @@ function PatientDashboard() {
                     if (data.weight_data) {
                         setWeightData(data.weight_data);
                     }
+                    if (data.caloric_intake_data) {
+                        setCalorieData(data.caloric_intake_data);
+                    }
                 })
-                .catch(error => console.error('Error fetching weight data:', error));
+                .catch(error => console.error('Error fetching metrics:', error));
         }
-    }, [activeTab, user_id]);
+    }, [user_id, activeTab]);
 
     // Render content based on the active tab.
     const renderDashboardData = () => {
@@ -158,7 +176,19 @@ function PatientDashboard() {
             return (
                 <div>
                     <h3>Metrics</h3>
-                    <WeightChart weightData={weightData} />
+                    {latestHeight !== null ? (
+                        <p>Latest Recorded Height: {latestHeight} m</p>
+                    ) : (
+                        <p>Loading latest height...</p>
+                    )}
+                    <div>
+                        <h4>Weight Over Time</h4>
+                        <WeightChart weightData={weightData} />
+                    </div>
+                    <div>
+                        <h4>Caloric Intake Over Time</h4>
+                        <CalorieChart calorieData={calorieData} />
+                    </div>
                 </div>
             );
         } else if (activeTab === "payments") {
