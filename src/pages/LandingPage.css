@@ -1,0 +1,12 @@
+/* Creates Light Blue Background */
+  .landing-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    width: 100%;
+  
+    background-color: #f4faff;         
+    border-radius: 0;                
+    box-shadow: none;                
+    margin-bottom: 0;                
+  }

@@ -5,7 +5,7 @@
   background-color: #f8f9fa;
   max-width: 1200px;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -40,6 +40,11 @@
   font-size: 1.2rem;
   margin-bottom: 2rem;
   color: #333;
+}
+
+.highlight {
+  text-decoration: underline;
+  color: #2a8eed; 
 }
 
 .hero-btn {
@@ -77,11 +82,11 @@
   justify-content: space-between;
   align-items: center;
   background-color: #2a8eed;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 0; /* ❗ Remove side padding */
   color: white;
   border-radius: 0 0 12px 12px;
   flex-wrap: wrap;
-  width: 100%;
+  width: 100%; /* Keep this */
 }
 
 .stat-box {
@@ -101,13 +106,13 @@
 }
 
 .divider {
-  width: 1px;
-  height: 50px;
+  width: 2px;
+  height: 60px;
   background-color: white;
   margin: 0 1rem;
 }
 
-/* RESPONSIVE */
+/* For Mobile */
 @media (max-width: 768px) {
   .hero-content {
     flex-direction: column;
