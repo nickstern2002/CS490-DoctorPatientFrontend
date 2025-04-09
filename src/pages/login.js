@@ -10,8 +10,8 @@ const Login = () => {
  const [userName, setUserName] = useState('');
  const [passWord, setPassword] = useState('');
  //
- const [error, setError] = useState('');
- const [loading, setLoading] = useState(false);
+ //const [error, setError] = useState(''); // Might add this back
+ //const [loading, setLoading] = useState(false);
  // 
  const LoginUser = async (userName, passWord) => {
     const requestData = {
@@ -37,10 +37,16 @@ const Login = () => {
       else {
         const data = await response.json();
         console.log("Data but went wrong:", data)
+        alert("Data but went wrong:", data)
+        //setError("Data but went wrong:", data)
+        //setTimeout(() => setError(""), 5000); // Hide message after 5 seconds
       }
     } catch (error) {
       //setMessage('Error: ' + error.message); 
       console.log('Error: ' + error.message);
+      alert('Error: ' + error.message);
+      //setError('Error: ' + error.message);
+      //setTimeout(() => setError(""), 5000); // Hide message after 5 seconds
     }
 };
 
@@ -49,47 +55,50 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-[#d8eafe]">
       <div className="w-full max-w-sm">
-        {/* Logo Section */}
-        {/* Logo is currently not aligned properly and I'll fix it later */}
-        <div className="bg-blue-600 text-white text-lg font-bold p-3 pl-6 rounded-t-lg w-fit">
-          Smart Eatz
+        {/* Logo Section FIXED */}
+        <div className="absolute top-0 left-0 bg-blue-600 text-white text-xl font-bold px-6 py-3 rounded-br-md shadow-md">
+        Smart Eatz
         </div>
-
         {/* Login Form */}
         <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
-          {/* Username Input */}
-          <div className="mb-4 w-full">
-            <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-              <span className="mr-2">📷</span>
-              <input
-                type="text"
-                placeholder="USERNAME"
-                className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-              />
+          <form onSubmit={() => LoginUser(userName, passWord)}>
+            {/* Username Input */}
+            <div className="mb-4 w-full">
+              <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                <span className="mr-2">📷</span>
+                <input
+                  type="text"
+                  placeholder="EMAIL"
+                  className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                  required
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Password Input */}
-          <div className="mb-4 w-full">
-            <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-              <span className="mr-2">🔒</span>
-              <input
-                type="password"
-                placeholder="PASSWORD"
-                className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                value={passWord}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+            {/* Password Input */}
+            <div className="mb-4 w-full">
+              <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                <span className="mr-2">🔒</span>
+                <input
+                  type="password"
+                  placeholder="PASSWORD"
+                  className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                  required
+                  value={passWord}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Login Button */}
-          <button className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" onClick={() => LoginUser(userName, passWord)}>
-            LOGIN
-          </button>
-
+            {/* Login Button */}
+            <button type="submit" className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition">
+              LOGIN
+            </button>
+          </form>
+          {/* Login Error Fade in */}
+          {/* {error && <p className="mt-2 text-red-600 shadow-md animate-fadeIn">{error}</p>}  Display error message that fades after a bit */}
           {/* Now Return to Landing Page */}
           {/* WAS Forgot Password Link: Forgot password? */}
           <p>

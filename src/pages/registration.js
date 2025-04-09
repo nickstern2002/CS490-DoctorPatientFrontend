@@ -28,6 +28,12 @@ const Registration = () => {
         //alert(`You selected: ${role}`);
     };
 
+    const handleRoleReset = (role) => {
+      setSelectedRole(null);
+      setRoleChosen(false);
+      //alert(`You selected: ${role}`);
+  };
+
     // Backend request for Registration
     // All post requests for them at the below route
     // '/api/register/patient', methods=['POST']
@@ -106,7 +112,9 @@ const Registration = () => {
     }
   };
   //
-  const regPharmacy = async () => {
+  const regPharmacy = async (e) => {
+    e.preventDefault();
+
     const requestData = {
       email: email,
       password: passWord,
@@ -145,6 +153,10 @@ const Registration = () => {
   // I should add the require to the fields but I'm lazy rn
   return (
     <div className='flex flex-col items-center justify-center min-h-screen bg-blue-100'>
+      {/* Logo Section FIXED */}
+      <div className="absolute top-0 left-0 bg-blue-600 text-white text-xl font-bold px-6 py-3 rounded-br-md shadow-md">
+        Smart Eatz
+      </div>
       {!roleChosen && (
         <div className='bg-white p-6 rounded-xl shadow-lg text-center'>
           <h2 className='text-xl font-semibold'>Please Choose Your Role</h2>
@@ -164,7 +176,7 @@ const Registration = () => {
               <button
                 key={role}
                 onClick={() => handleRoleClick(role)}
-                className={`p-4 rounded-lg shadow-md border-2 transition ${
+                className={`w-32 h-32 flex flex-col items-center justify-center p-4 rounded-lg shadow-md border-2 transition ${
                   selectedRole === role
                     ? `border-${color}-500 shadow-lg`
                     : 'border-gray-300'
@@ -186,13 +198,16 @@ const Registration = () => {
       {roleChosen && (<div className='bg-white p-6 rounded-xl shadow-lg text-center'>
         {selectedRole === "Patient" && (
             <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
+              <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Patient Registration</h1>
+              <form onSubmit={regPatient}>
+              {/* Name */}
               <div className="mb-4 w-full">
-                <h1>Patient Reg</h1>
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                   <input
                     type="text"
                     placeholder="FIRST NAME"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                   />
@@ -200,58 +215,103 @@ const Registration = () => {
                     type="text"
                     placeholder="LAST NAME"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                   />
                 </div>
               </div>
+              {/* Email */}
+              <div className="mb-4 w-full">
+                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                  <input
+                    type="text"
+                    placeholder="EMAIL"
+                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+              {/* Password */}
+              <div className="mb-4 w-full">
+                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                  <input
+                    type="text"
+                    placeholder="PASSWORD"
+                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
+                    value={passWord}
+                    onChange={(e) => setpassWord(e.target.value)}
+                  />
+                </div>
+              </div>
+              {/* */}
               <div className="mb-4 w-full">
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                   <input
                     type="text"
                     placeholder="ADDRESS"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                   />
+                  <input
+                    type="text"
+                    placeholder="ZIP CODE"
+                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
+                    value={zipcode}
+                    onChange={(e) => setZipCode(e.target.value)}
+                  />
                 </div>
               </div>
+              {/* */}
               <div className="mb-4 w-full">
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                   <input
                     type="text"
                     placeholder="PHONE NUMBER"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
               </div>
+              {/* 
               <div className="mb-4 w-full">
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  <input
-                    type="text"
-                    placeholder="ZIP CODE"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                    value={zipcode}
-                    onChange={(e) => setZipCode(e.target.value)}
-                  />
+                  
                 </div>
               </div>
-              <button className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" onClick={() => regPatient()}>
+              */}
+              <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition">
                 REGISTER
               </button>
+              </form>
+              <div className="mt-4 mb-4 w-full">
+              <button className="w-full bg-gray-200 text-blue-600 font-semibold py-2 rounded hover:bg-gray-300 transition" onClick={handleRoleReset}>
+                Go Back
+              </button>
+              </div>
             </div>
         )}
         {selectedRole === "Doctor" && (
             <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
+              <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Doctor Registration</h1>
+              <form onSubmit={regDoctor}>
               <div className="mb-4 w-full">
-                <h1>DOCTOR Reg</h1>
+                
+                {/* */}
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                   <input
                     type="text"
                     placeholder="FIRST NAME"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                   />
@@ -259,132 +319,220 @@ const Registration = () => {
                     type="text"
                     placeholder="LAST NAME"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                   />
                 </div>
               </div>
+              {/* Email */}
+              <div className="mb-4 w-full">
+                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                  <input
+                    type="text"
+                    placeholder="EMAIL"
+                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+              {/* Password */}
+              <div className="mb-4 w-full">
+                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                  <input
+                    type="text"
+                    placeholder="PASSWORD"
+                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
+                    value={passWord}
+                    onChange={(e) => setpassWord(e.target.value)}
+                  />
+                </div>
+              </div>
+              {/* */}
               <div className="mb-4 w-full">
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                   <input
                     type="text"
                     placeholder="ADDRESS"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                   />
+                  <input
+                    type="text"
+                    placeholder="ZIP CODE"
+                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
+                    value={zipcode}
+                    onChange={(e) => setZipCode(e.target.value)}
+                  />
                 </div>
               </div>
+              {/* */}
               <div className="mb-4 w-full">
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                   <input
                     type="text"
                     placeholder="PHONE NUMBER"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
               </div>
+              {/* 
               <div className="mb-4 w-full">
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  <input
-                    type="text"
-                    placeholder="ZIP CODE"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                    value={zipcode}
-                    onChange={(e) => setZipCode(e.target.value)}
-                  />
+                  
                 </div>
               </div>
+              */}
+              {/* */}
               <div className="mb-4 w-full">
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                   <input
                     type="text"
                     placeholder="LISCENCE NUMBER"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
                     value={liscenseNumber}
                     onChange={(e) => setLiscenseNumber(e.target.value)}
                   />
                 </div>
               </div>
+              {/* */}
               <div className="mb-4 w-full">
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                   <input
                     type="text"
                     placeholder="SSN"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    required
                     value={ssn}
                     onChange={(e) => setSSN(e.target.value)}
                   />
                 </div>
               </div>
-              <button className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" onClick={() => regDoctor()}>
+              <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition">
                 REGISTER
               </button>
+              </form>
+              <div className="mt-4 mb-4 w-full">
+              <button className="w-full bg-gray-200 text-blue-600 font-semibold py-2 rounded hover:bg-gray-300 transition" onClick={handleRoleReset}>
+                Go Back
+              </button>
+              </div>
             </div>
         )}
         {selectedRole === "Pharmacist" && (
             <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
-              <div className="mb-4 w-full">
-                <h1>PHARMA Reg</h1>
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  <input
-                    type="text"
-                    placeholder="NAME"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
+              <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Pharmacy Registration</h1>
+              <form onSubmit={regPharmacy}>
+                <div className="mb-4 w-full">
+                  {/* Name */}
+                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                    <input
+                      type="text"
+                      placeholder="NAME"
+                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  <input
-                    type="text"
-                    placeholder="ADDRESS"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                  />
+                {/* Email */}
+                <div className="mb-4 w-full">
+                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                    <input
+                      type="text"
+                      placeholder="EMAIL"
+                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  <input
-                    type="text"
-                    placeholder="PHONE NUMBER"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                  />
+                {/* Password */}
+                <div className="mb-4 w-full">
+                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                    <input
+                      type="text"
+                      placeholder="PASSWORD"
+                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      required
+                      value={passWord}
+                      onChange={(e) => setpassWord(e.target.value)}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  <input
-                    type="text"
-                    placeholder="ZIP CODE"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                    value={zipcode}
-                    onChange={(e) => setZipCode(e.target.value)}
-                  />
+                {/* */}
+                <div className="mb-4 w-full">
+                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                    <input
+                      type="text"
+                      placeholder="ADDRESS"
+                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      required
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                    />
+                    <input
+                      type="text"
+                      placeholder="ZIP CODE"
+                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      required
+                      value={zipcode}
+                      onChange={(e) => setZipCode(e.target.value)}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  <input
-                    type="text"
-                    placeholder="LISCENCE NUMBER"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                    value={liscenseNumber}
-                    onChange={(e) => setLiscenseNumber(e.target.value)}
-                  />
+                {/* */}
+                <div className="mb-4 w-full">
+                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                    <input
+                      type="text"
+                      placeholder="PHONE NUMBER"
+                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      required
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                    />
+                  </div>
                 </div>
-              </div>
-              <button className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" onClick={() => regPharmacy()}>
-                REGISTER
+                {/* 
+                <div className="mb-4 w-full">
+                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                  </div>
+                </div>*/}
+                {/* */}
+                <div className="mb-4 w-full">
+                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                    <input
+                      type="text"
+                      placeholder="LISCENCE NUMBER"
+                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      required
+                      value={liscenseNumber}
+                      onChange={(e) => setLiscenseNumber(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <button type='submit' className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition">
+                  REGISTER
+                </button>
+              </form>
+              <div className="mt-4 mb-4 w-full">
+              <button className="w-full bg-gray-200 text-blue-600 font-semibold py-2 rounded hover:bg-gray-300 transition" onClick={handleRoleReset}>
+                Go Back
               </button>
+              </div>
             </div>
         )}
       </div>
