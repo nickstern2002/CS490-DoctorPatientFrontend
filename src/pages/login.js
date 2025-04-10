@@ -35,8 +35,12 @@ const Login = () => {
         alert('Login Successful');
         const data = await response.json();
         console.log("Data:", data)
+        localStorage.setItem('user', JSON.stringify(data.user));
         if(data.user.user_type === 'patient'){
           navigate('/patient');
+        }
+        else if(data.user.user_type == 'doctor'){
+          navigate('/doctors');
         }
       } 
       else {
