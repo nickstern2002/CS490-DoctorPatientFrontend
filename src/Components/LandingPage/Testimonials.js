@@ -16,7 +16,7 @@ function Testimonials() {
           </div>
           <h3>Joe Biden</h3>
           <p>
-          Smart Eatz is a company that can be described in one word... Iwuzindfutmhmafut....
+          Smart EatZ is a company that can be described in one word... Iwuzindfutmhmafut....
           </p>
         </div>
 
@@ -26,7 +26,7 @@ function Testimonials() {
           </div>
           <h3>Donald Trump</h3>
           <p>
-            Nobody does health like Smart Eats believe me. I've seen lots of doctors, great doctors, dumb doctos, but the ones on Smart EatZ? They're the best. Maybe the greatest doctors of all time
+            Nobody does health like Smart EatZ believe me. I've seen lots of doctors, great doctors, dumb doctos, but the ones on Smart EatZ? They're the best. Maybe the greatest doctors of all time
           </p>
         </div>
 
@@ -36,7 +36,7 @@ function Testimonials() {
           </div>
           <h3>Spingle Bingle</h3>
           <p>
-            Truly a life-changing experience — the support team is also fantastic and responsive.
+            After suffering with PTSD from CS288 with Itani, I needed mental and physical help. Smart EatZ was able to help me recover thanks to their excellent doctors, pharmacists, and support. 
           </p>
         </div>
       </div>
