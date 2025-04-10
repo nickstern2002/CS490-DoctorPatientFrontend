@@ -17,7 +17,7 @@ const Registration = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [zipcode, setZipCode] = useState('');
     //
-    const [liscenseNumber, setLiscenseNumber] = useState('');
+    const [licenseNumber, setLicenseNumber] = useState('');
     const [name, setName] = useState('');
     const [ssn, setSSN] = useState('');
 
@@ -45,7 +45,6 @@ const Registration = () => {
       };
   
       try {
-        // Sending POST request (I know that its weird right now, we might change type later)
         const response = await fetch('http://localhost:5000/api/register/patient', {
           method: 'POST',
           headers: {
@@ -73,7 +72,7 @@ const Registration = () => {
     const requestData = {
       email: email,
       password: password,
-      liscense_number: liscenseNumber,
+      license_number: licenseNumber,
       first_name: firstName,
       last_name: lastName,
       address: address,
@@ -82,7 +81,6 @@ const Registration = () => {
     };
 
     try {
-      // Sending POST request (I know that its weird right now, we might change type later)
       const response = await fetch('http://localhost:5000/api/register/doctor', {
         method: 'POST',
         headers: {
@@ -114,7 +112,7 @@ const Registration = () => {
       address: address,
       zip_code: zipcode,
       phone_number: phoneNumber,
-      liscense_number: liscenseNumber,
+      license_number: licenseNumber,
     };
 
     try {
@@ -289,6 +287,28 @@ const Registration = () => {
               <div className="mb-4 w-full">
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                   <input
+                      type="text"
+                      placeholder="EMAIL"
+                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="mb-4 w-full">
+                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                  <input
+                      type="text"
+                      placeholder="PASSWORD"
+                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="mb-4 w-full">
+                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                  <input
                     type="text"
                     placeholder="ADDRESS"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
@@ -323,10 +343,10 @@ const Registration = () => {
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                   <input
                     type="text"
-                    placeholder="LISCENCE NUMBER"
+                    placeholder="LICENCE NUMBER"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                    value={liscenseNumber}
-                    onChange={(e) => setLiscenseNumber(e.target.value)}
+                    value={licenseNumber}
+                    onChange={(e) => setLicenseNumber(e.target.value)}
                   />
                 </div>
               </div>
@@ -397,10 +417,10 @@ const Registration = () => {
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                   <input
                     type="text"
-                    placeholder="LISCENCE NUMBER"
+                    placeholder="LICENCE NUMBER"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                    value={liscenseNumber}
-                    onChange={(e) => setLiscenseNumber(e.target.value)}
+                    value={licenseNumber}
+                    onChange={(e) => setLicenseNumber(e.target.value)}
                   />
                 </div>
               </div>
