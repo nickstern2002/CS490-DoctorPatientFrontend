@@ -10,14 +10,16 @@ const Login = () => {
  const [userName, setUserName] = useState('');
  const [passWord, setPassword] = useState('');
  //
- //const [error, setError] = useState(''); // Might add this back
- //const [loading, setLoading] = useState(false);
+ const [error, setError] = useState(''); // Might add this back
+ const [loading, setLoading] = useState(false);
  // 
  const LoginUser = async (userName, passWord) => {
     const requestData = {
       email: userName,
       password: passWord,
     };
+
+    setLoading(true);
 
     try {
       // Sending POST request (I know that its weird right now, we might change type later)
@@ -32,21 +34,25 @@ const Login = () => {
       if (response.ok) {
         alert('Login Successful');
         const data = await response.json();
-        console.log("Data:", data)
+        console.log("Data:", data);
       } 
       else {
         const data = await response.json();
         console.log("Data but went wrong:", data)
-        alert("Data but went wrong:", data)
-        //setError("Data but went wrong:", data)
-        //setTimeout(() => setError(""), 5000); // Hide message after 5 seconds
+        //alert("Data but went wrong:", data)
+        setError("Data but went wrong:", data)
+        setTimeout(() => setError(""), 10000); // Hide message after 10 seconds
       }
-    } catch (error) {
+    } 
+    catch (error) {
       //setMessage('Error: ' + error.message); 
       console.log('Error: ' + error.message);
-      alert('Error: ' + error.message);
-      //setError('Error: ' + error.message);
-      //setTimeout(() => setError(""), 5000); // Hide message after 5 seconds
+      //alert('Error: ' + error.message);
+      setError('Error: ' + error.message);
+      setTimeout(() => setError(""), 10000); // Hide message after 10 seconds
+    }
+    finally{
+      setLoading(false);
     }
 };
 
@@ -57,22 +63,26 @@ const Login = () => {
       <div className="w-full max-w-sm">
         {/* Logo Section FIXED */}
         <div className="absolute top-0 left-0 bg-blue-600 text-white text-xl font-bold px-6 py-3 rounded-br-md shadow-md">
-        Smart Eatz
+        Smart EatZ
         </div>
         {/* Login Form */}
         <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
-          <form onSubmit={() => LoginUser(userName, passWord)}>
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            LoginUser(userName, passWord)
+            }}>
             {/* Username Input */}
             <div className="mb-4 w-full">
               <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                 <span className="mr-2">📷</span>
                 <input
-                  type="text"
+                  type="email"
                   placeholder="EMAIL"
                   className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
                   required
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -88,17 +98,18 @@ const Login = () => {
                   required
                   value={passWord}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
                 />
               </div>
             </div>
 
             {/* Login Button */}
-            <button type="submit" className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition">
-              LOGIN
+            <button type="submit" className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" disabled={loading}>
+            {loading ? 'Logging in...' : 'LOGIN'}
             </button>
           </form>
           {/* Login Error Fade in */}
-          {/* {error && <p className="mt-2 text-red-600 shadow-md animate-fadeIn">{error}</p>}  Display error message that fades after a bit */}
+          {error && <p className="mt-2 text-red-600 shadow-md animate-fadeIn">{error}</p>}  { /*Display error message that fades after a bit */}
           {/* Now Return to Landing Page */}
           {/* WAS Forgot Password Link: Forgot password? */}
           <p>

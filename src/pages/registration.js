@@ -39,7 +39,8 @@ const Registration = () => {
     // '/api/register/patient', methods=['POST']
     // '/api/register/doctor', methods=['POST']
     // '/api/register/pharmacy', methods=['POST']
-    const regPatient = async () => {
+    const regPatient = async (e) => {
+      e.preventDefault();
       const requestData = {
         email: email,
         password: passWord,
@@ -75,7 +76,8 @@ const Registration = () => {
       }
   };
   //
-  const regDoctor = async () => {
+  const regDoctor = async (e) => {
+    e.preventDefault();
     const requestData = {
       email: email,
       password: passWord,
@@ -225,7 +227,7 @@ const Registration = () => {
               <div className="mb-4 w-full">
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                   <input
-                    type="text"
+                    type="email"
                     placeholder="EMAIL"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
                     required
@@ -329,7 +331,7 @@ const Registration = () => {
               <div className="mb-4 w-full">
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                   <input
-                    type="text"
+                    type="email"
                     placeholder="EMAIL"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
                     required
@@ -450,7 +452,7 @@ const Registration = () => {
                 <div className="mb-4 w-full">
                   <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                     <input
-                      type="text"
+                      type="email"
                       placeholder="EMAIL"
                       className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
                       required
