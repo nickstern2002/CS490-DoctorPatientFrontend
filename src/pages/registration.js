@@ -10,7 +10,7 @@ const Registration = () => {
     const [roleChosen, setRoleChosen] = useState(false);
     // The text fields variables TODO
     const [email, setEmail] = useState('');
-    const [passWord, setpassWord] = useState('');
+    const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [address, setAddress] = useState('');
@@ -36,7 +36,7 @@ const Registration = () => {
     const regPatient = async () => {
       const requestData = {
         email: email,
-        password: passWord,
+        password: password,
         first_name: firstName,
         last_name: lastName,
         address: address,
@@ -72,7 +72,7 @@ const Registration = () => {
   const regDoctor = async () => {
     const requestData = {
       email: email,
-      password: passWord,
+      password: password,
       liscense_number: liscenseNumber,
       first_name: firstName,
       last_name: lastName,
@@ -109,7 +109,7 @@ const Registration = () => {
   const regPharmacy = async () => {
     const requestData = {
       email: email,
-      password: passWord,
+      password: password,
       name: name,
       address: address,
       zip_code: zipcode,
@@ -202,6 +202,28 @@ const Registration = () => {
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="mb-4 w-full">
+                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                  <input
+                      type="text"
+                      placeholder="EMAIL"
+                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="mb-4 w-full">
+                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                  <input
+                      type="text"
+                      placeholder="PASSWORD"
+                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>
