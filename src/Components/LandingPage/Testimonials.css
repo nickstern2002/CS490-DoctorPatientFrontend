@@ -4,6 +4,7 @@
   
   .testimonials-title {
     font-size: 2.5rem;
+    font-weight: bold;
     color: #2a8eed;
     margin-bottom: 0.5rem;
   }
@@ -14,6 +15,7 @@
     margin-bottom: 3.3rem;
   }
   
+  /* Testemonial Cards */
   .testimonial-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -30,14 +32,14 @@
     overflow: visible;
   }
   
-  /* Floating Profile Picture */
+  
   .testimonial-profile {
     position: absolute;
     top: -45px;
     left: 50%;
     transform: translateX(-50%);
-    width: 90px;               /* ✅ fixed size */
-    height: 90px;              /* ✅ fixed size */
+    width: 90px;               
+    height: 90px;              
     border-radius: 50%;
     overflow: hidden;
     border: 3px solid white;
@@ -47,13 +49,14 @@
   .testimonial-profile img {
     width: 100%;
     height: 100%;
-    object-fit: cover;         /* ✅ crop instead of stretch */
+    object-fit: cover;         
     display: block;
   }
   
   .testimonial-card h3 {
-    margin-top: 50px;
+    margin-top: 25px;
     font-size: 1.1rem;
+    font-weight: bold;
     color: #2a8eed;
   }
   
