@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import { useParams } from 'react-router-dom';
 import './patientDashboard.css';
 import BookAppointmentModal from "./BookAppointmentModal";
 import WeightChart from "./WeightChart";
 import CalorieChart from "./CalorieChart";
 
 function PatientDashboard() {
-    const { user_id } = useParams(); // grabs the user_id from the URL
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    const user_id = user ? user.user_id : null;
     const [activeTab, setActiveTab] = useState("dashboard"); // "dashboard", "appointments", "metrics", "payments"
     const [patientDetails, setPatientDetails] = useState(null);
     const [firstName, setFirstName] = useState("");
@@ -27,6 +28,11 @@ function PatientDashboard() {
     const [latestHeight, setLatestHeight] = useState(null);
     const [weightData, setWeightData] = useState([]);
     const [calorieData, setCalorieData] = useState([]);
+
+    // States for Appointments Tab
+    const [acceptedAppointments, setAcceptedAppointments] = useState([]);
+    const [canceledAppointments, setCanceledAppointments] = useState([]);
+    const [completedAppointments, setCompletedAppointments] = useState([]);
 
     // Function to trigger booking modal
     const openBookingModal = (doctor_id) => {
@@ -126,6 +132,60 @@ function PatientDashboard() {
         }
     }, [user_id, activeTab]);
 
+    // Fetch appointments data when appointments tab is active
+    useEffect(() => {
+        if (activeTab === "appointments" && user_id) {
+            Promise.all([
+                fetch(`http://localhost:5000/api/patient-dashboard/appointments/accepted?user_id=${user_id}`).then(res => res.json()),
+                fetch(`http://localhost:5000/api/patient-dashboard/appointments/canceled?user_id=${user_id}`).then(res => res.json()),
+                fetch(`http://localhost:5000/api/patient-dashboard/appointments/completed?user_id=${user_id}`).then(res => res.json())
+            ])
+                .then(([acceptedData, canceledData, completedData]) => {
+                    setAcceptedAppointments(acceptedData);
+                    setCanceledAppointments(canceledData);
+                    setCompletedAppointments(completedData);
+                })
+                .catch(error => console.error("Error fetching appointments data:", error));
+        }
+    }, [activeTab, user_id]);
+
+    // Function to cancel an appointment
+    const cancelAppointment = (appointment_id) => {
+        fetch(`http://localhost:5000/api/patient-dashboard/appointments/cancel_appointment`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: user_id,
+                appointment_id: appointment_id
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                    // Refresh the appointments after canceling
+                    // You could call the same promise-all fetch here again:
+                    if(activeTab === "appointments") {
+                        // Re-fetch appointments to update the lists
+                        Promise.all([
+                            fetch(`http://localhost:5000/api/patient-dashboard/appointments/accepted?user_id=${user_id}`).then(res => res.json()),
+                            fetch(`http://localhost:5000/api/patient-dashboard/appointments/canceled?user_id=${user_id}`).then(res => res.json()),
+                            fetch(`http://localhost:5000/api/patient-dashboard/appointments/completed?user_id=${user_id}`).then(res => res.json())
+                        ])
+                            .then(([acceptedData, canceledData, completedData]) => {
+                                setAcceptedAppointments(acceptedData);
+                                setCanceledAppointments(canceledData);
+                                setCompletedAppointments(completedData);
+                            })
+                            .catch(error => console.error("Error re-fetching appointments:", error));
+                    }
+                } else if (data.error) {
+                    alert("Error: " + data.error);
+                }
+            })
+            .catch(error => console.error("Error canceling appointment:", error));
+    };
+
     // Render content based on the active tab.
     const renderDashboardData = () => {
         if (activeTab === "dashboard") {
@@ -169,7 +229,57 @@ function PatientDashboard() {
             return (
                 <div>
                     <h3>Appointments</h3>
-                    <p>Appointments content goes here...</p>
+                    <div>
+                        <h4>Accepted Appointments</h4>
+                        <div className="appointments-container">
+                            {acceptedAppointments.length > 0 ? (
+                                acceptedAppointments.map(app => (
+                                    <div key={app.appointment_id} className="appointment-card">
+                                        <h5>Appointment #{app.appointment_id}</h5>
+                                        <p><strong>Doctor ID:</strong> {app.doctor_id}</p>
+                                        <p><strong>Date/Time:</strong> {app.appointment_time}</p>
+                                        <p><strong>Status:</strong> {app.status}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No accepted appointments.</p>
+                            )}
+                        </div>
+                    </div>
+                    <div>
+                        <h4>Canceled Appointments</h4>
+                        <div className="appointments-container">
+                            {canceledAppointments.length > 0 ? (
+                                canceledAppointments.map(app => (
+                                    <div key={app.appointment_id} className="appointment-card">
+                                        <h5>Appointment #{app.appointment_id}</h5>
+                                        <p><strong>Doctor ID:</strong> {app.doctor_id}</p>
+                                        <p><strong>Date/Time:</strong> {app.appointment_time}</p>
+                                        <p><strong>Status:</strong> {app.status}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No canceled appointments.</p>
+                            )}
+                        </div>
+                    </div>
+                    <div>
+                        <h4>Completed Appointments</h4>
+                        <div className="appointments-container">
+                            {completedAppointments.length > 0 ? (
+                                completedAppointments.map(app => (
+                                    <div key={app.appointment_id} className="appointment-card">
+                                        <h5>Appointment #{app.appointment_id}</h5>
+                                        <p><strong>Doctor ID:</strong> {app.doctor_id}</p>
+                                        <p><strong>Date/Time:</strong> {app.appointment_time}</p>
+                                        <p><strong>Status:</strong> {app.status}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No completed appointments.</p>
+                            )}
+                        </div>
+                    </div>
                 </div>
             );
         } else if (activeTab === "metrics") {

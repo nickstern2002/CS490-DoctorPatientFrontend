@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import './doctorDashboard.css';
 
 function DoctorDashboard() {
-    const { user_id } = useParams(); // grabs the user_id from the URL
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    const user_id = user ? user.user_id : null;
     const [appointments, setAppointments] = useState([]);
     const [payments, setPayments] = useState([]);
     const [acceptedAppointments, setAcceptedAppointments] = useState([]);
