@@ -1,7 +1,7 @@
 // Registration.js
 import React from 'react'
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 //import Navbar from '../components/Navbar'; // This is for a navbar from my individual if I knew how Michael was making his
 const Registration = () => {
     // This is some boiler plate for the Registration page
@@ -21,6 +21,8 @@ const Registration = () => {
     const [name, setName] = useState('');
     const [ssn, setSSN] = useState('');
 
+    //for navigating to the landing page
+    const navigate = useNavigate();
     //
     const handleRoleClick = (role) => {
         setSelectedRole(role);
@@ -64,6 +66,7 @@ const Registration = () => {
           alert('Registration Successful');
           const data = await response.json();
           console.log("Data:", data)
+          navigate(-1);
         } 
         else {
           const data = await response.json();
@@ -101,6 +104,7 @@ const Registration = () => {
         alert('Registration Successful');
         const data = await response.json();
         console.log("Data:", data)
+        navigate(-1);
       } 
       else {
         const data = await response.json();
@@ -137,6 +141,7 @@ const Registration = () => {
         alert('Registration Successful');
         const data = await response.json();
         console.log("Data:", data)
+        navigate(-1);
       } 
       else {
         const data = await response.json();
@@ -147,8 +152,8 @@ const Registration = () => {
       console.log('Error: ' + error.message);
     }
   };
+  /* The React Code Section BELOW  */
   //
-  // I should add the require to the fields but I'm lazy rn
   return (
     <div className='flex flex-col items-center justify-center min-h-screen bg-blue-100'>
       {/* Logo Section FIXED */}
@@ -197,7 +202,6 @@ const Registration = () => {
         {selectedRole === "Patient" && (
             <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
               <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Patient Registration</h1>
-              <form onSubmit={regPatient}>
               {/* Name */}
               <div className="mb-4 w-full">
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
@@ -286,10 +290,9 @@ const Registration = () => {
                 </div>
               </div>
               */}
-              <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition">
+              <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition" onClick={() => regPatient()}>
                 REGISTER
               </button>
-              </form>
               <div className="mt-4 mb-4 w-full">
               <button className="w-full bg-gray-200 text-blue-600 font-semibold py-2 rounded hover:bg-gray-300 transition" onClick={handleRoleReset}>
                 Go Back
@@ -300,7 +303,6 @@ const Registration = () => {
         {selectedRole === "Doctor" && (
             <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
               <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Doctor Registration</h1>
-              <form onSubmit={regDoctor}>
               <div className="mb-4 w-full">
                 
                 {/* */}
@@ -416,10 +418,9 @@ const Registration = () => {
                   />
                 </div>
               </div>
-              <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition">
+              <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition" onClick={() => regDoctor()}>
                 REGISTER
               </button>
-              </form>
               <div className="mt-4 mb-4 w-full">
               <button className="w-full bg-gray-200 text-blue-600 font-semibold py-2 rounded hover:bg-gray-300 transition" onClick={handleRoleReset}>
                 Go Back
@@ -430,7 +431,6 @@ const Registration = () => {
         {selectedRole === "Pharmacist" && (
             <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
               <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Pharmacy Registration</h1>
-              <form onSubmit={regPharmacy}>
                 <div className="mb-4 w-full">
                   {/* Name */}
                   <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
@@ -522,10 +522,9 @@ const Registration = () => {
                     />
                   </div>
                 </div>
-                <button type='submit' className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition">
+                <button type='submit' className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition" onClick={() => regPharmacy()}>
                   REGISTER
                 </button>
-              </form>
               <div className="mt-4 mb-4 w-full">
               <button className="w-full bg-gray-200 text-blue-600 font-semibold py-2 rounded hover:bg-gray-300 transition" onClick={handleRoleReset}>
                 Go Back

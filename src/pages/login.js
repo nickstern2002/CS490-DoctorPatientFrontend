@@ -1,7 +1,7 @@
 // Login.js
 import React from 'react'
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 //import Navbar from '../components/Navbar'; // This is for a navbar if I knew how Michael was making his
 const Login = () => {
  // This is some boiler plate for the login page
@@ -12,6 +12,8 @@ const Login = () => {
  //
  const [error, setError] = useState(''); // Might add this back
  const [loading, setLoading] = useState(false);
+ //for navigating to the dashboards
+ const navigate = useNavigate();
  // 
  const LoginUser = async (userName, passWord) => {
     const requestData = {
@@ -74,7 +76,6 @@ const Login = () => {
         </div>
         {/* Login Form */}
         <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
-          <form>
             {/* Username Input */}
             <div className="mb-4 w-full">
               <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
@@ -111,7 +112,6 @@ const Login = () => {
             <button type="submit" className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" disabled={loading} onClick={() => LoginUser(userName, passWord)}>
             {loading ? 'Logging in...' : 'LOGIN'}
             </button>
-          </form>
           {/* Login Error Fade in */}
           {error && <p className="mt-2 text-red-600 shadow-md animate-fadeIn">{error}</p>}  { /*Display error message that fades after a bit */}
           {/* Now Return to Landing Page */}
