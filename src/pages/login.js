@@ -34,7 +34,14 @@ const Login = () => {
       if (response.ok) {
         alert('Login Successful');
         const data = await response.json();
-        console.log("Data:", data);
+        console.log("Data:", data)
+        localStorage.setItem('user', JSON.stringify(data.user));
+        if(data.user.user_type === 'patient'){
+          navigate('/patient');
+        }
+        else if(data.user.user_type == 'doctor'){
+          navigate('/doctors');
+        }
       } 
       else {
         const data = await response.json();
@@ -67,10 +74,7 @@ const Login = () => {
         </div>
         {/* Login Form */}
         <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            LoginUser(userName, passWord)
-            }}>
+          <form>
             {/* Username Input */}
             <div className="mb-4 w-full">
               <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
@@ -104,7 +108,7 @@ const Login = () => {
             </div>
 
             {/* Login Button */}
-            <button type="submit" className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" disabled={loading}>
+            <button type="submit" className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" disabled={loading} onClick={() => LoginUser(userName, passWord)}>
             {loading ? 'Logging in...' : 'LOGIN'}
             </button>
           </form>

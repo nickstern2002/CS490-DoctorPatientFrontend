@@ -39,8 +39,7 @@ const Registration = () => {
     // '/api/register/patient', methods=['POST']
     // '/api/register/doctor', methods=['POST']
     // '/api/register/pharmacy', methods=['POST']
-    const regPatient = async (e) => {
-      e.preventDefault();
+    const regPatient = async () => {
       const requestData = {
         email: email,
         password: passWord,
@@ -76,8 +75,7 @@ const Registration = () => {
       }
   };
   //
-  const regDoctor = async (e) => {
-    e.preventDefault();
+  const regDoctor = async () => {
     const requestData = {
       email: email,
       password: passWord,
@@ -114,9 +112,7 @@ const Registration = () => {
     }
   };
   //
-  const regPharmacy = async (e) => {
-    e.preventDefault();
-
+  const regPharmacy = async () => {
     const requestData = {
       email: email,
       password: passWord,
