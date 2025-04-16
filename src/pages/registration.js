@@ -264,8 +264,8 @@ const Registration = () => {
                     placeholder="PASSWORD"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
                     required
-                    value={passWord}
-                    onChange={(e) => setpassWord(e.target.value)}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>
@@ -388,8 +388,8 @@ const Registration = () => {
                     placeholder="PASSWORD"
                     className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
                     required
-                    value={passWord}
-                    onChange={(e) => setpassWord(e.target.value)}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>
@@ -507,8 +507,8 @@ const Registration = () => {
                       placeholder="PASSWORD"
                       className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
                       required
-                      value={passWord}
-                      onChange={(e) => setpassWord(e.target.value)}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
                 </div>
@@ -559,8 +559,8 @@ const Registration = () => {
                       placeholder="LISCENCE NUMBER"
                       className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
                       required
-                      value={liscenseNumber}
-                      onChange={(e) => setLiscenseNumber(e.target.value)}
+                      value={licenseNumber}
+                      onChange={(e) => setLicenseNumber(e.target.value)}
                     />
                   </div>
                 </div>
