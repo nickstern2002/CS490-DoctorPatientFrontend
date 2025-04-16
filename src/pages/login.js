@@ -10,7 +10,7 @@ const Login = () => {
  const [userName, setUserName] = useState('');
  const [passWord, setPassword] = useState('');
  //
- const [error, setError] = useState('');
+ const [error, setError] = useState(''); // Might add this back
  const [loading, setLoading] = useState(false);
  //for navigating to the dashboards
  const navigate = useNavigate();
@@ -20,6 +20,8 @@ const Login = () => {
       email: userName,
       password: passWord,
     };
+
+    setLoading(true);
 
     try {
       // Sending POST request (I know that its weird right now, we might change type later)
@@ -46,10 +48,20 @@ const Login = () => {
       else {
         const data = await response.json();
         console.log("Data but went wrong:", data)
+        //alert("Data but went wrong:", data)
+        setError("Data but went wrong:", data)
+        setTimeout(() => setError(""), 10000); // Hide message after 10 seconds
       }
-    } catch (error) {
+    } 
+    catch (error) {
       //setMessage('Error: ' + error.message); 
       console.log('Error: ' + error.message);
+      //alert('Error: ' + error.message);
+      setError('Error: ' + error.message);
+      setTimeout(() => setError(""), 10000); // Hide message after 10 seconds
+    }
+    finally{
+      setLoading(false);
     }
 };
 
@@ -58,47 +70,50 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-[#d8eafe]">
       <div className="w-full max-w-sm">
-        {/* Logo Section */}
-        {/* Logo is currently not aligned properly and I'll fix it later */}
-        <div className="bg-blue-600 text-white text-lg font-bold p-3 pl-6 rounded-t-lg w-fit">
-          Smart Eatz
+        {/* Logo Section FIXED */}
+        <div className="absolute top-0 left-0 bg-blue-600 text-white text-xl font-bold px-6 py-3 rounded-br-md shadow-md">
+        Smart EatZ
         </div>
-
         {/* Login Form */}
         <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
-          {/* Username Input */}
-          <div className="mb-4 w-full">
-            <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-              <span className="mr-2">📷</span>
-              <input
-                type="text"
-                placeholder="USERNAME"
-                className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-              />
+            {/* Username Input */}
+            <div className="mb-4 w-full">
+              <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                <span className="mr-2">📷</span>
+                <input
+                  type="email"
+                  placeholder="EMAIL"
+                  className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                  required
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Password Input */}
-          <div className="mb-4 w-full">
-            <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-              <span className="mr-2">🔒</span>
-              <input
-                type="password"
-                placeholder="PASSWORD"
-                className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                value={passWord}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+            {/* Password Input */}
+            <div className="mb-4 w-full">
+              <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                <span className="mr-2">🔒</span>
+                <input
+                  type="password"
+                  placeholder="PASSWORD"
+                  className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                  required
+                  value={passWord}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Login Button */}
-          <button className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" onClick={() => LoginUser(userName, passWord)}>
-            LOGIN
-          </button>
-
+            {/* Login Button */}
+            <button type="submit" className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" disabled={loading} onClick={() => LoginUser(userName, passWord)}>
+            {loading ? 'Logging in...' : 'LOGIN'}
+            </button>
+          {/* Login Error Fade in */}
+          {error && <p className="mt-2 text-red-600 shadow-md animate-fadeIn">{error}</p>}  { /*Display error message that fades after a bit */}
           {/* Now Return to Landing Page */}
           {/* WAS Forgot Password Link: Forgot password? */}
           <p>
