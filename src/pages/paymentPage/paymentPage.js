@@ -1,16 +1,20 @@
 import React from "react";
 //import { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation  } from 'react-router-dom';
 import { paymentStyles } from './paymentStyles';
 
 const PaymentPage = () => {
   //for navigating to the landing page
   const navigate = useNavigate();
+  // Imported Transaction Info
+  const { state } = useLocation();
+  const txnId = state?.transaction_id;
+  //
 
+  // Returns you to your last page
   const returnToLastPlace = () => {
-    navigate(-1);
+    navigate(-1); // Sends you back one page
   };
-  // className="min-h-screen bg-[#d8eafe] flex items-center justify-center p-4"
   //
   return (
     <div className={paymentStyles.background}>
