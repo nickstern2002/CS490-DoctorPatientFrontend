@@ -49,7 +49,7 @@ const Login = () => {
         const data = await response.json();
         console.log("Data but went wrong:", data)
         //alert("Data but went wrong:", data)
-        setError("Data but went wrong:", data)
+        setError("Data but went wrong: " + data.error)
         setTimeout(() => setError(""), 10000); // Hide message after 10 seconds
       }
     } 
