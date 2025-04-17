@@ -244,31 +244,6 @@ const Registration = () => {
                   />
                 </div>
               </div>
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  <input
-                    type="text"
-                    placeholder="ADDRESS"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-              </div>
-              {/* Password */}
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  <input
-                    type="text"
-                    placeholder="PASSWORD"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-              </div>
               {/* */}
               <div className="mb-4 w-full">
                 <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
@@ -365,31 +340,6 @@ const Registration = () => {
                       className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  <input
-                    type="text"
-                    placeholder="ADDRESS"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-              </div>
-              {/* Password */}
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  <input
-                    type="text"
-                    placeholder="PASSWORD"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>
