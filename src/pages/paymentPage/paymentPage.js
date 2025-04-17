@@ -9,7 +9,37 @@ const PaymentPage = () => {
   // Imported Transaction Info
   const { state } = useLocation();
   const txnId = state?.transaction_id;
+  const txnType = state?.transaction_type;
   //
+  const getRealTransaction = async () => {
+    /*
+    try {
+      // Sending POST request (I know that its weird right now, we might change type later)
+      const response = await fetch('http://localhost:5000/api/register/pharmacy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData), // Convert the data to JSON
+      });
+      // close enough for now
+      if (response.ok) {
+        alert('Registration Successful');
+        const data = await response.json();
+        console.log("Data:", data)
+      } 
+      else {
+        const data = await response.json();
+        console.log("Data but went wrong:", data)
+      }
+    } catch (error) {
+      //setMessage('Error: ' + error.message); 
+      console.log('Error: ' + error.message);
+    }
+    */
+  };
+
+
 
   // Returns you to your last page
   const returnToLastPlace = () => {
