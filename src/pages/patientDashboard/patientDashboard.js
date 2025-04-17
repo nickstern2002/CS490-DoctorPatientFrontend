@@ -421,6 +421,11 @@ function PatientDashboard() {
                                         <p><strong>Amount:</strong> ${payment.amount}</p>
                                         <p><strong>Fulfilled:</strong> {payment.is_fulfilled ? "Yes" : "No"}</p>
                                         <p><strong>Date:</strong> {payment.payment_date}</p>
+                                        {!payment.is_fulfilled && (
+                                            <button className="fulfill-button">
+                                                Pay Now
+                                            </button>
+                                        )}
                                     </div>
                                 ))
                             ) : (
@@ -438,6 +443,11 @@ function PatientDashboard() {
                                         <p><strong>Amount:</strong> ${payment.amount}</p>
                                         <p><strong>Fulfilled:</strong> {payment.is_fulfilled ? "Yes" : "No"}</p>
                                         <p><strong>Date:</strong> {payment.payment_date}</p>
+                                        {!payment.is_fulfilled && (
+                                            <button className="fulfill-button">
+                                                Pay Now
+                                            </button>
+                                        )}
                                     </div>
                                 ))
                             ) : (
