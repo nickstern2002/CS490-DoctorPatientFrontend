@@ -40,6 +40,18 @@ function PatientDashboard() {
         setShowBookingModal(true);
     };
 
+    // Modal visibility
+    const [showMetricsModal, setShowMetricsModal] = useState(false);
+
+    // Form fields
+    const [metricWeight, setMetricWeight] = useState("");
+    const [metricHeight, setMetricHeight] = useState("");
+    const [metricCalories, setMetricCalories] = useState("");
+
+    // Open / close
+    const openMetricsModal = () => setShowMetricsModal(true);
+    const closeMetricsModal = () => setShowMetricsModal(false);
+
     useEffect(() => {
         fetch(`http://localhost:5000/api/patient-dashboard/details?user_id=${user_id}`)
             .then(response => response.json())
@@ -67,6 +79,45 @@ function PatientDashboard() {
                 .catch(error => console.error('Error fetching payments:', error));
         }
     }, [user_id, activeTab]);
+
+    // Submit handler
+    const handleMetricsSubmit = () => {
+        // simple validation
+        if (!metricWeight || !metricHeight || !metricCalories) {
+            return alert("All fields are required");
+        }
+
+        fetch("http://localhost:5000/api/patient-dashboard/metrics/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user_id,
+                weight: parseFloat(metricWeight),
+                height: parseFloat(metricHeight),
+                caloric_intake: parseInt(metricCalories, 10)
+            })
+        })
+            .then(res => res.json())
+            .then(json => {
+                if (json.message) {
+                    alert(json.message);
+                    // optionally re‑fetch latest height and graph data:
+                    fetch(`http://localhost:5000/api/patient-dashboard/metrics/latest-height?user_id=${user_id}`)
+                        .then(r => r.json()).then(d => setLatestHeight(d.latest_height));
+                    if (activeTab === "metrics") {
+                        fetch(`http://localhost:5000/api/patient-dashboard/metrics/graph-data?user_id=${user_id}`)
+                            .then(r => r.json()).then(d => {
+                            setWeightData(d.weight_data);
+                            setCalorieData(d.caloric_intake_data);
+                        });
+                    }
+                } else {
+                    alert("Error: " + (json.error||"Unknown"));
+                }
+            })
+            .catch(err => console.error("Error submitting metrics:", err))
+            .finally(closeMetricsModal);
+    };
 
     // Function to perform doctor search
     const performDoctorSearch = () => {
@@ -307,6 +358,9 @@ function PatientDashboard() {
                     ) : (
                         <p>Loading latest height...</p>
                     )}
+                    <button className="submit-metrics-button" onClick={openMetricsModal}>
+                        Log Daily Metrics
+                    </button>
                     <div>
                         <h4>Weight Over Time</h4>
                         <WeightChart weightData={weightData} />
@@ -315,6 +369,41 @@ function PatientDashboard() {
                         <h4>Caloric Intake Over Time</h4>
                         <CalorieChart calorieData={calorieData} />
                     </div>
+                    {showMetricsModal && (
+                        <div className="modal-overlay">
+                            <div className="modal">
+                                <h4>Enter Today’s Metrics</h4>
+                                <label>
+                                    Weight (lbs):
+                                    <input
+                                        type="number"
+                                        value={metricWeight}
+                                        onChange={e => setMetricWeight(e.target.value)}
+                                    />
+                                </label>
+                                <label>
+                                    Height (inches):
+                                    <input
+                                        type="number"
+                                        value={metricHeight}
+                                        onChange={e => setMetricHeight(e.target.value)}
+                                    />
+                                </label>
+                                <label>
+                                    Calories:
+                                    <input
+                                        type="number"
+                                        value={metricCalories}
+                                        onChange={e => setMetricCalories(e.target.value)}
+                                    />
+                                </label>
+                                <div className="modal-actions">
+                                    <button onClick={handleMetricsSubmit}>Submit</button>
+                                    <button onClick={closeMetricsModal}>Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         } else if (activeTab === "payments") {
