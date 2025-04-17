@@ -186,6 +186,16 @@ function PatientDashboard() {
             .catch(error => console.error("Error canceling appointment:", error));
     };
 
+    // Somewhere near the top of your component
+    const handleCancelClick = (appointment_id) => {
+        const ok = window.confirm(
+            `Are you sure you want to cancel appointment #${appointment_id}?`
+        );
+        if (ok) {
+            cancelAppointment(appointment_id);
+        }
+    };
+
     // Render content based on the active tab.
     const renderDashboardData = () => {
         if (activeTab === "dashboard") {
@@ -239,6 +249,12 @@ function PatientDashboard() {
                                         <p><strong>Doctor ID:</strong> {app.doctor_id}</p>
                                         <p><strong>Date/Time:</strong> {app.appointment_time}</p>
                                         <p><strong>Status:</strong> {app.status}</p>
+                                        <button
+                                            className="cancel-button"
+                                            onClick={() => handleCancelClick(app.appointment_id)}
+                                        >
+                                            Cancel
+                                        </button>
                                     </div>
                                 ))
                             ) : (
