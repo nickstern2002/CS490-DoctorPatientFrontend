@@ -4,6 +4,7 @@ import BookAppointmentModal from "./BookAppointmentModal";
 import WeightChart from "./WeightChart";
 import CalorieChart from "./CalorieChart";
 import {useNavigate} from "react-router-dom";
+import ChatWindow from '../../Components/ChatWindow';
 
 import Logo from '../../Assets/Logo/logo.png';
 
@@ -481,6 +482,16 @@ function PatientDashboard() {
                 </div>
             );
         }
+        else if (activeTab === "chat") {
+            return (
+              <div>
+                <h3>Chat with Doctor</h3>
+                {patientDetails && (
+                  <ChatWindow patientId={patientDetails.patient_id} />
+                )}
+              </div>
+            );
+          }
     };
 
     return (
@@ -518,6 +529,8 @@ function PatientDashboard() {
                         <li>
                             <button onClick={() => setActiveTab("payments")}>Payments</button>
                         </li>
+                        <li><button onClick={() => setActiveTab("chat")}>Chat</button></li>
+
                     </ul>
                 </nav>
 
