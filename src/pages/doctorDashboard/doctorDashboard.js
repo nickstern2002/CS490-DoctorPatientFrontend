@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './doctorDashboard.css';
+import Logo from '../../Assets/Logo/logo.png';
 
 function DoctorDashboard() {
     const storedUser = localStorage.getItem('user');
@@ -232,7 +233,7 @@ function DoctorDashboard() {
         <div style={{ backgroundColor: 'white', minHeight: '100vh' }}>
             {/* Top Bar */}
             <header className="top-bar">
-                <h1>Smart Eatz</h1>
+                <img src={Logo} alt="Smart Eatz Logo" style={{ height: '50px' }} />
                 <h2>Doctor Dashboard</h2>
                 <div className="doctor-details">
                     {doctorDetails ? (

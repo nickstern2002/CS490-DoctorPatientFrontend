@@ -5,6 +5,8 @@ import WeightChart from "./WeightChart";
 import CalorieChart from "./CalorieChart";
 import {useNavigate} from "react-router-dom";
 
+import Logo from '../../Assets/Logo/logo.png';
+
 function PatientDashboard() {
     const storedUser = localStorage.getItem('user');
     const user = storedUser ? JSON.parse(storedUser) : null;
@@ -485,7 +487,7 @@ function PatientDashboard() {
         <div style={{ backgroundColor: 'white', minHeight: '100vh' }}>
             {/* Top Bar */}
             <header className="top-bar">
-                <h1>Smart Eatz</h1>
+                <img src={Logo} alt="Smart Eatz Logo" style={{ height: '50px' }} />
                 <h2>Patient Dashboard</h2>
                 <div className="patient-details">
                     {patientDetails ? (

@@ -2,6 +2,7 @@
 import React from 'react'
 import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
+import Logo from '../Assets/Logo/logo.png';
 //import Navbar from '../components/Navbar'; // This is for a navbar from my individual if I knew how Michael was making his
 const Registration = () => {
     // This is some boiler plate for the Registration page
@@ -155,8 +156,8 @@ const Registration = () => {
   return (
     <div className='flex flex-col items-center justify-center min-h-screen bg-blue-100'>
       {/* Logo Section FIXED */}
-      <div className="absolute top-0 left-0 bg-blue-600 text-white text-xl font-bold px-6 py-3 rounded-br-md shadow-md">
-        Smart Eatz
+      <div className="absolute top-0 left-0 bg-blue-600 px-4 py-2 rounded-br-md shadow-md">
+        <img src={Logo} alt="Smart Eatz Logo" className="h-10" />
       </div>
       {!roleChosen && (
         <div className='bg-white p-6 rounded-xl shadow-lg text-center'>
