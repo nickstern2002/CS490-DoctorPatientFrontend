@@ -1,53 +1,90 @@
 import React from "react";
-//import { useState } from "react";
-import { useNavigate, useLocation  } from 'react-router-dom';
+import { useState, useEffect}  from "react";
+import { useNavigate, useLocation } from 'react-router-dom';
 import { paymentStyles } from './paymentStyles';
 
 const PaymentPage = () => {
   //for navigating to the landing page
   const navigate = useNavigate();
-  // Imported Transaction Info
   const { state } = useLocation();
   const txnId = state?.transaction_id;
   const txnType = state?.transaction_type;
   //
-  const getRealTransaction = async () => {
-    /*
-    try {
-      // Sending POST request (I know that its weird right now, we might change type later)
-      const response = await fetch('http://localhost:5000/api/register/pharmacy', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestData), // Convert the data to JSON
-      });
-      // close enough for now
-      if (response.ok) {
-        alert('Registration Successful');
-        const data = await response.json();
-        console.log("Data:", data)
-      } 
-      else {
-        const data = await response.json();
-        console.log("Data but went wrong:", data)
+  const [payment, setPayment] = useState(null);
+
+  useEffect(() => {
+    //const getRealTransaction = async () => {
+      console.log("TEST!!!!!!!!!!!")
+      if(txnType === "pharmacy"){
+        fetch(`http://localhost:5000/api/payment/transaction/payments/pharmacy/${txnId}`)
+            .then(response => response.json())
+            .then(data => {
+              setPayment(data);
+              //
+              console.log(data);
+              //
+              console.log(payment)
+              //const { amount, payment_date, pharmacy_name } = payment;
+            })
+            .catch(error => console.error('Error fetching patient details:', error));
       }
-    } catch (error) {
-      //setMessage('Error: ' + error.message); 
-      console.log('Error: ' + error.message);
-    }
-    */
-  };
-
-
-
-  // Returns you to your last page
+      else{
+        fetch(`http://localhost:5000/api/payment/transaction/payments/doctor/${txnId}`)
+            .then(response => response.json())
+            .then(data => {
+              setPayment(data);
+              //
+              console.log(data);
+              //
+              console.log(payment)
+              //const { amount, payment_date, pharmacy_name } = payment;
+            })
+            .catch(error => console.error('Error fetching patient details:', error));
+      }
+  }, []);
+  
   const returnToLastPlace = () => {
-    navigate(-1); // Sends you back one page
+    console.log("TEST ID", txnId)
+    console.log("TEST TYPE", txnType)
+    console.log(payment.amount)
+    navigate(-1);
   };
+  // className="min-h-screen bg-[#d8eafe] flex items-center justify-center p-4"
   //
+  if (!payment) {
+    return <div className="flex justify-center items-center h-screen text-gray-400 text-lg">Loading...</div>;
+  }
+
+  const DetailItem = ({ label, value }) => (
+    <div className="flex justify-between items-center px-4 py-3 bg-white border rounded-xl shadow-sm hover:shadow-md transition duration-200">
+      <span className="text-sm font-medium text-gray-500">{label}</span>
+      <span className="text-base font-semibold text-gray-800">{value}</span>
+    </div>
+  );
+
   return (
     <div className={paymentStyles.background}>
+      {/* */}
+      <div className={paymentStyles.card}>
+      <h2 className={paymentStyles.h2}>
+        Purchase Details
+      </h2>
+      {txnType === "pharmacy" ? (
+        <div className="space-y-4 text-gray-700">
+          <DetailItem label="Pharmacy" value={payment.pharmacy_name} />
+          <DetailItem label="Amount" value={`$${payment.amount}`} />
+          <DetailItem label="Date Charged" value={new Date(payment.payment_date).toLocaleString()} />
+        </div>
+      ) : (
+        <div className="space-y-4 text-gray-700">
+        <DetailItem label="Doctor" value={payment.doctor_first_name + " " + payment.doctor_last_name} />
+        <DetailItem label="Amount" value={`$${payment.amount}`} />
+        <DetailItem label="Date Charged" value={new Date(payment.payment_date).toLocaleString()} />
+      </div>
+      )}
+
+      </div>
+      {/* */}
       <div className={paymentStyles.card}>
         <h2 className={paymentStyles.h2}>
           Enter Your Payment Details
