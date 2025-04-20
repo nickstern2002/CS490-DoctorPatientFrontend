@@ -113,7 +113,13 @@ function DoctorDashboard() {
             });
 
             // 3) Redirect to post‑appointment placeholder
-            navigate('/post-appointment');
+            navigate('/post-appointment', {
+                state: {
+                    appointment_id: apptId,
+                    doctor_id:     doctorDetails.doctor_id,
+                    patient_id:    activeChatAppointment.patient_id
+                }
+            });
         } catch (err) {
             console.error('❌ Error ending appointment:', err);
             alert('Could not end appointment. Please try again.');
