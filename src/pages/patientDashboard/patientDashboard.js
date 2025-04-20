@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom";
 import ChatWindow from '../../Components/ChatWindow';
 
 import Logo from '../../Assets/Logo/logo.png';
+import ChatHistory from "../../Components/ChatHistory";
 
 function PatientDashboard() {
     const storedUser = localStorage.getItem('user');
@@ -37,6 +38,9 @@ function PatientDashboard() {
     const [acceptedAppointments, setAcceptedAppointments] = useState([]);
     const [canceledAppointments, setCanceledAppointments] = useState([]);
     const [completedAppointments, setCompletedAppointments] = useState([]);
+
+    // Track the appointment that’s been “started”
+    const [activeChatAppointment, setActiveChatAppointment] = useState(null);
 
     const navigate = useNavigate();
 
@@ -293,34 +297,64 @@ function PatientDashboard() {
                 </div>
             );
         } else if (activeTab === "appointments") {
+            if (activeChatAppointment) {
+                return (
+                    <div>
+                        <button onClick={() => setActiveChatAppointment(null)}>
+                            ← Back to Appointments
+                        </button>
+                        <ChatWindow
+                            doctorId={activeChatAppointment.doctor_id}
+                            patientId={patientDetails.patient_id}
+                        />
+                    </div>
+                );
+            }
             return (
                 <div>
-                    <h3>Appointments</h3>
+                    <h1>Appointments</h1>
                     <div>
-                        <h4>Accepted Appointments</h4>
+                        <h3>Accepted Appointments</h3>
                         <div className="appointments-container">
                             {acceptedAppointments.length > 0 ? (
-                                acceptedAppointments.map(app => (
-                                    <div key={app.appointment_id} className="appointment-card">
-                                        <h5>Appointment #{app.appointment_id}</h5>
-                                        <p><strong>Doctor ID:</strong> {app.doctor_id}</p>
-                                        <p><strong>Date/Time:</strong> {app.appointment_time}</p>
-                                        <p><strong>Status:</strong> {app.status}</p>
-                                        <button
-                                            className="cancel-button"
-                                            onClick={() => handleCancelClick(app.appointment_id)}
-                                        >
-                                            Cancel
-                                        </button>
-                                    </div>
-                                ))
+                                acceptedAppointments.map(app => {
+                                    const apptDate = new Date(app.appointment_time);
+                                    const now     = new Date();
+                                    const diffMs  = apptDate - now;
+                                    const isStartable = diffMs >= -30  * 60 * 1000 && diffMs <= 15 * 60 * 1000; // 0–15min
+
+                                    return (
+                                        <div key={app.appointment_id} className="appointment-card">
+                                            <h5>Appointment #{app.appointment_id}</h5>
+                                            <p><strong>Doctor ID:</strong> {app.doctor_id}</p>
+                                            <p><strong>Date/Time:</strong> {apptDate.toLocaleString()}</p>
+                                            <p><strong>Status:</strong> {app.status}</p>
+
+                                            {isStartable && (
+                                                <button
+                                                    className="start-appointment-button"
+                                                    onClick={() => setActiveChatAppointment(app)}
+                                                >
+                                                    Start Appointment
+                                                </button>
+                                            )}
+
+                                            <button
+                                                className="cancel-button"
+                                                onClick={() => handleCancelClick(app.appointment_id)}
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    );
+                                })
                             ) : (
                                 <p>No accepted appointments.</p>
                             )}
                         </div>
                     </div>
                     <div>
-                        <h4>Canceled Appointments</h4>
+                        <h3>Canceled Appointments</h3>
                         <div className="appointments-container">
                             {canceledAppointments.length > 0 ? (
                                 canceledAppointments.map(app => (
@@ -337,7 +371,7 @@ function PatientDashboard() {
                         </div>
                     </div>
                     <div>
-                        <h4>Completed Appointments</h4>
+                        <h3>Completed Appointments</h3>
                         <div className="appointments-container">
                             {completedAppointments.length > 0 ? (
                                 completedAppointments.map(app => (
@@ -482,16 +516,19 @@ function PatientDashboard() {
                 </div>
             );
         }
-        else if (activeTab === "chat") {
+        else if (activeTab === "chat-history") {
             return (
-              <div>
-                <h3>Chat with Doctor</h3>
-                {patientDetails && (
-                  <ChatWindow patientId={patientDetails.patient_id} />
-                )}
-              </div>
+                <div>
+                    <h3>Chat History</h3>
+                    {patientDetails && (
+                        <ChatHistory
+                            patientId={patientDetails.patient_id}
+                            isDoctor={false}
+                        />
+                    )}
+                </div>
             );
-          }
+        }
     };
 
     return (
@@ -529,7 +566,7 @@ function PatientDashboard() {
                         <li>
                             <button onClick={() => setActiveTab("payments")}>Payments</button>
                         </li>
-                        <li><button onClick={() => setActiveTab("chat")}>Chat</button></li>
+                        <li><button onClick={() => setActiveTab("chat-history")}>Chat History</button></li>
 
                     </ul>
                 </nav>
