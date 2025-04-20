@@ -3,6 +3,7 @@ import React from 'react'
 import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../Assets/Logo/logo.png';
+import { registrationStyles } from './registrationStyles.js';
 //import Navbar from '../components/Navbar'; // This is for a navbar from my individual if I knew how Michael was making his
 const Registration = () => {
     // This is some boiler plate for the Registration page
@@ -154,13 +155,13 @@ const Registration = () => {
   /* The React Code Section BELOW  */
   //
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-blue-100'>
+    <div className={registrationStyles.background}>
       {/* Logo Section FIXED */}
       <div className="absolute top-0 left-0 bg-blue-600 px-4 py-2 rounded-br-md shadow-md">
         <img src={Logo} alt="Smart Eatz Logo" className="h-10" />
       </div>
       {!roleChosen && (
-        <div className='bg-white p-6 rounded-xl shadow-lg text-center'>
+        <div className={registrationStyles.central_sections}>
           <h2 className='text-xl font-semibold'>Please Choose Your Role</h2>
           <p className='text-gray-500 text-sm'>
             Select one of the 3 options below
@@ -178,11 +179,11 @@ const Registration = () => {
               <button
                 key={role}
                 onClick={() => handleRoleClick(role)}
-                className={`w-32 h-32 flex flex-col items-center justify-center p-4 rounded-lg shadow-md border-2 transition ${
-                  selectedRole === role
-                    ? `border-${color}-500 shadow-lg`
-                    : 'border-gray-300'
-                }`}
+                className={`w-32 h-32 flex flex-col items-center justify-center p-4 rounded-lg shadow-md border-2 transition
+                  ${selectedRole === role ? `border-${color}-500 shadow-lg` : 'border-gray-300'}
+                  ${color === 'blue' && 'hover:border-blue-500'}
+                  ${color === 'red' && 'hover:border-red-500'}
+                  ${color === 'green' && 'hover:border-green-500'}`}
               >
                 <div className='text-4xl'>{icon}</div>
                 <p className='mt-2 font-medium'>{role}</p>
@@ -197,17 +198,17 @@ const Registration = () => {
           </p>
         </div>
       )}
-      {roleChosen && (<div className='bg-white p-6 rounded-xl shadow-lg text-center'>
+      {roleChosen && (<div className={registrationStyles.central_sections}>
         {selectedRole === "Patient" && (
-            <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
-              <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Patient Registration</h1>
+            <div className={registrationStyles.user_divs}>
+              <h1 className={registrationStyles.userh1}>Patient Registration</h1>
               {/* Name */}
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+              <div className={registrationStyles.input_div_1}>
+                <div className={registrationStyles.input_div_2}>
                   <input
                     type="text"
                     placeholder="FIRST NAME"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    className={registrationStyles.input}
                     required
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
@@ -215,7 +216,7 @@ const Registration = () => {
                   <input
                     type="text"
                     placeholder="LAST NAME"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    className={registrationStyles.input}
                     required
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
@@ -223,35 +224,35 @@ const Registration = () => {
                 </div>
               </div>
               {/* Email */}
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+              <div className={registrationStyles.input_div_1}>
+                <div className={registrationStyles.input_div_2}>
                   <input
                       type="text"
                       placeholder="EMAIL"
-                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      className={registrationStyles.input}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
               </div>
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+              <div className={registrationStyles.input_div_1}>
+                <div className={registrationStyles.input_div_2}>
                   <input
                       type="text"
                       placeholder="PASSWORD"
-                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      className={registrationStyles.input}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>
               {/* */}
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+              <div className={registrationStyles.input_div_1}>
+                <div className={registrationStyles.input_div_2}>
                   <input
                     type="text"
                     placeholder="ADDRESS"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    className={registrationStyles.input}
                     required
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
@@ -259,7 +260,7 @@ const Registration = () => {
                   <input
                     type="text"
                     placeholder="ZIP CODE"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    className={registrationStyles.input}
                     required
                     value={zipcode}
                     onChange={(e) => setZipCode(e.target.value)}
@@ -267,46 +268,38 @@ const Registration = () => {
                 </div>
               </div>
               {/* */}
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+              <div className={registrationStyles.input_div_1}>
+                <div className={registrationStyles.input_div_2}>
                   <input
                     type="text"
                     placeholder="PHONE NUMBER"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    className={registrationStyles.input}
                     required
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
               </div>
-              {/* 
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  
-                </div>
-              </div>
-              */}
-              <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition" onClick={() => regPatient()}>
+              <button type="submit" className={registrationStyles.register_button} onClick={() => regPatient()}>
                 REGISTER
               </button>
               <div className="mt-4 mb-4 w-full">
-              <button className="w-full bg-gray-200 text-blue-600 font-semibold py-2 rounded hover:bg-gray-300 transition" onClick={handleRoleReset}>
+              <button className={registrationStyles.go_back_button} onClick={handleRoleReset}>
                 Go Back
               </button>
               </div>
             </div>
         )}
         {selectedRole === "Doctor" && (
-            <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
-              <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Doctor Registration</h1>
-              <div className="mb-4 w-full">
-                
-                {/* */}
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+            <div className={registrationStyles.user_divs}>
+              <h1 className={registrationStyles.userh1}>Doctor Registration</h1>
+              {/* Name */}
+              <div className={registrationStyles.input_div_1}>
+                <div className={registrationStyles.input_div_2}>
                   <input
                     type="text"
                     placeholder="FIRST NAME"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    className={registrationStyles.input}
                     required
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
@@ -314,7 +307,7 @@ const Registration = () => {
                   <input
                     type="text"
                     placeholder="LAST NAME"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    className={registrationStyles.input}
                     required
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
@@ -322,35 +315,35 @@ const Registration = () => {
                 </div>
               </div>
               {/* Email */}
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+              <div className={registrationStyles.input_div_1}>
+                <div className={registrationStyles.input_div_2}>
                   <input
                       type="text"
                       placeholder="EMAIL"
-                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      className={registrationStyles.input}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
               </div>
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+              <div className={registrationStyles.input_div_1}>
+                <div className={registrationStyles.input_div_2}>
                   <input
                       type="text"
                       placeholder="PASSWORD"
-                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      className={registrationStyles.input}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>
               {/* */}
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+              <div className={registrationStyles.input_div_1}>
+                <div className={registrationStyles.input_div_2}>
                   <input
                     type="text"
                     placeholder="ADDRESS"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    className={registrationStyles.input}
                     required
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
@@ -358,7 +351,7 @@ const Registration = () => {
                   <input
                     type="text"
                     placeholder="ZIP CODE"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    className={registrationStyles.input}
                     required
                     value={zipcode}
                     onChange={(e) => setZipCode(e.target.value)}
@@ -366,32 +359,25 @@ const Registration = () => {
                 </div>
               </div>
               {/* */}
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+              <div className={registrationStyles.input_div_1}>
+                <div className={registrationStyles.input_div_2}>
                   <input
                     type="text"
                     placeholder="PHONE NUMBER"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    className={registrationStyles.input}
                     required
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
               </div>
-              {/* 
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  
-                </div>
-              </div>
-              */}
               {/* */}
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+              <div className={registrationStyles.input_div_1}>
+                <div className={registrationStyles.input_div_2}>
                   <input
                     type="text"
                     placeholder="LICENCE NUMBER"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    className={registrationStyles.input}
                     required
                     value={licenseNumber}
                     onChange={(e) => setLicenseNumber(e.target.value)}
@@ -399,38 +385,39 @@ const Registration = () => {
                 </div>
               </div>
               {/* */}
-              <div className="mb-4 w-full">
-                <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+              <div className={registrationStyles.input_div_1}>
+                <div className={registrationStyles.input_div_2}>
                   <input
                     type="text"
                     placeholder="SSN"
-                    className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                    className={registrationStyles.input}
                     required
                     value={ssn}
                     onChange={(e) => setSSN(e.target.value)}
                   />
                 </div>
               </div>
-              <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition" onClick={() => regDoctor()}>
+              {/* Buttons */}
+              <button type="submit" className={registrationStyles.register_button} onClick={() => regDoctor()}>
                 REGISTER
               </button>
               <div className="mt-4 mb-4 w-full">
-              <button className="w-full bg-gray-200 text-blue-600 font-semibold py-2 rounded hover:bg-gray-300 transition" onClick={handleRoleReset}>
+              <button className={registrationStyles.go_back_button} onClick={handleRoleReset}>
                 Go Back
               </button>
               </div>
             </div>
         )}
         {selectedRole === "Pharmacist" && (
-            <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
-              <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Pharmacy Registration</h1>
-                <div className="mb-4 w-full">
-                  {/* Name */}
-                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+            <div className={registrationStyles.user_divs}>
+              <h1 className={registrationStyles.userh1}>Pharmacy Registration</h1>
+                {/* Name */}
+                <div className={registrationStyles.input_div_1}>
+                  <div className={registrationStyles.input_div_2}>
                     <input
                       type="text"
                       placeholder="NAME"
-                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      className={registrationStyles.input}
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -438,12 +425,12 @@ const Registration = () => {
                   </div>
                 </div>
                 {/* Email */}
-                <div className="mb-4 w-full">
-                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                <div className={registrationStyles.input_div_1}>
+                  <div className={registrationStyles.input_div_2}>
                     <input
                       type="email"
                       placeholder="EMAIL"
-                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      className={registrationStyles.input}
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -451,12 +438,12 @@ const Registration = () => {
                   </div>
                 </div>
                 {/* Password */}
-                <div className="mb-4 w-full">
-                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                <div className={registrationStyles.input_div_1}>
+                  <div className={registrationStyles.input_div_2}>
                     <input
                       type="text"
                       placeholder="PASSWORD"
-                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      className={registrationStyles.input}
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -464,12 +451,12 @@ const Registration = () => {
                   </div>
                 </div>
                 {/* */}
-                <div className="mb-4 w-full">
-                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                <div className={registrationStyles.input_div_1}>
+                  <div className={registrationStyles.input_div_2}>
                     <input
                       type="text"
                       placeholder="ADDRESS"
-                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      className={registrationStyles.input}
                       required
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
@@ -477,7 +464,7 @@ const Registration = () => {
                     <input
                       type="text"
                       placeholder="ZIP CODE"
-                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      className={registrationStyles.input}
                       required
                       value={zipcode}
                       onChange={(e) => setZipCode(e.target.value)}
@@ -485,41 +472,37 @@ const Registration = () => {
                   </div>
                 </div>
                 {/* */}
-                <div className="mb-4 w-full">
-                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                <div className={registrationStyles.input_div_1}>
+                  <div className={registrationStyles.input_div_2}>
                     <input
                       type="text"
                       placeholder="PHONE NUMBER"
-                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      className={registrationStyles.input}
                       required
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
                     />
                   </div>
               </div>
-                {/* 
-                <div className="mb-4 w-full">
-                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
-                  </div>
-                </div>*/}
                 {/* */}
-                <div className="mb-4 w-full">
-                  <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
+                <div className={registrationStyles.input_div_1}>
+                  <div className={registrationStyles.input_div_2}>
                     <input
                       type="text"
                       placeholder="LISCENCE NUMBER"
-                      className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
+                      className={registrationStyles.input}
                       required
                       value={licenseNumber}
                       onChange={(e) => setLicenseNumber(e.target.value)}
                     />
                   </div>
                 </div>
-                <button type='submit' className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition" onClick={() => regPharmacy()}>
+                {/* Buttons */}
+                <button type='submit' className={registrationStyles.register_button} onClick={() => regPharmacy()}>
                   REGISTER
                 </button>
               <div className="mt-4 mb-4 w-full">
-              <button className="w-full bg-gray-200 text-blue-600 font-semibold py-2 rounded hover:bg-gray-300 transition" onClick={handleRoleReset}>
+              <button className={registrationStyles.go_back_button} onClick={handleRoleReset}>
                 Go Back
               </button>
               </div>

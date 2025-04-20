@@ -1,4 +1,4 @@
-
+// Just a list of the longer and very common tailwind css in payment page
 export const paymentStyles = {
     background: "min-h-screen bg-[#d8eafe] flex items-center justify-center p-4",
     card: "bg-white rounded-lg shadow-md p-8 w-full max-w-md relative",
