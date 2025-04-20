@@ -17,6 +17,9 @@ function DoctorDashboard() {
     const [updateMessage, setUpdateMessage] = useState('');
     const [showUpdatePopup, setShowUpdatePopup] = useState(false);
 
+    // inside DoctorDashboard()
+    const [activeChatAppointment, setActiveChatAppointment] = useState(null);
+
     // Function to fetch appointments
     const fetchAppointments = () => {
         fetch(`http://localhost:5000/api/doctor-dashboard/appointments?user_id=${user_id}`)
@@ -111,7 +114,7 @@ function DoctorDashboard() {
         if (activeTab === "dashboard") {
             return (
                 <div>
-                    <h3>Scheduled Appointments</h3>
+                    <h3>Requested Appointments</h3>
                     <div className="appointments-container">
                         {appointments.map(app => (
                             <div key={app.appointment_id} className="appointment-card">
@@ -139,21 +142,52 @@ function DoctorDashboard() {
                 </div>
             );
         } else if (activeTab === "appointments") {
+            if (activeChatAppointment) {
+                return (
+                    <div>
+                        <button onClick={() => setActiveChatAppointment(null)}>
+                            ← Back to Appointments
+                        </button>
+                        <ChatWindow
+                            doctorId={doctorDetails.doctor_id}
+                            patientId={activeChatAppointment.patient_id}
+                            isDoctor={true}
+                        />
+                    </div>
+                );
+            }
             return (
                 <div>
                     <h3>Appointment History</h3>
+
                     <div>
                         <h4>Accepted Appointments</h4>
                         <div className="appointments-container">
                             {acceptedAppointments.length > 0 ? (
-                                acceptedAppointments.map(app => (
-                                    <div key={app.appointment_id} className="appointment-card">
-                                        <h5>Appointment #{app.appointment_id}</h5>
-                                        <p><strong>Patient ID:</strong> {app.patient_id}</p>
-                                        <p><strong>Date/Time:</strong> {app.appointment_time}</p>
-                                        <p><strong>Status:</strong> {app.status}</p>
-                                    </div>
-                                ))
+                                acceptedAppointments.map(app => {
+                                    const apptDate    = new Date(app.appointment_time);
+                                    const now         = new Date();
+                                    const diffMs      = apptDate - now;
+                                    const isStartable = diffMs >= -30  * 60 * 1000 && diffMs <= 15 * 60 * 1000;
+
+                                    return (
+                                        <div key={app.appointment_id} className="appointment-card">
+                                            <h5>Appointment #{app.appointment_id}</h5>
+                                            <p><strong>Patient ID:</strong> {app.patient_id}</p>
+                                            <p><strong>Date/Time:</strong> {apptDate.toLocaleString()}</p>
+                                            <p><strong>Status:</strong> {app.status}</p>
+
+                                            {isStartable && (
+                                                <button
+                                                    className="start-appointment-button"
+                                                    onClick={() => setActiveChatAppointment(app)}
+                                                >
+                                                    Start Appointment
+                                                </button>
+                                            )}
+                                        </div>
+                                    );
+                                })
                             ) : (
                                 <p>No accepted appointments.</p>
                             )}
