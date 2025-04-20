@@ -128,3 +128,17 @@
 .start-appointment-button:hover {
     background-color: #218838;
 }
+
+.end-appointment-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+.end-appointment-button:hover {
+    background-color: #c82333;
+}

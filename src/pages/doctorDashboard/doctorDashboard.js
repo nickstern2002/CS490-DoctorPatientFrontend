@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './doctorDashboard.css';
 import Logo from '../../Assets/Logo/logo.png';
 import ChatWindow from '../../Components/ChatWindow';
+import {useNavigate} from "react-router-dom";
 
 function DoctorDashboard() {
     const storedUser = localStorage.getItem('user');
@@ -19,6 +20,8 @@ function DoctorDashboard() {
 
     // inside DoctorDashboard()
     const [activeChatAppointment, setActiveChatAppointment] = useState(null);
+
+    const navigate = useNavigate();
 
     // Function to fetch appointments
     const fetchAppointments = () => {
@@ -86,6 +89,36 @@ function DoctorDashboard() {
             .catch(error => console.error('Error fetching doctor details:', error));
     }, [user_id]);
 
+    const handleEndAppointment = async () => {
+        const apptId = activeChatAppointment.appointment_id;
+        try {
+            // 1) Mark completed in DB
+            await fetch('http://localhost:5000/api/doctor-dashboard/appointments/complete', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ appointment_id: apptId }),
+            });
+
+            // 2) Notify patient via chat
+            await fetch('http://localhost:5000/api/chat/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    doctor_id: doctorDetails.doctor_id,
+                    patient_id: activeChatAppointment.patient_id,
+                    sender_type: 'doctor',
+                    message: 'The appointment has ended.',
+                }),
+            });
+
+            // 3) Redirect to post‑appointment placeholder
+            navigate('/post-appointment');
+        } catch (err) {
+            console.error('❌ Error ending appointment:', err);
+            alert('Could not end appointment. Please try again.');
+        }
+    };
+
     // Function to respond to an appointment
     const respondAppointment = (appointment_id, accepted) => {
         fetch('http://localhost:5000/api/doctor-dashboard/appointments/respond', {
@@ -142,12 +175,19 @@ function DoctorDashboard() {
                 </div>
             );
         } else if (activeTab === "appointments") {
-            if (activeChatAppointment) {
+            if (activeTab === "appointments" && activeChatAppointment) {
                 return (
                     <div>
                         <button onClick={() => setActiveChatAppointment(null)}>
                             ← Back to Appointments
                         </button>
+                        <button
+                            className="end-appointment-button"
+                            onClick={handleEndAppointment}
+                        >
+                            End Appointment
+                        </button>
+
                         <ChatWindow
                             doctorId={doctorDetails.doctor_id}
                             patientId={activeChatAppointment.patient_id}
