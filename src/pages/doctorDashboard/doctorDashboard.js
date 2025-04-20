@@ -3,6 +3,7 @@ import './doctorDashboard.css';
 import Logo from '../../Assets/Logo/logo.png';
 import ChatWindow from '../../Components/ChatWindow';
 import {useNavigate} from "react-router-dom";
+import ChatHistory from "../../Components/ChatHistory";
 
 function DoctorDashboard() {
     const storedUser = localStorage.getItem('user');
@@ -302,16 +303,19 @@ function DoctorDashboard() {
                 </div>
             );
         }
-        else if (activeTab === "chat") {
+        else if (activeTab === "chat-history") {
             return (
-              <div>
-                <h3>Doctor-Patient Chat</h3>
-                {doctorDetails && (
-                  <ChatWindow doctorId={doctorDetails.doctor_id} />
-                )}
-              </div>
+                <div>
+                    <h3>Chat History</h3>
+                    {doctorDetails && (
+                        <ChatHistory
+                            doctorId={doctorDetails.doctor_id}
+                            isDoctor={true}
+                        />
+                    )}
+                </div>
             );
-          }
+        }
     };
 
     return (
@@ -349,7 +353,7 @@ function DoctorDashboard() {
                         <li>
                             <button onClick={() => setActiveTab("payments")}>Payments</button>
                         </li>
-                        <li><button onClick={() => setActiveTab("chat")}>Chat</button></li>
+                        <li><button onClick={() => setActiveTab("chat-history")}>Chat History</button></li>
 
                     </ul>
                 </nav>
