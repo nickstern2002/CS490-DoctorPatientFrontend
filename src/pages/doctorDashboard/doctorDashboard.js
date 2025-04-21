@@ -108,8 +108,9 @@ function DoctorDashboard() {
                 body: JSON.stringify({
                     doctor_id: doctorDetails.doctor_id,
                     patient_id: activeChatAppointment.patient_id,
+                    appointment_id: apptId,
                     sender_type: 'doctor',
-                    message: 'The appointment has ended.',
+                    message: '__APPOINTMENT_ENDED__',
                 }),
             });
 
@@ -199,6 +200,7 @@ function DoctorDashboard() {
                         <ChatWindow
                             doctorId={doctorDetails.doctor_id}
                             patientId={activeChatAppointment.patient_id}
+                            appointmentId={activeChatAppointment.appointment_id}
                             isDoctor={true}
                         />
                     </div>

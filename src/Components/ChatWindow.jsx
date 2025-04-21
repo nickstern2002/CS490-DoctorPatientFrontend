@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function ChatWindow({ doctorId, patientId, isDoctor }) {
+function ChatWindow({ doctorId, patientId, appointmentId, isDoctor }) {
   // Are both sides “locked in”?
   const fixedParticipants = Boolean(doctorId && patientId);
+
+  const navigate = useNavigate();
 
   // targetId only matters when fixed===false
   const [targetId, setTargetId] = useState('');
@@ -20,12 +23,30 @@ function ChatWindow({ doctorId, patientId, isDoctor }) {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
 
+    // Redirects Patient when
+    useEffect(() => {
+        if (!isDoctor && appointmentId && messages.length > 0) {
+            const ended = messages.some(
+                msg => msg.sender_type === 'doctor'
+                    && msg.message === '__APPOINTMENT_ENDED__'
+            );
+            if (ended) {
+                navigate('/patient-post-appointment', {
+                    state: { appointment_id: appointmentId,
+                        doctor_id: doctorId,
+                        patient_id: patientId,
+                    }
+                });
+            }
+        }
+    }, [messages, isDoctor, appointmentId, doctorId, patientId, navigate]);
+
   // Fetch the chat history
   const fetchMessages = async () => {
     if (!resolvedDoctorId || !resolvedPatientId) return;
     try {
       const res = await fetch(
-          `http://localhost:5000/api/chat/history?doctor_id=${resolvedDoctorId}&patient_id=${resolvedPatientId}`
+          `http://localhost:5000/api/chat/history?doctor_id=${resolvedDoctorId}&patient_id=${resolvedPatientId}&appointment_id=${appointmentId}`
       );
       const data = await res.json();
       setMessages(Array.isArray(data) ? data : []);
@@ -36,7 +57,7 @@ function ChatWindow({ doctorId, patientId, isDoctor }) {
 
   // Send a new message
   const sendMessage = async () => {
-    if (!input.trim() || !resolvedDoctorId || !resolvedPatientId) return;
+    if (!input.trim() || !resolvedDoctorId || !resolvedPatientId || !appointmentId) return;
     try {
       await fetch('http://localhost:5000/api/chat/send', {
         method: 'POST',
@@ -44,6 +65,7 @@ function ChatWindow({ doctorId, patientId, isDoctor }) {
         body: JSON.stringify({
           doctor_id: resolvedDoctorId,
           patient_id: resolvedPatientId,
+          appointment_id: appointmentId,
           sender_type: isDoctor ? 'doctor' : 'patient',
           message: input.trim(),
         }),
@@ -57,12 +79,12 @@ function ChatWindow({ doctorId, patientId, isDoctor }) {
 
   // Poll every 3s once we have both IDs
   useEffect(() => {
-    if (!resolvedDoctorId || !resolvedPatientId) return;
+    if (!resolvedDoctorId || !resolvedPatientId || !appointmentId) return;
 
     fetchMessages();
     const iv = setInterval(fetchMessages, 3000);
     return () => clearInterval(iv);
-  }, [resolvedDoctorId, resolvedPatientId]);
+  }, [resolvedDoctorId, resolvedPatientId, appointmentId]);
 
   return (
       <div style={{ padding: '1rem', border: '1px solid #ccc' }}>

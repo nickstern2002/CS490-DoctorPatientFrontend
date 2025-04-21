@@ -307,6 +307,8 @@ function PatientDashboard() {
                         <ChatWindow
                             doctorId={activeChatAppointment.doctor_id}
                             patientId={patientDetails.patient_id}
+                            appointmentId={activeChatAppointment.appointment_id}
+                            isDoctor={false}
                         />
                     </div>
                 );
