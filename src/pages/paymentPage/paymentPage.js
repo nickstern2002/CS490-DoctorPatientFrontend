@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect}  from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { paymentStyles } from './paymentStyles';
+import Footer from '../../Components/Footer/Footer';
 
 const PaymentPage = () => {
   //for navigating to the landing page

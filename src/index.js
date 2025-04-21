@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 //import { BrowserRouter } from 'react-router-dom';
 import './index.css';
-import LandingPage from './pages/landingPage';
-import LoginPage from './pages/login'
-import RegistrationPage from './pages/registration'
+import LandingPage from './pages/LandingPage/landingPage';
+import LoginPage from './pages/Login/login'
+import RegistrationPage from './pages/Registration/registration'
 import PatientPage from './pages/patientDashboard/patientDashboard'
 import DoctorPage from './pages/doctorDashboard/doctorDashboard'
 import PaymentPage from './pages/paymentPage/paymentPage'

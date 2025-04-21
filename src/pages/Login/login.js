@@ -1,8 +1,9 @@
 // Login.js
+import Footer from '../../Components/Footer/Footer';
 import React from 'react'
 import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
-import Logo from '../Assets/Logo/logo.png';
+import Logo from '../../Assets/Logo/logo.png';
 //import Navbar from '../components/Navbar'; // This is for a navbar if I knew how Michael was making his
 const Login = () => {
  // This is some boiler plate for the login page
@@ -66,18 +67,20 @@ const Login = () => {
     }
 };
 
- //
+
 
   return (
-    <div className="flex justify-center items-center h-screen bg-[#d8eafe]">
-      <div className="w-full max-w-sm">
-        {/* Logo Section FIXED */}
-        <div className="absolute top-0 left-0 bg-blue-600 px-4 py-2 rounded-br-md shadow-md">
-          <img src={Logo} alt="Smart Eatz Logo" className="h-10" />
-        </div>
-        {/* Login Form */}
-        <div className="bg-transparent p-8 rounded-lg flex flex-col items-center">
-            {/* Username Input */}
+    <div className="flex flex-col min-h-screen bg-[#d8eafe] relative">
+      {/* Logo */}
+      <div className="fixed top-0 left-0 bg-[#2a8eed] px-4 py-2 rounded-br-md shadow-md z-50">
+        <img src={Logo} alt="Smart Eatz Logo" className="h-10" />
+      </div>
+
+      {/* Main login content */}
+      <div className="flex-grow flex justify-center items-center">
+        <div className="w-full max-w-sm">
+          <div className="bg-transparent p-8 rounded-lg flex flex-col items-center mt-12">
+            {/* Email input */}
             <div className="mb-4 w-full">
               <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                 <span className="mr-2">📷</span>
@@ -93,7 +96,7 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Password Input */}
+            {/* Password input */}
             <div className="mb-4 w-full">
               <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                 <span className="mr-2">🔒</span>
@@ -109,23 +112,37 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Login Button */}
-            <button type="submit" className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition" disabled={loading} onClick={() => LoginUser(userName, passWord)}>
-            {loading ? 'Logging in...' : 'LOGIN'}
+            {/* Login button */}
+            <button
+              type="submit"
+              className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition"
+              disabled={loading}
+              onClick={() => LoginUser(userName, passWord)}
+            >
+              {loading ? 'Logging in...' : 'LOGIN'}
             </button>
-          {/* Login Error Fade in */}
-          {error && <p className="mt-2 text-red-600 shadow-md animate-fadeIn">{error}</p>}  { /*Display error message that fades after a bit */}
-          {/* Now Return to Landing Page */}
-          {/* WAS Forgot Password Link: Forgot password? */}
-          <p>
-            <Link to={"/"} className="text-sm text-black mt-4 cursor-pointer hover:underline" >
-              Return to Home Page
-            </Link>
-          </p>
+
+            {/* Error message */}
+            {error && (
+              <p className="mt-2 text-red-600 shadow-md animate-fadeIn">
+                {error}
+              </p>
+            )}
+
+            {/* Return home */}
+            <p>
+              <Link to="/" className="text-sm text-black mt-4 cursor-pointer hover:underline">
+                Return to Home Page
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
+
+      {/* Footer component */}
+        <Footer />
     </div>
-  )
+  );
 }
 
 export default Login

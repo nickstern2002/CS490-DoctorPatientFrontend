@@ -4,6 +4,7 @@ import Logo from '../../Assets/Logo/logo.png';
 import ChatWindow from '../../Components/ChatWindow';
 import {useNavigate} from "react-router-dom";
 import ChatHistory from "../../Components/ChatHistory";
+import Footer from '../../Components/Footer/Footer';
 
 function DoctorDashboard() {
     const storedUser = localStorage.getItem('user');
@@ -325,67 +326,61 @@ function DoctorDashboard() {
     };
 
     return (
-        <div style={{ backgroundColor: 'white', minHeight: '100vh' }}>
-            {/* Top Bar */}
-            <header className="top-bar">
-                <img src={Logo} alt="Smart Eatz Logo" style={{ height: '50px' }} />
-                <h2>Doctor Dashboard</h2>
-                <div className="doctor-details">
-                    {doctorDetails ? (
-                        <p style={{ margin: 0 }}>
-                            Dr. {doctorDetails.first_name} {doctorDetails.last_name}<br />
-                            DoctorID: {doctorDetails.doctor_id}
-                        </p>
-                    ) : (
-                        <p>Loading...</p>
-                    )}
-                </div>
-            </header>
-
-            {/* Main container with sidebar and data plane */}
-            <div style={{ display: 'flex' }}>
-                {/* Sidebar */}
-                <nav className="side-bar">
-                    <ul>
-                        <li>
-                            <button onClick={() => setActiveTab("dashboard")}>Dashboard</button>
-                        </li>
-                        <li>
-                            <button onClick={() => setActiveTab("appointments")}>Appointments</button>
-                        </li>
-                        <li>
-                            <button onClick={() => setActiveTab("meal-plans")}>Official Meal Plans</button>
-                        </li>
-                        <li>
-                            <button onClick={() => setActiveTab("payments")}>Payments</button>
-                        </li>
-                        <li><button onClick={() => setActiveTab("chat-history")}>Chat History</button></li>
-
-                    </ul>
-                </nav>
-
-                {/* Data Plane */}
-                <main style={{ flex: 1, padding: '1rem' }}>
-                    {renderDashboardData()}
-                </main>
+        <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'white' }}>
+          {/* Top Bar */}
+          <header className="top-bar">
+            <img src={Logo} alt="Smart Eatz Logo" style={{ height: '50px' }} />
+            <h2 className="dashboard-heading">Doctor Dashboard</h2>
+            <div className="doctor-details">
+              {doctorDetails ? (
+                <p style={{ margin: 0 }}>
+                  Dr. {doctorDetails.first_name} {doctorDetails.last_name}<br />
+                  Doctor ID : {doctorDetails.doctor_id}
+                </p>
+              ) : (
+                <p>Loading...</p>
+              )}
             </div>
-            {/* Update Popup Modal */}
-            {showUpdatePopup && (
-                <div className="modal-overlay">
-                    <div className="modal">
-                        <p>{updateMessage}</p>
-                        <button onClick={() => {
-                            setShowUpdatePopup(false);
-                            // Refresh the appointments so the updated one is removed from scheduled list.
-                            fetchAppointments();
-                        }}>
-                            Confirm
-                        </button>
-                    </div>
-                </div>
-            )}
+          </header>
+      
+          {/* Main container with sidebar and data */}
+          <div className="flex-grow" style={{ display: 'flex' }}>
+            {/* Sidebar */}
+            <nav className="side-bar">
+              <ul>
+                <li><button onClick={() => setActiveTab("dashboard")}>Dashboard</button></li>
+                <li><button onClick={() => setActiveTab("appointments")}>Appointments</button></li>
+                <li><button onClick={() => setActiveTab("meal-plans")}>Official Meal Plans</button></li>
+                <li><button onClick={() => setActiveTab("payments")}>Payments</button></li>
+                <li><button onClick={() => setActiveTab("chat-history")}>Chat History</button></li>
+              </ul>
+            </nav>
+      
+            {/* Data Plane */}
+            <main style={{ flex: 1, padding: '1rem' }}>
+              {renderDashboardData()}
+            </main>
+          </div>
+      
+          {/* Update Popup Modal */}
+          {showUpdatePopup && (
+            <div className="modal-overlay">
+              <div className="modal">
+                <p>{updateMessage}</p>
+                <button onClick={() => {
+                  setShowUpdatePopup(false);
+                  fetchAppointments(); // refresh list
+                }}>
+                  Confirm
+                </button>
+              </div>
+            </div>
+          )}
+      
+          {/* ✅ Footer at bottom */}
+          <Footer />
         </div>
-    );
+      );
 }
 
 export default DoctorDashboard;

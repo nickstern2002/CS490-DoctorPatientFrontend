@@ -1,8 +1,9 @@
 // Registration.js
+import Footer from '../../Components/Footer/Footer';
 import React from 'react'
 import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
-import Logo from '../Assets/Logo/logo.png';
+import Logo from '../../Assets/Logo/logo.png';
 import { registrationStyles } from './registrationStyles.js';
 //import Navbar from '../components/Navbar'; // This is for a navbar from my individual if I knew how Michael was making his
 const Registration = () => {
@@ -156,8 +157,8 @@ const Registration = () => {
   //
   return (
     <div className={registrationStyles.background}>
-      {/* Logo Section FIXED */}
-      <div className="absolute top-0 left-0 bg-blue-600 px-4 py-2 rounded-br-md shadow-md">
+      {/* Logo Section */}
+      <div className="fixed top-0 left-0 bg-[#2a8eed] px-4 py-2 rounded-br-md shadow-md z-50">
         <img src={Logo} alt="Smart Eatz Logo" className="h-10" />
       </div>
       {!roleChosen && (
@@ -191,9 +192,10 @@ const Registration = () => {
             ))}
           </div>
           {/* Now Return to Landing Page */}
-          <p>
-            <Link to={"/"} className="text-sm text-black mt-4 cursor-pointer hover:underline" >
-              Return to Home Page
+          <p className="text-sm mt-2 text-center">
+            Already have an account?{' '}
+            <Link to="/login" className="text-blue-700 underline hover:text-blue-900">
+              Log In
             </Link>
           </p>
         </div>
@@ -288,6 +290,12 @@ const Registration = () => {
                 Go Back
               </button>
               </div>
+              <p className="text-sm mt-2 text-center">
+                Already have an account?{' '}
+                <Link to="/login" className="text-blue-700 underline hover:text-blue-900">
+                  Log In
+                </Link>
+              </p>
             </div>
         )}
         {selectedRole === "Doctor" && (
@@ -406,6 +414,12 @@ const Registration = () => {
                 Go Back
               </button>
               </div>
+              <p className="text-sm mt-2 text-center">
+                Already have an account?{' '}
+                <Link to="/login" className="text-blue-700 underline hover:text-blue-900">
+                  Log In
+                </Link>
+              </p>
             </div>
         )}
         {selectedRole === "Pharmacist" && (
@@ -506,12 +520,18 @@ const Registration = () => {
                 Go Back
               </button>
               </div>
+              <p className="text-sm mt-2 text-center">
+                Already have an account?{' '}
+                <Link to="/login" className="text-blue-700 underline hover:text-blue-900">
+                  Log In
+                </Link>
+              </p>
             </div>
         )}
       </div>
       )}
-      <footer className='absolute bottom-0 w-full bg-blue-600 text-white text-center p-2'>
-        Smart Eatz &copy; 2025 All Rights Reserved
+      <footer className='absolute bottom-0 left-0 w-full'>
+        <Footer />
       </footer>
     </div>
   )

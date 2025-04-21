@@ -1,4 +1,5 @@
 import './HeroSection.css';
+import { Link } from 'react-router-dom';
 import HeroImage from '../../Assets/Landing/Hero.png';
 
 function HeroSection() {
@@ -8,7 +9,7 @@ function HeroSection() {
         <div className="hero-text">
           <h1>Find The Best Doctor For <span className="highlight">YOU</span></h1>
           <p>Use <strong>Smart EatZ</strong> to connect with qualified doctors who care about your health.</p>
-          <button className="hero-btn">Get Started</button>
+          <li><Link to="/signup" className="hero-btn">Get Started</Link></li>
         </div>
 
         <div className="hero-image">
