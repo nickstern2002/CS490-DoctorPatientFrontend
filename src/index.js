@@ -14,6 +14,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import PostAppointmentReview from "./pages/patientDashboard/PostAppointment";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
     path: "/post-appointment",
     element: <PostAppointmentPage />,
   },
+  {
+    path: "/patient-post-appointment",
+    element: <PostAppointmentReview/>
+  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
