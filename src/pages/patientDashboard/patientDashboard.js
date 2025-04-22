@@ -6,6 +6,7 @@ import CalorieChart from "./CalorieChart";
 import {useNavigate} from "react-router-dom";
 import ChatWindow from '../../Components/ChatWindow';
 import Footer from '../../Components/Footer/Footer';
+import DashboardTopBar from '../../Components/DashboardTopBar/DashboardTopBar';
 
 import Logo from '../../Assets/Logo/logo.png';
 import ChatHistory from "../../Components/ChatHistory";
@@ -21,6 +22,9 @@ function PatientDashboard() {
     const [doctorResults, setDoctorResults] = useState([]);
     const [showBookingModal, setShowBookingModal] = useState(false);
     const [selectedDoctorId, setSelectedDoctorId] = useState(null);
+
+    // Dark Mode
+    const isDark = localStorage.getItem('dashboardDarkMode') === 'true';
 
     // Additional state for booking confirmation popup
     const [bookingMessage] = useState('');
@@ -533,60 +537,49 @@ function PatientDashboard() {
     };
 
     return (
-        <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'white' }}>
-          {/* Top Bar */}
-          <header className="top-bar">
-            <img src={Logo} alt="Smart Eatz Logo" style={{ height: '50px' }} />
-            <h2 className="dashboard-heading">Patient Dashboard</h2>
-            <div className="patient-details">
-              {patientDetails ? (
-                <p style={{ margin: 0 }}>
-                  {patientDetails.first_name} {patientDetails.last_name}<br />
-                  Patient ID : {patientDetails.patient_id}
-                </p>
-              ) : (
-                <p>Loading...</p>
-              )}
+        <div className={`dashboard-root ${isDark ? 'dark-mode' : ''}`}>
+            <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'white' }}>
+            {/* Top Bar */}
+            <DashboardTopBar />
+        
+            {/* Main content with sidebar and data */}
+            <div className="flex-grow flex main-container">
+                {/* Sidebar */}
+                <nav className="side-bar">
+                <ul>
+                    <li><button onClick={() => setActiveTab("dashboard")}>Dashboard</button></li>
+                    <li><button onClick={() => setActiveTab("appointments")}>Appointments</button></li>
+                    <li><button onClick={() => setActiveTab("metrics")}>Metrics</button></li>
+                    <li><button onClick={() => setActiveTab("payments")}>Payments</button></li>
+                    <li><button onClick={() => setActiveTab("chat-history")}>Chat History</button></li>
+                </ul>
+                </nav>
+        
+                {/* Data Panel */}
+                <main className="data-plane">
+                {renderDashboardData()}
+                </main>
             </div>
-          </header>
-      
-          {/* Main content with sidebar and data */}
-          <div className="flex-grow flex main-container">
-            {/* Sidebar */}
-            <nav className="side-bar">
-              <ul>
-                <li><button onClick={() => setActiveTab("dashboard")}>Dashboard</button></li>
-                <li><button onClick={() => setActiveTab("appointments")}>Appointments</button></li>
-                <li><button onClick={() => setActiveTab("metrics")}>Metrics</button></li>
-                <li><button onClick={() => setActiveTab("payments")}>Payments</button></li>
-                <li><button onClick={() => setActiveTab("chat-history")}>Chat History</button></li>
-              </ul>
-            </nav>
-      
-            {/* Data Panel */}
-            <main className="data-plane">
-              {renderDashboardData()}
-            </main>
-          </div>
-      
-          {/* Modals */}
-          {showBookingModal && (
-            <BookAppointmentModal
-              onBook={bookAppointment}
-              onClose={() => setShowBookingModal(false)}
-            />
-          )}
-          {showBookingPopup && (
-            <div className="modal-overlay">
-              <div className="modal">
-                <p>{bookingMessage}</p>
-                <button onClick={() => setShowBookingPopup(false)}>Confirm</button>
-              </div>
+        
+            {/* Modals */}
+            {showBookingModal && (
+                <BookAppointmentModal
+                onBook={bookAppointment}
+                onClose={() => setShowBookingModal(false)}
+                />
+            )}
+            {showBookingPopup && (
+                <div className="modal-overlay">
+                <div className="modal">
+                    <p>{bookingMessage}</p>
+                    <button onClick={() => setShowBookingPopup(false)}>Confirm</button>
+                </div>
+                </div>
+            )}
+        
+            {/* ✅ Sticky Footer at bottom */}
+            <Footer />
             </div>
-          )}
-      
-          {/* ✅ Sticky Footer at bottom */}
-          <Footer />
         </div>
       );
 }

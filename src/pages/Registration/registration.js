@@ -198,6 +198,12 @@ const Registration = () => {
               Log In
             </Link>
           </p>
+          {/* Return home */}
+          <p>
+            <Link to="/" className="text-sm text-black mt-4 cursor-pointer hover:underline">
+              Return to Home Page
+            </Link>
+          </p>
         </div>
       )}
       {roleChosen && (<div className={registrationStyles.central_sections}>
@@ -296,6 +302,12 @@ const Registration = () => {
                   Log In
                 </Link>
               </p>
+              {/* Return home */}
+              <p>
+                  <Link to="/" className="text-sm text-black mt-4 cursor-pointer hover:underline">
+                    Return to Home Page
+                  </Link>
+                </p>
             </div>
         )}
         {selectedRole === "Doctor" && (
@@ -420,6 +432,12 @@ const Registration = () => {
                   Log In
                 </Link>
               </p>
+              {/* Return home */}
+              <p>
+                  <Link to="/" className="text-sm text-black mt-4 cursor-pointer hover:underline">
+                    Return to Home Page
+                  </Link>
+                </p>
             </div>
         )}
         {selectedRole === "Pharmacist" && (
@@ -526,6 +544,12 @@ const Registration = () => {
                   Log In
                 </Link>
               </p>
+              {/* Return home */}
+                <p>
+                  <Link to="/" className="text-sm text-black mt-4 cursor-pointer hover:underline">
+                    Return to Home Page
+                  </Link>
+                </p>
             </div>
         )}
       </div>
