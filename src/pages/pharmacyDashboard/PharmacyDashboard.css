@@ -1,0 +1,180 @@
+/* Top Bar */
+.top-bar {
+    background-color: #2a8eed;
+    color: white;
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pharmacy-details {
+    margin-right: 1rem;
+    text-align: right;
+}
+
+/* Main container */
+.main-container {
+    display: flex;
+}
+
+/* Sidebar */
+.side-bar {
+    width: 200px;
+    background-color: #f0f0f0;
+    padding: 1rem;
+}
+
+.side-bar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.side-bar li {
+    margin-bottom: 1rem;
+}
+
+.side-bar button {
+    width: 100%;
+    padding: 0.5rem;
+    border: none;
+    background-color: #21a3bd;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Data Plane */
+.data-plane {
+    flex: 1;
+    padding: 1rem;
+}
+
+/* Patients Billing List */
+.patients-billing-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.patients-billing-card {
+    border: 2px solid #21a3bd;
+    border-radius: 8px;
+    padding: 1rem;
+    width: 300px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Drug Refill Requests */
+.drug-refill-requests {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.drug-refill-requests > div {
+    border: 2px solid #21a3bd;
+    border-radius: 8px;
+    padding: 1rem;
+    width: 300px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.request-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.respond-request-btn {
+    background-color: #21a3bd;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.respond-request-btn:hover {
+    background-color: #1a87a3;
+}
+
+/* Drug Inventory */
+.drug-inventory {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.drug-inventory-list {
+    border: 2px solid #21a3bd;
+    border-radius: 8px;
+    padding: 1rem;
+    width: 300px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.drug-inventory-list input[type="number"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.add-inventory {
+    width: 100%;
+    padding: 0.5rem;
+    border: none;
+    background-color: #21a3bd;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-inventory:hover {
+    background-color: #1a87a3;
+}
+
+/* Payments */
+.payments-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.payment-card {
+    border: 2px solid #21a3bd;
+    border-radius: 8px;
+    padding: 1rem;
+    width: 300px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Styling */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
