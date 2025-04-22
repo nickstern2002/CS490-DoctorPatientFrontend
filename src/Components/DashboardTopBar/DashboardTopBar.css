@@ -1,0 +1,162 @@
+.dashboard-header {
+    background-color: #2a8eed;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+  
+  .logo {
+    font-weight: bold;
+    font-size: 1.3rem;
+  }
+  
+  .dashboard-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .profile-container {
+    position: relative;
+  }
+  
+  .profile-avatar {
+    background-color: #ffffff33;
+    border-radius: 9999px;
+    width: 40px;
+    height: 40px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .profile-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: white;
+    color: #333;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #00000030;
+    z-index: 50;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
+    align-items: flex-start;
+  }
+  
+  .dropdown-button {
+    padding: 6px 12px;
+    background-color: #f0f0f0;
+    color: #333;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+  }
+  
+  .dropdown-button:hover {
+    background-color: #ddd;
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .modal-content {
+    background-color: white;
+    color: #333;
+    padding: 20px;
+    border-radius: 12px;
+    width: 300px;
+    max-width: 90%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: 2px solid #2a8eed;
+  }
+
+  .modal-buttons {
+    display: flex;
+    justify-content: flex-start; 
+    gap: 10px; 
+    margin-top: 1rem;
+  }
+  
+  .modal-btn {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  /* Save button styling */
+  .save-btn {
+    background-color: #2a8eed;
+    color: white;
+  }
+  
+  .save-btn:hover {
+    background-color: #1d6fc1;
+  }
+  
+  /* Cancel button styling */
+  .cancel-btn {
+    background-color: #eee;
+    color: #333;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #ddd;
+  }
+
+  .account-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+  
+  .account-field label {
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  
+  .account-field input {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+
+  .logout-button {
+    padding: 8px 12px;
+    background-color: #e53935;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+    width: 100%;
+  }
+  
+  .logout-button:hover {
+    background-color: #c62828;
+  }

@@ -1,15 +1,36 @@
-/* Top Bar */
-.top-bar {
-    background-color: #2a8eed;
-    color: white;
-    padding: 1rem;
-    width: 100%;
-    box-sizing: border-box;
+/* ✅ Theme Variables */
+.dashboard-root {
+    --bg-color: white;
+    --text-color: black;
+    --panel-bg: #f0f0f0;
+    --card-border: #2a8eed;
+  }
+  
+  .dashboard-root.dark-mode {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --panel-bg: #1e1e1e;
+    --card-border: #007b9f;
+  }
+  
+  /* ✅ Apply Variables */
+  body,
+  .dashboard-root,
+  .data-plane {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
+  .top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
+    padding: 1rem;
+    background-color: var(--card-border);
+    color: var(--text-color);
+    border-bottom: 2px solid var(--card-border);
+  }
+  
 /* Optional: Styling for the patient details on the top bar */
 .patient-details {
     margin-right: 1rem;

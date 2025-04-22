@@ -1,3 +1,26 @@
+/* ✅ Theme Variables */
+.dashboard-root {
+    --bg-color: white;
+    --text-color: black;
+    --panel-bg: #f0f0f0;
+    --card-border: #21a3bd;
+  }
+  
+  .dashboard-root.dark-mode {
+    --bg-color: #121212;
+    --text-color: #f0f0f0;
+    --panel-bg: #1e1e1e;
+    --card-border: #007b9f;
+  }
+  
+  /* 🔁 Apply dark mode vars */
+  body,
+  .dashboard-root,
+  .data-plane {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+
 .top-bar {
     background-color: #2a8eed;
     color: white;
