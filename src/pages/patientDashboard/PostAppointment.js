@@ -12,7 +12,18 @@ export default function PostAppointmentReview() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitting(true);
-        const res = await fetch('/api/ratings/rate_doctor', {
+
+        const payload = {
+            patient_id,
+            doctor_id,
+            appointment_id,
+            rating: parseFloat(rating),  // now guaranteed to be a number
+            review
+        };
+
+        console.log('⏩ POST rate_doctor payload:', payload);
+
+        const res = await fetch('http://localhost:5000/api/post-appointment/ratings/rate_doctor', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({ patient_id, doctor_id, appointment_id, rating, review })
