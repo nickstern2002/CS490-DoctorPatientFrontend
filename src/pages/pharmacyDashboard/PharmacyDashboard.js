@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './PharmacyDashboard.css';
+import DashboardTopBar from '../../Components/DashboardTopBar/DashboardTopBar';
 
-function PharmacyDashboard() {
+function PharmacyPage() {
     const storedUser = localStorage.getItem('user');
     const user = storedUser ? JSON.parse(storedUser) : null;
     const user_id = user ? user.user_id : null;
@@ -23,18 +24,18 @@ function PharmacyDashboard() {
     const [drugResults, setDrugResults] = useState([]);
     */
     const [showUpdatePopup, setShowUpdatePopup] = useState(false);
-
+    
     useEffect(() => {
-        fetch(`http://localhost:5000/api/pharmacy-dashboard/details?user_id=${user_id}`)
+        fetch(`http://localhost:5000/api/pharmacy/details?user_id=${user_id}`)
             .then(response => response.json())
             .then(data => {
-                if (data.pharmacy) {
-                    setPharmacyDetails(data.pharmacy);
+                if (data.doctor) {
+                    setPharmacyDetails(data.doctor);
                 }
             })
             .catch(error => console.error('Error fetching pharmacy details:', error));
     }, [user_id]);
-    
+
     useEffect(() => {
         if (activeTab === "dashboard") {
             fetch(`http://localhost:5000/api/pharmacy/logs`)
@@ -307,22 +308,9 @@ function PharmacyDashboard() {
         }
     };
     return (
-        <div style={{ backgroundColor: 'white', minHeight: '100vh' }}>
+        <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'white' }}>
             {/* Top Bar */}
-            <header className="top-bar">
-                <h1>Smart Eatz</h1>
-                <h2>Pharmacy Dashboard</h2>
-                <div className="pharmacy-details">
-                    {pharmacyDetails ? (
-                        <p style={{ margin: 0 }}>
-                            {pharmacyDetails.name}<br />
-                            PharmacyID: {pharmacyDetails.pharmacy_id}
-                        </p>
-                    ) : (
-                        <p>Loading...</p>
-                    )}
-                </div>
-            </header>
+            <DashboardTopBar />
 
             {/* Main container with sidebar and data plane */}
             <div style={{ display: 'flex' }}>
@@ -361,4 +349,4 @@ function PharmacyDashboard() {
     );
 };
 
-export default PharmacyDashboard;
+export default PharmacyPage;
