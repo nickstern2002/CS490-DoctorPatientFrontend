@@ -251,6 +251,7 @@ const PaymentPage = () => {
               CARDHOLDER NAME
             </label>
             <input
+              id="text-in"
               type="text"
               required
               value={cardName}
@@ -265,6 +266,7 @@ const PaymentPage = () => {
             </label>
             <div className="flex items-center border-b border-gray-400">
               <input
+                id="text-in"
                 type="text"
                 required
                 value={cardNumber}
@@ -281,6 +283,7 @@ const PaymentPage = () => {
                 EXPIRATION DATE (MM/YY)
               </label>
               <input
+                id="text-in"
                 type="text"
                 required
                 value={exdDate}
@@ -294,6 +297,7 @@ const PaymentPage = () => {
               </label>
               <div className="flex items-center border-b border-gray-400">
                 <input
+                  id="text-in"
                   type="text"
                   required
                   value={cvv}
@@ -314,6 +318,7 @@ const PaymentPage = () => {
           </div>
           */}
           <button
+            id="pay-btn"
             type="submit"
             className={paymentStyles.buttonsubmit}
             onClick={attemptPayment}
@@ -321,7 +326,7 @@ const PaymentPage = () => {
             Pay Now
           </button>
         </form>
-        <button className={paymentStyles.buttonleave} onClick={returnToLastPlace}>
+        <button id="back-btn" className={paymentStyles.buttonleave} onClick={returnToLastPlace}>
           Go Back
         </button>
       </div>

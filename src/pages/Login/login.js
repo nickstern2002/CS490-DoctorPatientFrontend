@@ -85,6 +85,7 @@ const Login = () => {
               <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                 <span className="mr-2">📷</span>
                 <input
+                  id="email-field"
                   type="email"
                   placeholder="EMAIL"
                   className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
@@ -101,6 +102,7 @@ const Login = () => {
               <div className="flex items-center border border-gray-500 rounded-md p-2 bg-white">
                 <span className="mr-2">🔒</span>
                 <input
+                  id="password-field"
                   type="password"
                   placeholder="PASSWORD"
                   className="w-full outline-none bg-white text-gray-700 placeholder-gray-500"
@@ -114,6 +116,7 @@ const Login = () => {
 
             {/* Login button */}
             <button
+              id="login-btn"
               type="submit"
               className="w-full bg-white text-blue-600 font-semibold py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-100 transition"
               disabled={loading}
@@ -131,7 +134,7 @@ const Login = () => {
 
             {/* Return home */}
             <p>
-              <Link to="/" className="text-sm text-black mt-4 cursor-pointer hover:underline">
+              <Link to="/" id="return-btn" className="text-sm text-black mt-4 cursor-pointer hover:underline">
                 Return to Home Page
               </Link>
             </p>

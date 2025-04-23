@@ -178,6 +178,7 @@ const Registration = () => {
               { role: 'Pharmacist', icon: '💊', color: 'green' },
             ].map(({ role, icon, color }) => (
               <button
+                id="users-btn"
                 key={role}
                 onClick={() => handleRoleClick(role)}
                 className={`w-32 h-32 flex flex-col items-center justify-center p-4 rounded-lg shadow-md border-2 transition
@@ -214,6 +215,7 @@ const Registration = () => {
               <div className={registrationStyles.input_div_1}>
                 <div className={registrationStyles.input_div_2}>
                   <input
+                    id="text-in"
                     type="text"
                     placeholder="FIRST NAME"
                     className={registrationStyles.input}
@@ -222,6 +224,7 @@ const Registration = () => {
                     onChange={(e) => setFirstName(e.target.value)}
                   />
                   <input
+                    id="text-in"
                     type="text"
                     placeholder="LAST NAME"
                     className={registrationStyles.input}
@@ -235,22 +238,24 @@ const Registration = () => {
               <div className={registrationStyles.input_div_1}>
                 <div className={registrationStyles.input_div_2}>
                   <input
-                      type="text"
-                      placeholder="EMAIL"
-                      className={registrationStyles.input}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                    id="text-in"
+                    type="text"
+                    placeholder="EMAIL"
+                    className={registrationStyles.input}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
               </div>
               <div className={registrationStyles.input_div_1}>
                 <div className={registrationStyles.input_div_2}>
                   <input
-                      type="text"
-                      placeholder="PASSWORD"
-                      className={registrationStyles.input}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                    id="text-in"
+                    type="text"
+                    placeholder="PASSWORD"
+                    className={registrationStyles.input}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>
@@ -258,6 +263,7 @@ const Registration = () => {
               <div className={registrationStyles.input_div_1}>
                 <div className={registrationStyles.input_div_2}>
                   <input
+                    id="text-in"
                     type="text"
                     placeholder="ADDRESS"
                     className={registrationStyles.input}
@@ -266,6 +272,7 @@ const Registration = () => {
                     onChange={(e) => setAddress(e.target.value)}
                   />
                   <input
+                    id="text-in"
                     type="text"
                     placeholder="ZIP CODE"
                     className={registrationStyles.input}
@@ -279,6 +286,7 @@ const Registration = () => {
               <div className={registrationStyles.input_div_1}>
                 <div className={registrationStyles.input_div_2}>
                   <input
+                    id="text-in"
                     type="text"
                     placeholder="PHONE NUMBER"
                     className={registrationStyles.input}
@@ -288,11 +296,11 @@ const Registration = () => {
                   />
                 </div>
               </div>
-              <button type="submit" className={registrationStyles.register_button} onClick={() => regPatient()}>
+              <button id="reg-btn" type="submit" className={registrationStyles.register_button} onClick={() => regPatient()}>
                 REGISTER
               </button>
               <div className="mt-4 mb-4 w-full">
-              <button className={registrationStyles.go_back_button} onClick={handleRoleReset}>
+              <button id="back-btn" className={registrationStyles.go_back_button} onClick={handleRoleReset}>
                 Go Back
               </button>
               </div>
@@ -317,6 +325,7 @@ const Registration = () => {
               <div className={registrationStyles.input_div_1}>
                 <div className={registrationStyles.input_div_2}>
                   <input
+                    id="text-in"
                     type="text"
                     placeholder="FIRST NAME"
                     className={registrationStyles.input}
@@ -325,6 +334,7 @@ const Registration = () => {
                     onChange={(e) => setFirstName(e.target.value)}
                   />
                   <input
+                    id="text-in"
                     type="text"
                     placeholder="LAST NAME"
                     className={registrationStyles.input}
@@ -338,6 +348,7 @@ const Registration = () => {
               <div className={registrationStyles.input_div_1}>
                 <div className={registrationStyles.input_div_2}>
                   <input
+                      id="text-in"
                       type="text"
                       placeholder="EMAIL"
                       className={registrationStyles.input}
@@ -349,6 +360,7 @@ const Registration = () => {
               <div className={registrationStyles.input_div_1}>
                 <div className={registrationStyles.input_div_2}>
                   <input
+                      id="text-in"
                       type="text"
                       placeholder="PASSWORD"
                       className={registrationStyles.input}
@@ -361,6 +373,7 @@ const Registration = () => {
               <div className={registrationStyles.input_div_1}>
                 <div className={registrationStyles.input_div_2}>
                   <input
+                    id="text-in"
                     type="text"
                     placeholder="ADDRESS"
                     className={registrationStyles.input}
@@ -369,6 +382,7 @@ const Registration = () => {
                     onChange={(e) => setAddress(e.target.value)}
                   />
                   <input
+                    id="text-in"
                     type="text"
                     placeholder="ZIP CODE"
                     className={registrationStyles.input}
@@ -382,6 +396,7 @@ const Registration = () => {
               <div className={registrationStyles.input_div_1}>
                 <div className={registrationStyles.input_div_2}>
                   <input
+                    id="text-in"
                     type="text"
                     placeholder="PHONE NUMBER"
                     className={registrationStyles.input}
@@ -395,6 +410,7 @@ const Registration = () => {
               <div className={registrationStyles.input_div_1}>
                 <div className={registrationStyles.input_div_2}>
                   <input
+                    id="text-in"
                     type="text"
                     placeholder="LICENCE NUMBER"
                     className={registrationStyles.input}
@@ -408,6 +424,7 @@ const Registration = () => {
               <div className={registrationStyles.input_div_1}>
                 <div className={registrationStyles.input_div_2}>
                   <input
+                    id="text-in"
                     type="text"
                     placeholder="SSN"
                     className={registrationStyles.input}
@@ -418,11 +435,11 @@ const Registration = () => {
                 </div>
               </div>
               {/* Buttons */}
-              <button type="submit" className={registrationStyles.register_button} onClick={() => regDoctor()}>
+              <button id="reg-btn" type="submit" className={registrationStyles.register_button} onClick={() => regDoctor()}>
                 REGISTER
               </button>
               <div className="mt-4 mb-4 w-full">
-              <button className={registrationStyles.go_back_button} onClick={handleRoleReset}>
+              <button id="back-btn" className={registrationStyles.go_back_button} onClick={handleRoleReset}>
                 Go Back
               </button>
               </div>
@@ -447,6 +464,7 @@ const Registration = () => {
                 <div className={registrationStyles.input_div_1}>
                   <div className={registrationStyles.input_div_2}>
                     <input
+                      id="text-in"
                       type="text"
                       placeholder="NAME"
                       className={registrationStyles.input}
@@ -460,6 +478,7 @@ const Registration = () => {
                 <div className={registrationStyles.input_div_1}>
                   <div className={registrationStyles.input_div_2}>
                     <input
+                      id="text-in"
                       type="email"
                       placeholder="EMAIL"
                       className={registrationStyles.input}
@@ -473,6 +492,7 @@ const Registration = () => {
                 <div className={registrationStyles.input_div_1}>
                   <div className={registrationStyles.input_div_2}>
                     <input
+                      id="text-in"
                       type="text"
                       placeholder="PASSWORD"
                       className={registrationStyles.input}
@@ -486,6 +506,7 @@ const Registration = () => {
                 <div className={registrationStyles.input_div_1}>
                   <div className={registrationStyles.input_div_2}>
                     <input
+                      id="text-in"
                       type="text"
                       placeholder="ADDRESS"
                       className={registrationStyles.input}
@@ -494,6 +515,7 @@ const Registration = () => {
                       onChange={(e) => setAddress(e.target.value)}
                     />
                     <input
+                      id="text-in"
                       type="text"
                       placeholder="ZIP CODE"
                       className={registrationStyles.input}
@@ -507,6 +529,7 @@ const Registration = () => {
                 <div className={registrationStyles.input_div_1}>
                   <div className={registrationStyles.input_div_2}>
                     <input
+                      id="text-in"
                       type="text"
                       placeholder="PHONE NUMBER"
                       className={registrationStyles.input}
@@ -520,6 +543,7 @@ const Registration = () => {
                 <div className={registrationStyles.input_div_1}>
                   <div className={registrationStyles.input_div_2}>
                     <input
+                      id="text-in"
                       type="text"
                       placeholder="LISCENCE NUMBER"
                       className={registrationStyles.input}
@@ -530,11 +554,11 @@ const Registration = () => {
                   </div>
                 </div>
                 {/* Buttons */}
-                <button type='submit' className={registrationStyles.register_button} onClick={() => regPharmacy()}>
+                <button id="reg-btn" type='submit' className={registrationStyles.register_button} onClick={() => regPharmacy()}>
                   REGISTER
                 </button>
               <div className="mt-4 mb-4 w-full">
-              <button className={registrationStyles.go_back_button} onClick={handleRoleReset}>
+              <button id="back-btn" className={registrationStyles.go_back_button} onClick={handleRoleReset}>
                 Go Back
               </button>
               </div>
