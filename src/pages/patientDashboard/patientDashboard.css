@@ -1,4 +1,19 @@
 /* ✅ Theme Variables */
+:root {
+    --bg-color: white;
+    --text-color: black;
+    --panel-bg: #f0f0f0;
+    --card-border: #21a3bd;
+    --sidebar-hover: #d0f0f7;
+  }
+  
+  :root.dark-mode {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --panel-bg: #1e1e1e;
+    --card-border: #4fc3f7;
+    --sidebar-hover: #3ac1dd;
+  }
 .dashboard-root {
     --bg-color: white;
     --text-color: black;
@@ -45,7 +60,7 @@
 /* Sidebar */
 .side-bar {
     width: 200px;
-    background-color: #f0f0f0;
+    background-color: var(--panel-bg);
     padding: 1rem;
 }
 
@@ -69,6 +84,17 @@
     cursor: pointer;
 }
 
+.side-bar button:hover {
+    background-color: var(--sidebar-hover); /* Slightly darker/lighter */
+  }
+
+  .side-bar button.active-tab {
+    background-color: var(--card-border);
+    color: var(--text-color);
+    font-weight: bold;
+    border: 2px solid var(--text-color);
+  }
+
 /* Data Plane */
 .data-plane {
     flex: 1;
@@ -85,8 +111,10 @@
 .search-form input {
     flex: 1;
     padding: 0.5rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--card-border);
     border-radius: 4px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 .search-form button {
@@ -106,7 +134,9 @@
 }
 
 .doctor-card {
-    border: 2px solid #21a3bd !important;
+    border: 2px solid var(--card-border) !important;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     border-radius: 8px !important;
     padding: 1rem !important;
     width: 300px !important;
@@ -127,6 +157,54 @@
 .doctor-card button:hover {
     background-color: #1a87a3;
 }
+
+/* Mealplans */
+.mealplans-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 1rem;
+  }
+  
+  .meal-card {
+    flex: 1 1 300px;
+    max-width: 350px;
+    border: 2px solid #22b8cf;
+    padding: 12px;
+    border-radius: 10px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .meal-card h4 {
+    margin: 0;
+  }
+  
+  .delete-button {
+    background-color: #e03131;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  .delete-button:hover {
+    background-color: #c92a2a;
+  }
+
+  .meal-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+
+  
 
 /* Payments Container */
 .payments-container {
@@ -193,7 +271,9 @@
     z-index: 1000;
 }
 .modal {
-    background: white;
+    background-color: var(--bg-color) !important;
+    color: var(--text-color);                
+    border: 1px solid var(--card-border);    
     padding: 1.5rem;
     border-radius: 8px;
     width: 320px;
@@ -207,8 +287,10 @@
     width: 100%;
     padding: 0.4rem;
     margin-top: 0.2rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--card-border);
     border-radius: 4px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 .modal-actions {
     display: flex;
@@ -224,10 +306,11 @@
 }
 .modal-actions button:first-child {
     background-color: #2a9d8f;
-    color: white;
+    color: var(--bg-color);
 }
 .modal-actions button:last-child {
-    background-color: #ccc;
+    background-color: var(--panel-bg);
+    color: var(--text-color);
 }
 
 .fulfill-button {

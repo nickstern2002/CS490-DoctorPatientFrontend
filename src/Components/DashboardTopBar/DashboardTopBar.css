@@ -38,8 +38,8 @@
     position: absolute;
     top: 50px;
     right: 0;
-    background-color: white;
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     padding: 12px;
     border-radius: 8px;
     box-shadow: 0 0 10px #00000030;
@@ -47,15 +47,15 @@
     min-width: 180px;
     display: flex;
     flex-direction: column;
-    gap: 10px; 
+    gap: 10px;
     align-items: flex-start;
   }
   
   .dropdown-button {
     padding: 6px 12px;
-    background-color: #f0f0f0;
-    color: #333;
-    border: none;
+    background-color: var(--panel-bg);
+    color: var(--text-color);
+    border: 1px solid var(--card-border);
     border-radius: 6px;
     cursor: pointer;
     width: 100%;
@@ -64,7 +64,7 @@
   }
   
   .dropdown-button:hover {
-    background-color: #ddd;
+    background-color: var(--card-border);
   }
   
   .modal-overlay {
@@ -81,14 +81,14 @@
   }
   
   .modal-content {
-    background-color: white;
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     padding: 20px;
     border-radius: 12px;
     width: 300px;
     max-width: 90%;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    border: 2px solid #2a8eed;
+    border: 2px solid var(--card-border);
   }
 
   .modal-buttons {
@@ -96,6 +96,15 @@
     justify-content: flex-start; 
     gap: 10px; 
     margin-top: 1rem;
+  }
+
+  .account-field input {
+    padding: 6px 10px;
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: var(--bg-color);
+    color: var(--text-color);
   }
   
   .modal-btn {

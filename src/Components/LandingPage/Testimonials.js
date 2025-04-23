@@ -26,7 +26,7 @@ function Testimonials() {
           </div>
           <h3>Donald Trump</h3>
           <p>
-            Nobody does health like Smart EatZ believe me. I've seen lots of doctors, great doctors, dumb doctos, but the ones on Smart EatZ? They're the best. Maybe the greatest doctors of all time
+            Nobody does health like Smart EatZ believe me. I've seen lots of doctors, great doctors, dumb doctors, but the ones on Smart EatZ? They're the best. Maybe the greatest doctors of all time
           </p>
         </div>
 

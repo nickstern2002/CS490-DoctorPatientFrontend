@@ -26,6 +26,10 @@ function PatientDashboard() {
     // Dark Mode
     const isDark = localStorage.getItem('dashboardDarkMode') === 'true';
 
+    useEffect(() => {
+        document.documentElement.classList.toggle("dark-mode", isDark);
+      }, [isDark]);
+    
     // Additional state for booking confirmation popup
     const [bookingMessage] = useState('');
     const [showBookingPopup, setShowBookingPopup] = useState(false);
@@ -54,6 +58,115 @@ function PatientDashboard() {
         setSelectedDoctorId(doctor_id);
         setShowBookingModal(true);
     };
+
+    // Mealplan state and modal logic
+    const [showMealplanModal, setShowMealplanModal] = useState(false);
+
+    const [mealplanData, setMealplanData] = useState({
+        title: '',
+        description: '',
+        instructions: '',
+        ingredients: '',
+        calories: '',
+        fat: '',
+        sugar: '',
+        image: null
+    });
+    
+    const [selectedMeal, setSelectedMeal] = useState(null);
+    const [showMealModal, setShowMealModal] = useState(false);
+    const openMealModal = (plan) => {
+        setSelectedMeal(plan);
+        setShowMealModal(true);
+      };
+
+    const handleMealplanChange = (e) => {
+        const { name, value, files } = e.target;
+        setMealplanData(prev => ({
+            ...prev,
+            [name]: files ? files[0] : value
+        }));
+    };
+
+    const submitMealplan = async () => {
+        if (!user_id) return alert("User not found.");
+        if (!mealplanData.title.trim()) return alert("Title is required!");
+    
+        const payload = new FormData();
+        payload.append('user_id', user_id);
+    
+        for (let key in mealplanData) {
+            if (mealplanData[key]) {
+                payload.append(key, mealplanData[key]);
+            }
+        }
+    
+        try {
+            const response = await fetch('http://localhost:5000/api/patient-dashboard/mealplans/patient/create', {
+                method: 'POST',
+                body: payload
+            });
+    
+            const result = await response.json();
+            if (response.ok) {
+                alert("Mealplan created successfully!");
+                setShowMealplanModal(false);
+                fetchMealplans(); // Refresh list
+            } else {
+                alert("Error: " + result.error);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("An error occurred. See console.");
+        }
+    };
+
+    // Fetches mealplans
+    const [mealplans, setMealplans] = useState([]);
+
+    const fetchMealplans = async () => {
+        if (!user_id) return;
+    
+        try {
+            const response = await fetch(`http://localhost:5000/api/patient-dashboard/mealplans/patient/all?user_id=${user_id}`);
+            const data = await response.json();
+            if (response.ok) {
+                setMealplans(data.mealplans || []);
+            } else {
+                console.error("Error fetching mealplans:", data.error);
+            }
+        } catch (err) {
+            console.error("Fetch failed:", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchMealplans();
+    }, []);
+
+    // Deletes Meal Plans
+    const deleteMealplan = async (meal_plan_id) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this meal plan?");
+        if (!confirmDelete) return;
+    
+        try {
+            const response = await fetch(`http://localhost:5000/api/patient-dashboard/mealplans/delete/${meal_plan_id}`, {
+                method: 'DELETE'
+            });
+    
+            const result = await response.json();
+            if (response.ok) {
+                alert("Meal plan deleted successfully.");
+                fetchMealplans(); // Refresh the list
+            } else {
+                alert("Error: " + result.error);
+            }
+        } catch (err) {
+            console.error("Delete failed:", err);
+            alert("An error occurred.");
+        }
+    };
+
 
     // Modal visibility
     const [showMetricsModal, setShowMetricsModal] = useState(false);
@@ -299,7 +412,114 @@ function PatientDashboard() {
                             <p>No results found.</p>
                         )}
                     </div>
-                </div>
+
+                    {/* Mealplan Section */}
+                    <div style={{ marginTop: '2rem' }}>
+                        <h3>Mealplans</h3>
+                        <button className="submit-metrics-button" onClick={() => setShowMealplanModal(true)}>
+                            Create Mealplan
+                        </button>
+                    </div>
+
+                    {showMealplanModal && (
+                        <div className="modal-overlay">
+                            <div className="modal">
+                                <h4>Enter Mealplan Info</h4>
+                                <label>Title
+                                    <input type="text" name="title" value={mealplanData.title} onChange={handleMealplanChange} />
+                                </label>
+                                <label>Description
+                                    <input type="text" name="description" value={mealplanData.description} onChange={handleMealplanChange} />
+                                </label>
+                                <label>Instructions
+                                    <input type="text" name="instructions" value={mealplanData.instructions} onChange={handleMealplanChange} />
+                                </label>
+                                <label>Ingredients
+                                    <input type="text" name="ingredients" value={mealplanData.ingredients} onChange={handleMealplanChange} />
+                                </label>
+                                <label>Calories
+                                    <input type="number" name="calories" value={mealplanData.calories} onChange={handleMealplanChange} />
+                                </label>
+                                <label>Fat
+                                    <input type="number" name="fat" value={mealplanData.fat} onChange={handleMealplanChange} />
+                                </label>
+                                <label>Sugar
+                                    <input type="number" name="sugar" value={mealplanData.sugar} onChange={handleMealplanChange} />
+                                </label>
+                                <label>Image
+                                    <input type="file" name="image" onChange={handleMealplanChange} />
+                                </label>
+                                <div className="modal-actions">
+                                    <button onClick={submitMealplan}>Submit</button>
+                                    <button onClick={() => setShowMealplanModal(false)}>Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                     <div style={{ marginTop: '2rem' }}>
+                        <h4>Your Mealplans</h4>
+                        {mealplans.length > 0 ? (
+                            <div className="mealplans-wrapper">
+                            {mealplans.map(plan => (
+                                <div
+                                key={plan.meal_plan_id}
+                                className="meal-card"
+                                onClick={() => openMealModal(plan)}
+                                style={{ cursor: 'pointer' }}
+                                >
+                                {plan.image && (
+                                    <img
+                                    src={`data:image/jpeg;base64,${plan.image}`}
+                                    alt={plan.title}
+                                    className="meal-image"
+                                    />
+                                )}
+                                <div className="meal-card-header">
+                                    <h4>{plan.title}</h4>
+                                </div>
+                                </div>
+                            ))}
+                            </div>
+                        ) : (
+                            <p>No mealplans yet.</p>
+                        )}
+
+                        {/* ✅ Modal */}
+                        {showMealModal && selectedMeal && (
+                            <div className="modal-overlay" onClick={() => setShowMealModal(false)}>
+                            <div className="modal" onClick={(e) => e.stopPropagation()}>
+                                {selectedMeal.image && (
+                                <img
+                                    src={`data:image/jpeg;base64,${selectedMeal.image}`}
+                                    alt={selectedMeal.title}
+                                    className="meal-image"
+                                />
+                                )}
+                                <h3>{selectedMeal.title}</h3>
+                                <p><strong>Description:</strong> {selectedMeal.description}</p>
+                                <p><strong>Ingredients:</strong> {selectedMeal.ingredients}</p>
+                                <p><strong>Instructions:</strong> {selectedMeal.instructions}</p>
+                                <p><strong>Calories:</strong> {selectedMeal.calories}</p>
+                                <p><strong>Fat:</strong> {selectedMeal.fat}</p>
+                                <p><strong>Sugar:</strong> {selectedMeal.sugar}</p>
+
+                                <button
+                                className="delete-button"
+                                onClick={() => {
+                                    deleteMealplan(selectedMeal.meal_plan_id);
+                                    setShowMealModal(false);
+                                }}
+                                >
+                                Delete
+                                </button>
+                                <button className="close-button" onClick={() => setShowMealModal(false)}>
+                                Close
+                                </button>
+                            </div>
+                            </div>
+                        )}
+                        </div>
+                    </div>
             );
         } else if (activeTab === "appointments") {
             if (activeChatAppointment) {
@@ -540,7 +760,7 @@ function PatientDashboard() {
 
     return (
         <div className={`dashboard-root ${isDark ? 'dark-mode' : ''}`}>
-            <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'white' }}>
+            <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'var(--bg-color)', color: 'var(--text-color)' }}>
             {/* Top Bar */}
             <DashboardTopBar />
         
@@ -549,11 +769,46 @@ function PatientDashboard() {
                 {/* Sidebar */}
                 <nav className="side-bar">
                 <ul>
-                    <li><button onClick={() => setActiveTab("dashboard")}>Dashboard</button></li>
-                    <li><button onClick={() => setActiveTab("appointments")}>Appointments</button></li>
-                    <li><button onClick={() => setActiveTab("metrics")}>Metrics</button></li>
-                    <li><button onClick={() => setActiveTab("payments")}>Payments</button></li>
-                    <li><button onClick={() => setActiveTab("chat-history")}>Chat History</button></li>
+                    <li>
+                    <button
+                        className={activeTab === "dashboard" ? "active-tab" : ""}
+                        onClick={() => setActiveTab("dashboard")}
+                    >
+                        Dashboard
+                    </button>
+                    </li>
+                    <li>
+                    <button
+                        className={activeTab === "appointments" ? "active-tab" : ""}
+                        onClick={() => setActiveTab("appointments")}
+                    >
+                        Appointments
+                    </button>
+                    </li>
+                    <li>
+                    <button
+                        className={activeTab === "metrics" ? "active-tab" : ""}
+                        onClick={() => setActiveTab("metrics")}
+                    >
+                        Metrics
+                    </button>
+                    </li>
+                    <li>
+                    <button
+                        className={activeTab === "payments" ? "active-tab" : ""}
+                        onClick={() => setActiveTab("payments")}
+                    >
+                        Payments
+                    </button>
+                    </li>
+                    <li>
+                    <button
+                        className={activeTab === "chat-history" ? "active-tab" : ""}
+                        onClick={() => setActiveTab("chat-history")}
+                    >
+                        Chat History
+                    </button>
+                    </li>
                 </ul>
                 </nav>
         
