@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Logo from '../../Assets/Logo/logo.png'; // Adjust path if needed
 import './DashboardTopBar.css';
 
@@ -14,7 +14,9 @@ function DashboardTopBar() {
     address: '',
     phone_number: ''
   });
-  const navigate = useNavigate();
+  // Set Preferred Pharmacy
+  const [preferredPharmacy, setPreferredPharmacy] = useState(null); // New state
+
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -25,8 +27,18 @@ function DashboardTopBar() {
         body: JSON.stringify(storedUser)
       })
         .then(res => res.json())
-        .then(data => setUserInfo(data))
-        .catch(err => console.error('Error fetching user info:', err));
+          .then(data => {
+            setUserInfo(data);
+
+            // 2) If the logged-in user is a patient, fetch their preferred pharmacy
+            if (storedUser.user_type === 'patient') {
+              fetch(`http://localhost:5000/api/patient-dashboard/preferred_pharmacy?user_id=${storedUser.user_id}`)
+                  .then(r => r.json())
+                  .then(pharm => setPreferredPharmacy(pharm))
+                  .catch(err => console.error('Error loading preferred pharmacy:', err));
+            }
+          })
+          .catch(err => console.error('Error fetching user info:', err));
     }
 
     const root = document.querySelector('.dashboard-root');
@@ -89,6 +101,15 @@ function DashboardTopBar() {
       <h2 className="dashboard-title">
         {getDashboardTitle()}
       </h2>
+
+      {/* Only show for patients once we have the preferred pharmacy */}
+      {JSON.parse(localStorage.getItem('user')).user_type === 'patient' && preferredPharmacy && (
+          <div className="preferred-pharmacy-bar">
+            <div>Preferred Pharmacy:&nbsp;</div>
+            <strong>{preferredPharmacy.name}</strong>
+            <div className="zip">({preferredPharmacy.zip_code})</div>
+          </div>
+      )}
 
       {userInfo && (
         <div className="profile-container">

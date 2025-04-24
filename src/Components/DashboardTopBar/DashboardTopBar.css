@@ -169,3 +169,16 @@
   .logout-button:hover {
     background-color: #c62828;
   }
+
+.preferred-pharmacy-bar {
+  background: #2a8eed;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-top: 1px solid #2a8eed;
+  text-align: center;
+}
+
+.preferred-pharmacy-bar .zip {
+  color: #e3e3e3;
+  font-size: 0.85em;
+}
