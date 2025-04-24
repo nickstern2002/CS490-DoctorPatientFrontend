@@ -107,7 +107,7 @@ function DashboardTopBar() {
           <div className="preferred-pharmacy-bar">
             <div>Preferred Pharmacy:&nbsp;</div>
             <strong>{preferredPharmacy.name}</strong>
-            <div className="zip">({preferredPharmacy.zip_code})</div>
+            <span className="zip">({preferredPharmacy.zip_code})</span>
           </div>
       )}
 
