@@ -8,7 +8,6 @@ import ChatWindow from '../../Components/ChatWindow';
 import Footer from '../../Components/Footer/Footer';
 import DashboardTopBar from '../../Components/DashboardTopBar/DashboardTopBar';
 
-import Logo from '../../Assets/Logo/logo.png';
 import ChatHistory from "../../Components/ChatHistory";
 
 function PatientDashboard() {
