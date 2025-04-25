@@ -1,19 +1,5 @@
 /* ✅ Theme Variables */
-:root {
-    --bg-color: white;
-    --text-color: black;
-    --panel-bg: #f0f0f0;
-    --card-border: #21a3bd;
-    --sidebar-hover: #d0f0f7;
-  }
-  
-  :root.dark-mode {
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --panel-bg: #1e1e1e;
-    --card-border: #4fc3f7;
-    --sidebar-hover: #3ac1dd;
-  }
+
 .dashboard-root {
     --bg-color: white;
     --text-color: black;

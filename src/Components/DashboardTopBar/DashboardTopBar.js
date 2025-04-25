@@ -194,15 +194,11 @@ function DashboardTopBar() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3>⚙️ Settings</h3>
             <div className="settings-section">
-              <label htmlFor="darkModeToggle" className="setting-label">
-                <input
-                  type="checkbox"
-                  id="darkModeToggle"
-                  defaultChecked={document.querySelector('.dashboard-root')?.classList.contains("dark-mode")}
-                  onChange={toggleDarkMode}
-                />
-                Enable Dark Mode
-              </label>
+              <div className="theme-toggle" onClick={toggleDarkMode}>
+                {document.querySelector('.dashboard-root')?.classList.contains("dark-mode")
+                  ? '◐ Dark Mode'
+                  : '☀️ Light Mode'}
+              </div>
             </div>
             <button className="modal-btn cancel-btn" onClick={() => setShowSettingsModal(false)}>Close</button>
           </div>
