@@ -165,6 +165,41 @@ function DoctorDashboard() {
             }
         };
 
+    // Assigns mealplan to patient
+    const [recipientPatientId, setRecipientPatientId] = useState("");
+    const [messageContent, setMessageContent] = useState("");
+
+    const sendMealplanMessage = async () => {
+        if (!messageContent.trim() || !recipientPatientId) {
+            alert("Please enter a patient ID and a message.");
+            return;
+        }
+    
+        try {
+            const response = await fetch('http://localhost:5000/doctor-dashboard/assign-mealplan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: user_id,        
+                    patient_id: recipientPatientId,
+                    message: messageContent
+                })
+            });
+    
+            const data = await response.json();
+            if (response.ok) {
+                alert("Mealplan message sent successfully!");
+                setRecipientPatientId("");
+                setMessageContent("");
+            } else {
+                alert("Error: " + data.error);
+            }
+        } catch (err) {
+            console.error("Error sending mealplan message:", err);
+            alert("An error occurred while sending the mealplan message.");
+        }
+    };
+
     // Fetch appointments when activeTab changes to "dashboard"
     useEffect(() => {
         if (activeTab === "dashboard") {
@@ -314,6 +349,26 @@ function DoctorDashboard() {
                                 </div>
                             </div>
                         ))}
+                    </div>
+
+                    <div style={{ marginTop: '2rem' }}>
+                        <h3>Send Mealplan Message to Patient</h3>
+                        <input
+                            type="text"
+                            placeholder="Enter Patient ID"
+                            value={recipientPatientId}
+                            onChange={(e) => setRecipientPatientId(e.target.value)}
+                            style={{ marginBottom: '1rem', display: 'block', width: '100%' }}
+                        />
+                        <textarea
+                            placeholder="Enter your mealplan message"
+                            value={messageContent}
+                            onChange={(e) => setMessageContent(e.target.value)}
+                            style={{ width: '100%', height: '100px', marginBottom: '1rem' }}
+                        />
+                        <button onClick={sendMealplanMessage}>
+                            Send Mealplan Message
+                        </button>
                     </div>
                 </div>
             );

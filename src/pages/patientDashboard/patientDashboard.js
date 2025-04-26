@@ -166,7 +166,39 @@ function PatientDashboard() {
         }
     };
 
+    // Gets Mealplan From Doctor
+    const [assignedMessages, setAssignedMessages] = useState([]);
+    const fetchAssignedMessages = async () => {
+        if (!user_id) {
+            console.error("❌ No user_id available for assigned messages");
+            return;
+        }
+    
+        console.log("📡 Fetching messages for user_id:", user_id);
+    
+        try {
+            const response = await fetch(`http://localhost:5000/patient-dashboard/assigned-mealplans?user_id=${user_id}`);
+            const data = await response.json();
+    
+            console.log("Fetched assigned messages:", data);
+    
+            if (response.ok) {
+                setAssignedMessages(data.messages || []);
+            } else {
+                console.error("❌ Error fetching assigned messages:", data.error);
+            }
+        } catch (err) {
+            console.error("❌ Network or fetch error:", err);
+        }
+    };
 
+    useEffect(() => {
+        if (user_id) {
+            fetchAssignedMessages();
+        }
+    }, [user_id]);
+
+    
     // Modal visibility
     const [showMetricsModal, setShowMetricsModal] = useState(false);
 
@@ -412,9 +444,28 @@ function PatientDashboard() {
                         )}
                     </div>
 
-                    {/* Mealplan Section */}
+                    {/* Doctor Assign Patient Mealplan Section */}
                     <div style={{ marginTop: '2rem' }}>
-                        <h3>Mealplans</h3>
+                        <h3>Assigned Mealplans From Your Doctor:</h3>
+
+                        {console.log("💬 Assigned messages:", assignedMessages)}
+                        {assignedMessages.length > 0 ? (
+                            <ul>
+                                {assignedMessages.map((msg) => (
+                                    <li key={msg.assignment_id}>
+                                        <p><strong>Doctor ID {msg.doctor_id}:</strong> {msg.message}</p>
+                                        <p><em>Sent: {msg.assigned_at}</em></p>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No assigned mealplans yet.</p>
+                        )}
+                    </div>
+
+                    {/* Patient Mealplan Section */}
+                    <div style={{ marginTop: '2rem' }}>
+                        <h3>Mealplans:</h3>
                         <button className="submit-metrics-button" onClick={() => setShowMealplanModal(true)}>
                             Create Mealplan
                         </button>
