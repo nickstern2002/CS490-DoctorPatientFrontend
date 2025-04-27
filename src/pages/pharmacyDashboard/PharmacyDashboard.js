@@ -28,6 +28,11 @@ function PharmacyDashboard() {
   // state to hold any fill errors (e.g. “Out of stock”)
   const [fillError, setFillError] = useState("");
 
+  // states for Dispensing a Presciption
+  const [filledPrescriptions, setFilledPrescriptions] = useState([]);
+  const [dispenseMessage, setDispenseMessage] = useState("");
+  const [dispenseError, setDispenseError] = useState("");
+
   const fetchPrices = async () => {
     const res = await axios.get(
       `http://localhost:5001/api/prices/current-prices?user_id=${user_id}`
@@ -68,6 +73,36 @@ function PharmacyDashboard() {
       }
     } catch (err) {
       console.error("Error fetching inventory:", err);
+    }
+  };
+
+  const fetchFilledPrescriptions = async () => {
+    if (!user_id) return;
+    try {
+      const res = await axios.get(
+        `http://localhost:5001/api/pharmacy/prescriptions/filled?user_id=${user_id}`
+      );
+      setFilledPrescriptions(res.data);
+    } catch (err) {
+      console.error("Error fetching filled prescriptions:", err);
+    }
+  };
+
+  // Mark a prescription as dispensed
+  const markAsDispensed = async (prescId) => {
+    if (!user_id) return;
+    setDispenseError("");
+    setDispenseMessage("");
+    try {
+      const res = await axios.post(
+        `http://localhost:5001/api/pharmacy/prescriptions/${prescId}/dispense?user_id=${user_id}`
+      );
+      setDispenseMessage(`Dispensed ✔️ (Payment $${res.data.amount} created)`);
+    } catch (err) {
+      console.error("Error dispensing prescription:", err);
+      setDispenseError(err.response?.data?.error || "Failed to dispense");
+    } finally {
+      fetchFilledPrescriptions();
     }
   };
 
@@ -134,6 +169,9 @@ function PharmacyDashboard() {
     }
     else if (activeTab === "prices") {
       fetchPrices();
+    }
+    else if (activeTab === "dispense") {
+      fetchFilledPrescriptions();
     }
     if (drugs.length === 0) {
       fetchDrugs();
@@ -235,6 +273,52 @@ function PharmacyDashboard() {
         </div>
       );
     }
+    else if (activeTab === "dispense") {
+      return (
+        <div className="data-plane">
+          <h1>Dispense Prescriptions</h1>
+
+          {dispenseMessage && (
+            <p className="success-message" style={{ color: "green" }}>
+              {dispenseMessage}
+            </p>
+          )}
+          {dispenseError && (
+            <p className="error-message" style={{ color: "red" }}>
+              {dispenseError}
+            </p>
+          )}
+
+          {filledPrescriptions.length === 0 ? (
+            <p>No prescriptions ready for dispense.</p>
+          ) : (
+            <div className="appointments-container">
+              {filledPrescriptions.map((rx, idx) => (
+                <div key={rx.prescription_id} className="appointment-card">
+                  <h5>Prescription #{rx.prescription_id}</h5>
+                  <p>
+                    <strong>Patient:</strong> {rx.patient_name}
+                  </p>
+                  <p>
+                    <strong>Medication:</strong> {rx.medication_name} ({rx.dosage})
+                  </p>
+                  <p>
+                    <strong>Requested at:</strong>{" "}
+                    {new Date(rx.requested_at).toLocaleString()}
+                  </p>
+                  <button
+                    className="start-appointment-button"
+                    onClick={() => markAsDispensed(rx.prescription_id)}
+                  >
+                    Mark as Dispensed
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
     else if (activeTab === "prices") {
       return (
         <div className="data-plane">
@@ -305,6 +389,14 @@ function PharmacyDashboard() {
                 onClick={() => setActiveTab("prescription-queue")}
               >
                 Prescription Queue
+              </button>
+            </li>
+            <li>
+              <button
+                className={activeTab === "dispense" ? "active-tab" : ""}
+                onClick={() => setActiveTab("dispense")}
+              >
+                Dispense
               </button>
             </li>
             <li>
