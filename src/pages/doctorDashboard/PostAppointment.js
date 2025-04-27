@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './PostAppointment.css';
 
@@ -12,6 +12,83 @@ export default function PostAppointmentPage() {
     const [mealPlan, setMealPlan] = useState('');
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState('');
+
+    /* Meal Plan Const stuff*/
+     // Assigns mealplan to patient
+     const [selectedMealPlanId, setSelectedMealPlanId] = useState('');
+     const [assignPatientId, setAssignPatientId] = useState('');
+     const [officialMealPlans, setOfficialMealPlans] = useState([]);
+     localStorage.setItem('user_id', '6');
+ 
+     const fetchOfficialMealPlans = async () => {
+         console.log("🛠 Entered fetchOfficialMealPlans"); // <- FIRST GUARANTEE
+ 
+         try {
+             const user_id = localStorage.getItem("user_id");
+             console.log("🛠 user_id from localStorage:", user_id); // <- SECOND GUARANTEE
+ 
+             if (!user_id) {
+                 console.error("🛠 No user_id found. Cannot fetch mealplans.");
+                 return;
+             }
+ 
+             const response = await fetch(`http://localhost:5000/doctor-dashboard/official/all?user_id=${user_id}`);
+             console.log("🛠 Got fetch response:", response); // <- THIRD GUARANTEE
+ 
+             const data = await response.json();
+             console.log("🛠 Full fetched data:", data);
+ 
+             if (response.ok) {
+                 setOfficialMealPlans(data.mealplans || []);
+             } else {
+                 console.error("Error fetching official mealplans:", data.error);
+             }
+         } catch (err) {
+             console.error("🛠 Caught fetch error:", err);
+         }
+     };
+ 
+     useEffect(() => {
+         console.log("🛠 useEffect running");
+         fetchOfficialMealPlans();
+     }, []);
+ 
+    
+            const assignMealPlanToPatient = async () => {
+                const user_id = localStorage.getItem("user_id"); // fresh inside
+            
+                if (!selectedMealPlanId || !assignPatientId) {
+                    alert("Please select a mealplan and enter a patient ID.");
+                    return;
+                }
+            
+                try {
+                    const response = await fetch('http://localhost:5000/doctor-dashboard/assign-mealplan', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            user_id: user_id,
+                            patient_id: assignPatientId,
+                            meal_plan_id: selectedMealPlanId
+                        })
+                    });
+            
+                    const data = await response.json();
+                    if (response.ok) {
+                        alert("Mealplan assigned successfully!");
+                        setSelectedMealPlanId('');
+                        setAssignPatientId('');
+                    } else {
+                        alert("Error: " + data.error);
+                    }
+                } catch (err) {
+                    console.error("Error assigning mealplan:", err);
+                    alert("An error occurred while assigning the mealplan.");
+                }
+            };
+    
+            
+            
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -53,6 +130,7 @@ export default function PostAppointmentPage() {
             setError('An unexpected error occurred.');
             setSubmitting(false);
         }
+
     };
 
     return (
@@ -105,14 +183,37 @@ export default function PostAppointmentPage() {
                     </div>
 
                     <div className="section">
+                        <h1>Hello from PostAppointmentPage</h1> {/* 👈 THIS IS THE TEST LINE */}
+                        
                         <h3 className="section-title">Assign Meal Plan</h3>
+
+                        <select
+                        value={selectedMealPlanId}
+                        onChange={(e) => setSelectedMealPlanId(e.target.value)}
+                        className="input"
+                        >
+                        <option value="">Select a mealplan...</option>
+                        {officialMealPlans.map(plan => (
+                            <option key={plan.meal_plan_id} value={plan.meal_plan_id}>
+                            {plan.title}
+                            </option>
+                        ))}
+                        </select>
+
                         <input
-                            type="text"
-                            value={mealPlan}
-                            onChange={e => setMealPlan(e.target.value)}
-                            placeholder="e.g. Low‑carb diet plan ID"
-                            className="input"
+                        type="text"
+                        placeholder="Enter Patient ID"
+                        value={assignPatientId}
+                        onChange={(e) => setAssignPatientId(e.target.value)}
+                        className="input"
                         />
+
+                        <button
+                        onClick={assignMealPlanToPatient}
+                        disabled={!selectedMealPlanId || !assignPatientId}
+                        >
+                        Assign Mealplan
+                        </button>
                     </div>
 
                     {error && <p className="message" style={{ color: '#b91c1c' }}>{error}</p>}

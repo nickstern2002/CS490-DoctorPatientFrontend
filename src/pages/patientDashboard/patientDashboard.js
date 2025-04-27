@@ -167,36 +167,27 @@ function PatientDashboard() {
     };
 
     // Gets Mealplan From Doctor
-    const [assignedMessages, setAssignedMessages] = useState([]);
-    const fetchAssignedMessages = async () => {
-        if (!user_id) {
-            console.error("❌ No user_id available for assigned messages");
-            return;
-        }
-    
-        console.log("📡 Fetching messages for user_id:", user_id);
-    
+    const [assignedMealplans, setAssignedMealplans] = useState([]);
+    const [showAssignedMealModal, setShowAssignedMealModal] = useState(false);
+    const [selectedAssignedMeal, setSelectedAssignedMeal] = useState(null);
+    const fetchAssignedMealplans = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/patient-dashboard/assigned-mealplans?user_id=${user_id}`);
+            const response = await fetch(`http://localhost:5000/api/patient-dashboard/assigned-mealplans?user_id=${user_id}`);
             const data = await response.json();
-    
-            console.log("Fetched assigned messages:", data);
-    
             if (response.ok) {
-                setAssignedMessages(data.messages || []);
+                console.log("💬 Assigned mealplans fetched:", data);
+                setAssignedMealplans(data.mealplans || []);
             } else {
-                console.error("❌ Error fetching assigned messages:", data.error);
+                console.error("Error fetching assigned mealplans:", data.error);
             }
         } catch (err) {
-            console.error("❌ Network or fetch error:", err);
+            console.error("Fetch failed:", err);
         }
     };
 
     useEffect(() => {
-        if (user_id) {
-            fetchAssignedMessages();
-        }
-    }, [user_id]);
+        fetchAssignedMealplans();
+    }, []);
 
     
     // Modal visibility
@@ -408,6 +399,8 @@ function PatientDashboard() {
 
     // Render content based on the active tab.
     const renderDashboardData = () => {
+        console.log("💬 assignedMealplans contents:", assignedMealplans);
+
         if (activeTab === "dashboard") {
             return (
                 <div>
@@ -446,20 +439,70 @@ function PatientDashboard() {
 
                     {/* Doctor Assign Patient Mealplan Section */}
                     <div style={{ marginTop: '2rem' }}>
-                        <h3>Assigned Mealplans From Your Doctor:</h3>
+                        <h3>Mealplans Assigned by Your Doctor</h3>
 
-                        {console.log("💬 Assigned messages:", assignedMessages)}
-                        {assignedMessages.length > 0 ? (
-                            <ul>
-                                {assignedMessages.map((msg) => (
-                                    <li key={msg.assignment_id}>
-                                        <p><strong>Doctor ID {msg.doctor_id}:</strong> {msg.message}</p>
-                                        <p><em>Sent: {msg.assigned_at}</em></p>
-                                    </li>
+                        {assignedMealplans.length > 0 ? (
+                            <div className="mealplans-wrapper">
+                                {assignedMealplans.map(plan => (
+                                    <div
+                                        key={plan.assignment_id}
+                                        className="meal-card"
+                                        onClick={() => {
+                                            setSelectedAssignedMeal(plan);
+                                            setShowAssignedMealModal(true);
+                                        }}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        {plan.image && (
+                                            <img
+                                                src={`data:image/jpeg;base64,${plan.image}`}
+                                                alt={plan.title}
+                                                className="meal-image"
+                                            />
+                                        )}
+                                        <div className="meal-card-header">
+                                            <h4>{plan.title}</h4>
+                                        </div>
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
                         ) : (
                             <p>No assigned mealplans yet.</p>
+                        )}
+
+                        {showAssignedMealModal && selectedAssignedMeal && (
+                            <div className="modal-overlay" onClick={() => setShowAssignedMealModal(false)}>
+                                <div className="modal" onClick={(e) => e.stopPropagation()}>
+                                    {selectedAssignedMeal.image && (
+                                        <img
+                                            src={`data:image/jpeg;base64,${selectedAssignedMeal.image}`}
+                                            alt={selectedAssignedMeal.title}
+                                            className="meal-image"
+                                        />
+                                    )}
+                                    <h3>{selectedAssignedMeal.title}</h3>
+
+                                    {/* ⭐ NEW doctor name and date section ⭐ */}
+                                    {selectedAssignedMeal.doctor_name && (
+                                        <p><strong>Assigned by:</strong> {selectedAssignedMeal.doctor_name}</p>
+                                    )}
+                                    {selectedAssignedMeal.assigned_at && (
+                                        <p><em>Assigned on: {selectedAssignedMeal.assigned_at}</em></p>
+                                    )}
+
+                                    {/* Existing info */}
+                                    <p><strong>Description:</strong> {selectedAssignedMeal.description}</p>
+                                    <p><strong>Ingredients:</strong> {selectedAssignedMeal.ingredients}</p>
+                                    <p><strong>Instructions:</strong> {selectedAssignedMeal.instructions}</p>
+                                    <p><strong>Calories:</strong> {selectedAssignedMeal.calories}</p>
+                                    <p><strong>Fat:</strong> {selectedAssignedMeal.fat}</p>
+                                    <p><strong>Sugar:</strong> {selectedAssignedMeal.sugar}</p>
+
+                                    <button className="close-button" onClick={() => setShowAssignedMealModal(false)}>
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
                         )}
                     </div>
 

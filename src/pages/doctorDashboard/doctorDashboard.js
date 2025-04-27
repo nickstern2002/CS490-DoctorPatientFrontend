@@ -165,40 +165,59 @@ function DoctorDashboard() {
             }
         };
 
-    // Assigns mealplan to patient
-    const [recipientPatientId, setRecipientPatientId] = useState("");
-    const [messageContent, setMessageContent] = useState("");
+        // Assigns mealplan to patient
+        const [selectedMealPlanId, setSelectedMealPlanId] = useState('');
+        const [assignPatientId, setAssignPatientId] = useState('');
 
-    const sendMealplanMessage = async () => {
-        if (!messageContent.trim() || !recipientPatientId) {
-            alert("Please enter a patient ID and a message.");
-            return;
-        }
-    
-        try {
-            const response = await fetch('http://localhost:5000/doctor-dashboard/assign-mealplan', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    user_id: user_id,        
-                    patient_id: recipientPatientId,
-                    message: messageContent
-                })
-            });
-    
-            const data = await response.json();
-            if (response.ok) {
-                alert("Mealplan message sent successfully!");
-                setRecipientPatientId("");
-                setMessageContent("");
-            } else {
-                alert("Error: " + data.error);
+        const assignMealPlanToPatient = async () => {
+            if (!selectedMealPlanId || !assignPatientId) {
+                alert("Please select a mealplan and enter a patient ID.");
+                return;
             }
-        } catch (err) {
-            console.error("Error sending mealplan message:", err);
-            alert("An error occurred while sending the mealplan message.");
-        }
-    };
+
+            try {
+                const response = await fetch('http://localhost:5000/doctor-dashboard/assign-mealplan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: user_id,
+                        patient_id: assignPatientId,
+                        meal_plan_id: selectedMealPlanId
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert("Mealplan assigned successfully!");
+                    setSelectedMealPlanId('');
+                    setAssignPatientId('');
+                } else {
+                    alert("Error: " + data.error);
+                }
+            } catch (err) {
+                console.error("Error assigning mealplan:", err);
+                alert("An error occurred while assigning the mealplan.");
+            }
+        };
+
+        const [officialMealPlans, setOfficialMealPlans] = useState([]);
+        const fetchOfficialMealPlans = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/doctor-dashboard/official/all?user_id=${user_id}`);
+                const data = await response.json();
+                if (response.ok) {
+                    setOfficialMealPlans(data.mealplans || []);
+                } else {
+                    console.error("Error fetching official mealplans:", data.error);
+                }
+            } catch (err) {
+                console.error("Fetch failed:", err);
+            }
+        };
+
+        useEffect(() => {
+            fetchOfficialMealPlans();
+        }, []);
 
     // Fetch appointments when activeTab changes to "dashboard"
     useEffect(() => {
@@ -352,22 +371,37 @@ function DoctorDashboard() {
                     </div>
 
                     <div style={{ marginTop: '2rem' }}>
-                        <h3>Send Mealplan Message to Patient</h3>
-                        <input
-                            type="text"
-                            placeholder="Enter Patient ID"
-                            value={recipientPatientId}
-                            onChange={(e) => setRecipientPatientId(e.target.value)}
-                            style={{ marginBottom: '1rem', display: 'block', width: '100%' }}
-                        />
-                        <textarea
-                            placeholder="Enter your mealplan message"
-                            value={messageContent}
-                            onChange={(e) => setMessageContent(e.target.value)}
-                            style={{ width: '100%', height: '100px', marginBottom: '1rem' }}
-                        />
-                        <button onClick={sendMealplanMessage}>
-                            Send Mealplan Message
+                        <h3>Assign a Meal Plan to a Patient</h3>
+
+                        <label>
+                            Select Meal Plan:
+                            <select
+                                value={selectedMealPlanId}
+                                onChange={(e) => setSelectedMealPlanId(e.target.value)}
+                                style={{ display: 'block', width: '100%', marginBottom: '1rem' }}
+                            >
+                                <option value="">-- Select a Meal Plan --</option>
+                                {officialMealPlans.map((plan) => (
+                                    <option key={plan.meal_plan_id} value={plan.meal_plan_id}>
+                                        {plan.title}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+
+                        <label>
+                            Patient ID:
+                            <input
+                                type="number"
+                                placeholder="Enter Patient ID"
+                                value={assignPatientId}
+                                onChange={(e) => setAssignPatientId(e.target.value)}
+                                style={{ display: 'block', width: '100%', marginBottom: '1rem' }}
+                            />
+                        </label>
+
+                        <button onClick={assignMealPlanToPatient}>
+                            Assign Meal Plan
                         </button>
                     </div>
                 </div>
