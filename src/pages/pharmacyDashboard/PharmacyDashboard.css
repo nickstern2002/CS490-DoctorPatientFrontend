@@ -264,3 +264,25 @@
     }
 }
 
+.prices-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+.prices-table th,
+.prices-table td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+}
+.prices-table th {
+    background: #f5f5f5;
+    text-align: left;
+}
+.prices-table input {
+    width: 5rem;
+    padding: 0.25rem;
+}
+.prices-table button {
+    padding: 0.3rem 0.6rem;
+}
+
