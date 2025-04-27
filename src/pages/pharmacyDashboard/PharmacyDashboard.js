@@ -22,6 +22,26 @@ function PharmacyDashboard() {
   // list of drugs offered
   const [drugs, setDrugs] = useState([]);
 
+  // current drug prices
+  const [prices, setPrices] = useState([]);
+
+  // state to hold any fill errors (e.g. “Out of stock”)
+  const [fillError, setFillError] = useState("");
+
+  const fetchPrices = async () => {
+    const res = await axios.get(
+      `http://localhost:5001/api/prices/current-prices?user_id=${user_id}`
+    );
+    setPrices(res.data);
+  };
+
+  const updatePrice = async (drug_id, price) => {
+    await axios.patch(`http://localhost:5001/api/pharmacy/update`, {
+      user_id, drug_id, price
+    });
+    fetchPrices();
+  };
+
   const fetchDrugs = async () => {
     try {
       const res = await axios.get(`http://localhost:5001/api/prescriptions/drugs`);
@@ -86,12 +106,19 @@ function PharmacyDashboard() {
   // mark filled by user_id
   const markAsFilled = async (prescriptionId) => {
     if (!user_id) return;
+
+    setFillError("");
+
     try {
       await axios.post(
         `http://localhost:5001/api/pharmacy/prescriptions/${prescriptionId}/fulfill?user_id=${user_id}`
       );
     } catch (err) {
-      console.error("Error marking as filled:", err);
+      if (err.response?.status === 400 && err.response.data.error === "Out of stock") {
+        setFillError("Out of stock");
+      } else {
+        console.error("Error marking as filled:", err);
+      }
     } finally {
       fetchQueue();
     }
@@ -104,6 +131,9 @@ function PharmacyDashboard() {
     }
     else if (activeTab === "dashboard") {
       fetchInventory();
+    }
+    else if (activeTab === "prices") {
+      fetchPrices();
     }
     if (drugs.length === 0) {
       fetchDrugs();
@@ -164,6 +194,12 @@ function PharmacyDashboard() {
         <div className="prescription-queue data-plane">
           <h1>Prescription Queue</h1>
 
+          {fillError && (
+            <p className="error-message" style={{ color: 'red', marginBottom: '1rem' }}>
+              {fillError}
+            </p>
+          )}
+
           {queue.length === 0 ? (
             <p>No pending prescriptions.</p>
           ) : (
@@ -199,6 +235,51 @@ function PharmacyDashboard() {
         </div>
       );
     }
+    else if (activeTab === "prices") {
+      return (
+        <div className="data-plane">
+          <h1>Drug Prices</h1>
+          <table className="prices-table">
+            <thead>
+            <tr>
+              <th>Drug</th>
+              <th>Description</th>
+              <th>Price ($)</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {prices.map(({ drug_id, name, description, price }) => (
+              <tr key={drug_id}>
+                <td>{name}</td>
+                <td>{description}</td>
+                <td>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={price}
+                    onChange={e => {
+                      const newPrice = parseFloat(e.target.value);
+                      setPrices(ps =>
+                        ps.map(p =>
+                          p.drug_id === drug_id ? { ...p, price: newPrice } : p
+                        )
+                      );
+                    }}
+                  />
+                </td>
+                <td>
+                  <button onClick={() => updatePrice(drug_id, price)}>
+                    Save
+                  </button>
+                </td>
+              </tr>
+            ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
   };
 
   return (
@@ -224,6 +305,14 @@ function PharmacyDashboard() {
                 onClick={() => setActiveTab("prescription-queue")}
               >
                 Prescription Queue
+              </button>
+            </li>
+            <li>
+              <button
+                className={activeTab === "prices" ? "active-tab" : ""}
+                onClick={() => setActiveTab("prices")}
+              >
+                Prices
               </button>
             </li>
           </ul>
