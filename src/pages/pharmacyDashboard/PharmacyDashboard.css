@@ -47,6 +47,17 @@
     cursor: pointer;
 }
 
+.side-bar button:hover {
+    background-color: var(--sidebar-hover); /* Slightly darker/lighter */
+}
+
+.side-bar button.active-tab {
+    background-color: var(--card-border);
+    color: var(--text-color);
+    font-weight: bold;
+    border: 2px solid var(--text-color);
+}
+
 /* Data Plane */
 .data-plane {
     flex: 1;
@@ -178,3 +189,78 @@
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
+
+/* ===== Inventory Submission Panel ===== */
+.inventory-form-container {
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border-color, #ddd);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    max-width: 500px;
+    margin-top: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.inventory-form-container h2 {
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+    color: var(--heading-color, #333);
+}
+
+.inventory-form {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.inventory-form label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    color: var(--text-color, #555);
+    flex: 1 1 120px;
+}
+
+.inventory-form label span {
+    margin-bottom: 0.25rem;
+}
+
+.inventory-form select,
+.inventory-form input[type="number"] {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: 4px;
+    background: var(--input-bg, #fff);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.inventory-form button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    background: var(--primary-color, #007bff);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    flex: 0 0 auto;
+    transition: background 0.2s ease;
+}
+
+.inventory-form button:hover {
+    background: var(--primary-hover, #0056b3);
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+    .inventory-form {
+        flex-direction: column;
+    }
+
+    .inventory-form button {
+        width: 100%;
+    }
+}
+

@@ -1,178 +1,237 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../../App.css";
-import "./PharmacyDashboard.css"
+import "./PharmacyDashboard.css";
+import DashboardTopBar from "../../Components/DashboardTopBar/DashboardTopBar";
+import Footer from "../../Components/Footer/Footer";
 
 function PharmacyDashboard() {
-  const [prescriptions, setPrescriptions] = useState([]);
+  // pull user_id from localStorage
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
+  const user_id = user?.user_id;
+
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [queue, setQueue] = useState([]);
+
+  // Inventory States
   const [inventory, setInventory] = useState([]);
-  const [transactions, setTransactions] = useState([]);
-  const [message, setMessage] = useState("");
-  const [pharmacyId, setPharmacyId] = useState(null);
+  const [selectedDrug, setSelectedDrug] = useState("");
+  const [newQuantity, setNewQuantity] = useState("");
 
-  useEffect(() => {
-    const fetchPharmacyIdAndData = async () => {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const userId = user?.user_id;
+  // list of drugs offered
+  const [drugs, setDrugs] = useState([]);
 
-      try {
-        const res = await axios.get(`http://localhost:5001/api/pharmacy/getPharmacyId?user_id=${userId}`);
-        const id = res.data.pharmacy_id;
-        setPharmacyId(id);
-
-        fetchPrescriptions(id);
-        fetchInventory(id);
-        fetchTransactions(id);
-      } catch (err) {
-        console.error("Error getting pharmacy_id", err);
-      }
-    };
-
-    fetchPharmacyIdAndData();
-  }, []);
-
-  const fetchPrescriptions = async (id) => {
+  const fetchDrugs = async () => {
     try {
-      const res = await axios.get(`http://localhost:5001/api/pharmacy/requests?pharmacy_id=${id}`);
-      setPrescriptions(res.data);
+      const res = await axios.get(`http://localhost:5001/api/prescriptions/drugs`);
+      setDrugs(res.data);
+      if (res.data.length) {
+        setSelectedDrug(res.data[0].name);
+      }
     } catch (err) {
-      console.error("Failed to load prescriptions", err);
+      console.error("Error fetching master drug list:", err);
     }
   };
 
-  const fetchInventory = async (id) => {
+  // fetch current inventory
+  const fetchInventory = async () => {
+    if (!user_id) return;
     try {
-      const res = await axios.get(`http://localhost:5001/api/pharmacy/inventory?pharmacy_id=${id}`);
+      const res = await axios.get(
+        `http://localhost:5001/api/pharmacy/inventory?user_id=${user_id}`
+      );
       setInventory(res.data);
+      // default the dropdown to the first drug, if any
+      if (res.data.length && !selectedDrug) {
+        setSelectedDrug(res.data[0].drug_name);
+      }
     } catch (err) {
       console.error("Error fetching inventory:", err);
     }
   };
 
-  const fetchTransactions = async (id) => {
-    try {
-      const res = await axios.get(`http://localhost:5001/api/pharmacy/logs?pharmacy_id=${id}`);
-      setTransactions(res.data);
-    } catch (err) {
-      console.error("Failed to load transactions:", err);
-    }
-  };
-
-  const fulfillPrescription = async (id) => {
-    try {
-      const res = await axios.post(`http://localhost:5001/api/pharmacy/prescriptions/${id}/fulfill`);
-      setMessage(res.data.message || "Success");
-      if (pharmacyId) {
-        fetchPrescriptions(pharmacyId);
-        fetchInventory(pharmacyId);
-        fetchTransactions(pharmacyId);
-      }
-    } catch (err) {
-      setMessage(err.response?.data?.error || "Failed to fulfill prescription.");
-    }
-  };
-
-  const [newMedName, setNewMedName] = useState("");
-  const [newStock, setNewStock] = useState("");
-
+// add to inventory
   const addInventoryItem = async () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const pharmacy_id = user?.user_id;
-
+    if (!user_id || !selectedDrug || !newQuantity) return;
     try {
-      const res = await axios.post("http://localhost:5001/api/pharmacy/inventory/add", {
-        pharmacy_id,
-        drug_name: newMedName,
-        stock_quantity: parseInt(newStock),
-      });
-      setMessage(res.data.message || "Inventory added");
-      setNewMedName("");
-      setNewStock("");
-      if (pharmacyId) fetchInventory(pharmacyId);
+      await axios.post(
+        `http://localhost:5001/api/pharmacy/inventory/add`,
+        {
+          user_id,
+          drug_name: selectedDrug,
+          stock_quantity: parseInt(newQuantity, 10),
+        }
+      );
+      setNewQuantity("");
+      fetchInventory();
     } catch (err) {
-      setMessage(err.response?.data?.error || "Error adding inventory");
+      console.error("Error adding inventory:", err);
+    }
+  };
+
+  // fetch queue by user_id
+  const fetchQueue = async () => {
+    if (!user_id) return;
+    try {
+      const res = await axios.get(
+        `http://localhost:5001/api/pharmacy/queue?user_id=${user_id}`
+      );
+      setQueue(res.data);
+    } catch (err) {
+      console.error("Error fetching prescription queue:", err);
+    }
+  };
+
+  // mark filled by user_id
+  const markAsFilled = async (prescriptionId) => {
+    if (!user_id) return;
+    try {
+      await axios.post(
+        `http://localhost:5001/api/pharmacy/prescriptions/${prescriptionId}/fulfill?user_id=${user_id}`
+      );
+    } catch (err) {
+      console.error("Error marking as filled:", err);
+    } finally {
+      fetchQueue();
+    }
+  };
+
+  // reload queue whenever tab or user changes
+  useEffect(() => {
+    if (activeTab === "prescription-queue") {
+      fetchQueue();
+    }
+    else if (activeTab === "dashboard") {
+      fetchInventory();
+    }
+    if (drugs.length === 0) {
+      fetchDrugs();
+    }
+  }, [activeTab, user_id]);
+
+  const renderDashboardData = () => {
+    if (activeTab === "dashboard") {
+      return (
+        <div className="data-plane">
+          <h1>Pharmacy Dashboard</h1>
+
+          <h2>Current Inventory</h2>
+          {inventory.length === 0 ? (
+            <p>No inventory on hand.</p>
+          ) : (
+            <ul className="prescription-list">
+              {inventory.map(item => (
+                <li key={item.drug_name} className="appointment-card">
+                  <p><strong>{item.drug_name}</strong></p>
+                  <p>{item.stock_quantity} units</p>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className="inventory-form-container">
+            <h2>Add Stock</h2>
+            <form className="inventory-form" onSubmit={e => { e.preventDefault(); addInventoryItem(); }}>
+              <label>
+                <span>Drug</span>
+                <select
+                  value={selectedDrug}
+                  onChange={e => setSelectedDrug(e.target.value)}
+                >
+                  {drugs.map(d => (
+                    <option key={d.drug_id} value={d.name}>
+                      {d.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span>Quantity</span>
+                <input
+                  type="number"
+                  min="1"
+                  value={newQuantity}
+                  onChange={e => setNewQuantity(e.target.value)}
+                />
+              </label>
+              <button type="submit">Add to Inventory</button>
+            </form>
+          </div>
+        </div>
+      );
+    } else if (activeTab === "prescription-queue") {
+      return (
+        <div className="prescription-queue data-plane">
+          <h1>Prescription Queue</h1>
+
+          {queue.length === 0 ? (
+            <p>No pending prescriptions.</p>
+          ) : (
+            <div className="appointments-container">
+              {queue.map((rx, idx) => (
+                <div key={rx.prescription_id} className="appointment-card">
+                  <h5>Prescription #{rx.prescription_id}</h5>
+                  <p>
+                    <strong>Patient:</strong> {rx.patient_name}
+                  </p>
+                  <p>
+                    <strong>Medication:</strong> {rx.medication_name} ({rx.dosage})
+                  </p>
+                  <p>
+                    <strong>Requested at:</strong>{" "}
+                    {new Date(rx.requested_at).toLocaleString()}
+                  </p>
+
+                  {idx === 0 ? (
+                    <button
+                      className="start-appointment-button"
+                      onClick={() => markAsFilled(rx.prescription_id)}
+                    >
+                      Mark as Filled
+                    </button>
+                  ) : (
+                    <span className="pending-label">Pending</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
     }
   };
 
   return (
-    <div className="main-container">
-      <div className="side-bar">
-        <ul>
-          <li><button onClick={() => fetchPrescriptions(pharmacyId)}>Refresh Prescriptions</button></li>
-          <li><button onClick={() => fetchInventory(pharmacyId)}>Refresh Inventory</button></li>
-          <li><button onClick={() => fetchTransactions(pharmacyId)}>Refresh Transactions</button></li>
-        </ul>
+    <div
+      className="flex flex-col min-h-screen"
+      style={{ backgroundColor: "var(--bg-color)", color: "var(--text-color)" }}
+    >
+      <DashboardTopBar />
+      <div className="flex-grow flex main-container">
+        <div className="side-bar">
+          <ul>
+            <li>
+              <button
+                className={activeTab === "dashboard" ? "active-tab" : ""}
+                onClick={() => setActiveTab("dashboard")}
+              >
+                Dashboard
+              </button>
+            </li>
+            <li>
+              <button
+                className={activeTab === "prescription-queue" ? "active-tab" : ""}
+                onClick={() => setActiveTab("prescription-queue")}
+              >
+                Prescription Queue
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <main className="data-plane">{renderDashboardData()}</main>
       </div>
-
-      <div className="data-plane">
-        <h1>Pharmacy Dashboard</h1>
-        {message && <p className="dashboard-message">{message}</p>}
-
-        <h2>Active Prescription Requests</h2>
-        <div className="drug-refill-requests">
-          {prescriptions.length === 0 ? (
-            <p>No active requests.</p>
-          ) : (
-            prescriptions.map((rx) => (
-              <div key={rx.prescription_id}>
-                <strong>{rx.patient_name}</strong><br />
-                {rx.medication_name} ({rx.dosage})<br />
-                {rx.inventory_conflict ? (
-                  <span className="inventory-conflict">Inventory conflict</span>
-                ) : (
-                  <button className="respond-request-btn" onClick={() => fulfillPrescription(rx.prescription_id)}>
-                    Fulfill
-                  </button>
-                )}
-              </div>
-            ))
-          )}
-        </div>
-
-        <h2>Add Inventory</h2>
-        <div className="drug-inventory-list">
-          <input
-            type="text"
-            placeholder="Medication Name"
-            value={newMedName}
-            onChange={(e) => setNewMedName(e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Stock Quantity"
-            value={newStock}
-            onChange={(e) => setNewStock(e.target.value)}
-          />
-          <button className="add-inventory" onClick={addInventoryItem}>
-            Add Medication
-          </button>
-        </div>
-
-        <h2>Current Inventory</h2>
-        <div className="drug-inventory">
-          {inventory.map((item, idx) => (
-            <div key={idx} className="drug-inventory-list">
-              {item.drug_name} — {item.stock_quantity} units
-            </div>
-          ))}
-        </div>
-
-        <h2>Completed Transactions</h2>
-        <div className="payments-container">
-          {transactions.length === 0 ? (
-            <p>No past transactions found.</p>
-          ) : (
-            transactions.map((tx, idx) => (
-              <div key={idx} className="payment-card">
-                {tx.patient_name}<br />
-                {tx.medication_name}<br />
-                ${Number(tx.amount_billed).toFixed(2)}<br />
-                {new Date(tx.timestamp).toLocaleString()}
-              </div>
-            ))
-          )}
-        </div>
-      </div>
+      <Footer />
     </div>
   );
 }
