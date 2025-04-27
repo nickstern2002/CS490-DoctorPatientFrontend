@@ -7,7 +7,9 @@ import LoginPage from './pages/Login/login'
 import RegistrationPage from './pages/Registration/registration'
 import PatientPage from './pages/patientDashboard/patientDashboard'
 import DoctorPage from './pages/doctorDashboard/doctorDashboard'
+import PharmacyPage from './pages/pharmacyDashboard/PharmacyDashboard';
 import PaymentPage from './pages/paymentPage/paymentPage'
+import DiscussionBoard from './pages/discussionPosts/discussion'
 import PostAppointmentPage from './pages/doctorDashboard/PostAppointment';
 import reportWebVitals from './reportWebVitals';
 import {
@@ -38,6 +40,10 @@ const router = createBrowserRouter([
     element: <DoctorPage />,
   },
   {
+    path: "/pharmacy",
+    element: <PharmacyPage />
+  },
+  {
     path: "/payment",
     element: <PaymentPage />,
   },
@@ -48,6 +54,10 @@ const router = createBrowserRouter([
   {
     path: "/patient-post-appointment",
     element: <PostAppointmentReview/>
+  },
+  {
+    path: "/discuss",
+    element: <DiscussionBoard/>
   }
 ]);
 

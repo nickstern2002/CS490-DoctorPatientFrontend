@@ -46,6 +46,9 @@ const Login = () => {
         else if(data.user.user_type === 'doctor'){
           navigate('/doctors');
         }
+        else if(data.user.user_type === 'pharmacy') {
+          navigate('/pharmacy')
+        }
       } 
       else {
         const data = await response.json();
