@@ -22,8 +22,11 @@ function PatientDashboard() {
     const [showBookingModal, setShowBookingModal] = useState(false);
     const [selectedDoctorId, setSelectedDoctorId] = useState(null);
 
-    // Patient current prescriptions
-    const [prescriptions, setPrescriptions] = useState([]);
+    // Patient pending prescriptions
+    const [pendingPrescriptions, setPendingPrescriptions] = useState([]);
+
+    // Patient filled prescriptions ready for pickup
+    const [filledPrescriptions, setFilledPrescriptions] = useState([]);
 
     // Dark Mode
     const isDark = localStorage.getItem('dashboardDarkMode') === 'true';
@@ -125,11 +128,21 @@ function PatientDashboard() {
 
     useEffect(() => {
         if (activeTab === "prescriptions") {
-            fetch(`http://localhost:5000/api/patient-dashboard/prescriptions?user_id=${user_id}`)
+            // fetch pending
+            fetch(`http://localhost:5000/api/patient-dashboard/pending-prescriptions?user_id=${user_id}`)
               .then(res => res.json())
               .then(data => {
-                  if (Array.isArray(data)) setPrescriptions(data);
+                  if (Array.isArray(data)) setPendingPrescriptions(data);
                   else console.error("Error loading prescriptions:", data.error);
+              })
+              .catch(err => console.error("Network error:", err));
+
+            // fetch filled
+            fetch(`http://localhost:5000/api/patient-dashboard/prescriptions/filled?user_id=${user_id}`)
+              .then(res => res.json())
+              .then(data => {
+                  if (Array.isArray(data)) setFilledPrescriptions(data);
+                  else console.error("Error loading filled prescriptions:", data.error);
               })
               .catch(err => console.error("Network error:", err));
         }
@@ -773,10 +786,28 @@ function PatientDashboard() {
         else if (activeTab === "prescriptions") {
             return (
               <div>
-                  <h3>Your Prescriptions</h3>
-                  {prescriptions.length > 0 ? (
+                  <h3>Ready for Pickup</h3>
+                  {filledPrescriptions.length > 0 ? (
                     <ul className="prescription-list">
-                        {prescriptions.map(p => (
+                        {filledPrescriptions.map(p => (
+                          <li key={p.prescription_id} className="prescription-card">
+                              <p><strong>Drug:</strong> {p.drug_name}</p>
+                              <p><strong>Dosage:</strong> {p.dosage}</p>
+                              <p><strong>Instructions:</strong> {p.instructions}</p>
+                              <p><strong>Requested at:</strong> {new Date(p.requested_at).toLocaleString()}</p>
+                              <p><strong>Status:</strong> {p.status}</p>
+                              <p><em>Your prescription is ready for pickup.</em></p>
+                          </li>
+                        ))}
+                    </ul>
+                  ) : (
+                    <p>No filled prescriptions.</p>
+                  )}
+
+                  <h3>Your Pending Prescriptions</h3>
+                  {pendingPrescriptions.length > 0 ? (
+                    <ul className="prescription-list">
+                        {pendingPrescriptions.map(p => (
                           <li key={p.prescription_id} className="prescription-card">
                               <p><strong>Drug:</strong> {p.drug_name}</p>
                               <p><strong>Dosage:</strong> {p.dosage}</p>
@@ -787,7 +818,7 @@ function PatientDashboard() {
                         ))}
                     </ul>
                   ) : (
-                    <p>No prescriptions.</p>
+                    <p>No Pending Prescriptions.</p>
                   )}
               </div>
             );
