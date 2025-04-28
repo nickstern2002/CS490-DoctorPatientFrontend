@@ -467,7 +467,7 @@ function PatientDashboard() {
 
                     {/* Doctor Assign Patient Mealplan Section */}
                     <div style={{ marginTop: '2rem' }}>
-                        <h3>Mealplans Assigned by Your Doctor</h3>
+                        <h3>Mealplans Assigned by Your Doctor:</h3>
 
                         {assignedMealplans.length > 0 ? (
                             <div className="mealplans-wrapper">
@@ -535,13 +535,6 @@ function PatientDashboard() {
                     </div>
 
                     {/* Patient Mealplan Section */}
-                    <div style={{ marginTop: '2rem' }}>
-                        <h3>Mealplans:</h3>
-                        <button className="submit-metrics-button" onClick={() => setShowMealplanModal(true)}>
-                            Create Mealplan
-                        </button>
-                    </div>
-
                     {showMealplanModal && (
                         <div className="modal-overlay">
                             <div className="modal">
@@ -578,7 +571,7 @@ function PatientDashboard() {
                         </div>
                     )}
                      <div style={{ marginTop: '2rem' }}>
-                        <h4>Your Mealplans</h4>
+                        <h4>Your Mealplans:</h4>
                         {mealplans.length > 0 ? (
                             <div className="mealplans-wrapper">
                             {mealplans.map(plan => (
@@ -604,6 +597,12 @@ function PatientDashboard() {
                         ) : (
                             <p>No mealplans yet.</p>
                         )}
+
+                    <div style={{ marginTop: '2rem' }}>
+                        <button className="submit-metrics-button" onClick={() => setShowMealplanModal(true)}>
+                            Create Mealplan
+                        </button>
+                    </div>
 
                         {/* ✅ Modal */}
                         {showMealModal && selectedMeal && (

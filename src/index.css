@@ -16,21 +16,33 @@ code {
     monospace;
 }
 
-:root {
+/* Dark Mode */
+.global-root {
   --bg-color: white;
   --text-color: black;
-  --card-bg: #f7f7f7;
-  --modal-bg: white;
+  --panel-bg: #f0f0f0;
+  --card-border: #2a8eed;
 }
 
-body.dark-mode {
+.global-root.dark-mode {
   --bg-color: #121212;
   --text-color: #e0e0e0;
-  --card-bg: #1e1e1e;
-  --modal-bg: #1a1a1a;
+  --panel-bg: #1e1e1e;
+  --card-border: #007b9f;
 }
 
-body {
+body, html {
   background-color: var(--bg-color);
   color: var(--text-color);
+  margin: 0;
+  padding: 0;
+}
+
+.card, .panel, .dashboard-card, .dashboard-panel, .profile-dropdown, .modal-content {
+  background-color: var(--panel-bg);
+  color: var(--text-color);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: background-color 0.3s, color 0.3s;
 }
