@@ -561,7 +561,7 @@ function DoctorDashboard() {
                                     >
                                         {plan.image && (
                                             <img
-                                                src={`data:image/jpeg;base64,${plan.image}`}
+                                                src={`http://localhost:5000/static/${plan.image}`}
                                                 alt={plan.title}
                                                 className="meal-image"
                                             />
@@ -582,7 +582,7 @@ function DoctorDashboard() {
                                 <div className="modal" onClick={(e) => e.stopPropagation()}>
                                     {selectedMeal.image && (
                                         <img
-                                            src={`data:image/jpeg;base64,${selectedMeal.image}`}
+                                            src={`http://localhost:5000/static/${selectedMeal.image}`}
                                             alt={selectedMeal.title}
                                             className="meal-image"
                                         />

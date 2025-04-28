@@ -4,6 +4,9 @@ import './PostAppointment.css';
 
 export default function PostAppointmentPage() {
     const navigate = useNavigate();
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    const user_id = user ? user.user_id : null;
     const { appointment_id, doctor_id, patient_id } = useLocation().state || {};
 
     const [amount, setAmount] = useState('');
@@ -22,15 +25,11 @@ export default function PostAppointmentPage() {
      const [selectedMealPlanId, setSelectedMealPlanId] = useState('');
      const [assignPatientId, setAssignPatientId] = useState('');
      const [officialMealPlans, setOfficialMealPlans] = useState([]);
-     localStorage.setItem('user_id', '6');
  
      const fetchOfficialMealPlans = async () => {
          console.log("🛠 Entered fetchOfficialMealPlans"); // <- FIRST GUARANTEE
  
          try {
-             const user_id = localStorage.getItem("user_id");
-             console.log("🛠 user_id from localStorage:", user_id); // <- SECOND GUARANTEE
- 
              if (!user_id) {
                  console.error("🛠 No user_id found. Cannot fetch mealplans.");
                  return;
@@ -59,7 +58,6 @@ export default function PostAppointmentPage() {
  
     
             const assignMealPlanToPatient = async () => {
-                const user_id = localStorage.getItem("user_id"); // fresh inside
             
                 if (!selectedMealPlanId || !assignPatientId) {
                     alert("Please select a mealplan and enter a patient ID.");
@@ -258,7 +256,7 @@ export default function PostAppointmentPage() {
                     </div>
 
                     <div className="section">
-                        <h1>Hello from PostAppointmentPage</h1> {/* 👈 THIS IS THE TEST LINE */}
+                        <h1>Hello from PostAppointmentPage</h1> 
                         
                         <h3 className="section-title">Assign Meal Plan</h3>
 
@@ -274,21 +272,6 @@ export default function PostAppointmentPage() {
                             </option>
                         ))}
                         </select>
-
-                        <input
-                        type="text"
-                        placeholder="Enter Patient ID"
-                        value={assignPatientId}
-                        onChange={(e) => setAssignPatientId(e.target.value)}
-                        className="input"
-                        />
-
-                        <button
-                        onClick={assignMealPlanToPatient}
-                        disabled={!selectedMealPlanId || !assignPatientId}
-                        >
-                        Assign Mealplan
-                        </button>
                     </div>
 
                     {error && <p className="message" style={{ color: '#b91c1c' }}>{error}</p>}

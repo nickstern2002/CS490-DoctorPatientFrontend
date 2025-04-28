@@ -483,7 +483,7 @@ function PatientDashboard() {
                                     >
                                         {plan.image && (
                                             <img
-                                                src={`data:image/jpeg;base64,${plan.image}`}
+                                                src={`http://localhost:5000/static/${plan.image}`}
                                                 alt={plan.title}
                                                 className="meal-image"
                                             />
@@ -503,7 +503,7 @@ function PatientDashboard() {
                                 <div className="modal" onClick={(e) => e.stopPropagation()}>
                                     {selectedAssignedMeal.image && (
                                         <img
-                                            src={`data:image/jpeg;base64,${selectedAssignedMeal.image}`}
+                                            src={`http://localhost:5000/static/${selectedAssignedMeal.image}`}
                                             alt={selectedAssignedMeal.title}
                                             className="meal-image"
                                         />
@@ -590,7 +590,7 @@ function PatientDashboard() {
                                 >
                                 {plan.image && (
                                     <img
-                                    src={`data:image/jpeg;base64,${plan.image}`}
+                                    src={`http://localhost:5000/static/${plan.image}`}
                                     alt={plan.title}
                                     className="meal-image"
                                     />
@@ -609,9 +609,9 @@ function PatientDashboard() {
                         {showMealModal && selectedMeal && (
                             <div className="modal-overlay" onClick={() => setShowMealModal(false)}>
                             <div className="modal" onClick={(e) => e.stopPropagation()}>
-                                {selectedMeal.image && (
+                            {selectedMeal.image && (
                                 <img
-                                    src={`data:image/jpeg;base64,${selectedMeal.image}`}
+                                    src={`http://localhost:5000/static/${selectedMeal.image}`}   // ✅ CORRECT
                                     alt={selectedMeal.title}
                                     className="meal-image"
                                 />
