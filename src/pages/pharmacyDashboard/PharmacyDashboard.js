@@ -33,6 +33,21 @@ function PharmacyDashboard() {
   const [dispenseMessage, setDispenseMessage] = useState("");
   const [dispenseError, setDispenseError] = useState("");
 
+  const [payments, setPayments] = useState({ fulfilled: [], unfulfilled: [] })
+
+  // fetch payments helper
+  const fetchPayments = async () => {
+    if (!user_id) return;
+    try {
+      const res = await axios.get(
+        `http://localhost:5001/api/pharmacy/payments?user_id=${user_id}`
+      );
+      setPayments(res.data);
+    } catch (err) {
+      console.error("Error fetching payments:", err);
+    }
+  };
+
   const fetchPrices = async () => {
     const res = await axios.get(
       `http://localhost:5001/api/prices/current-prices?user_id=${user_id}`
@@ -172,6 +187,9 @@ function PharmacyDashboard() {
     }
     else if (activeTab === "dispense") {
       fetchFilledPrescriptions();
+    }
+    else if (activeTab === "payments") {
+      fetchPayments();
     }
     if (drugs.length === 0) {
       fetchDrugs();
@@ -364,6 +382,57 @@ function PharmacyDashboard() {
         </div>
       );
     }
+    else if (activeTab === "payments") {
+      return (
+        <div className="data-plane">
+          <h1>Payments</h1>
+
+          <h2>Unfulfilled Payments</h2>
+          {payments.unfulfilled.length === 0 ? (
+            <p>No pending payments.</p>
+          ) : (
+            <div className="appointments-container">
+              {payments.unfulfilled.map(pay => (
+                <div key={pay.payment_id} className="payment-card">
+                  <h5>Payment #{pay.payment_id}</h5>
+                  <p><strong>Patient:</strong> {pay.patient_name}</p>
+                  <p>
+                    <strong>Amount:</strong>{" "}
+                    {isNaN(pay.amount)
+                      ? pay.amount
+                      : `$${Number(pay.amount).toFixed(2)}`}
+                  </p>
+                  <p><strong>Date:</strong> {new Date(pay.payment_date).toLocaleString()}</p>
+                  <p><strong>Status:</strong> Unfulfilled</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <h2>Fulfilled Payments</h2>
+          {payments.fulfilled.length === 0 ? (
+            <p>No fulfilled payments.</p>
+          ) : (
+            <div className="appointments-container">
+              {payments.fulfilled.map(pay => (
+                <div key={pay.payment_id} className="payment-card">
+                  <h5>Payment #{pay.payment_id}</h5>
+                  <p><strong>Patient:</strong> {pay.patient_name}</p>
+                  <p>
+                    <strong>Amount:</strong>{" "}
+                    {isNaN(pay.amount)
+                      ? pay.amount
+                      : `$${Number(pay.amount).toFixed(2)}`}
+                  </p>
+                  <p><strong>Date:</strong> {new Date(pay.payment_date).toLocaleString()}</p>
+                  <p><strong>Status:</strong> Fulfilled</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
   };
 
   return (
@@ -405,6 +474,14 @@ function PharmacyDashboard() {
                 onClick={() => setActiveTab("prices")}
               >
                 Prices
+              </button>
+            </li>
+            <li>
+              <button
+                className={activeTab === "payments" ? "active-tab" : ""}
+                onClick={() => setActiveTab("payments")}
+              >
+                Payments
               </button>
             </li>
           </ul>
