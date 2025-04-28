@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../Assets/Logo/logo.png'; // Adjust path if needed
 import './DashboardTopBar.css';
 
@@ -14,12 +14,17 @@ function DashboardTopBar() {
     address: '',
     phone_number: ''
   });
-  // Set Preferred Pharmacy
-  const [preferredPharmacy, setPreferredPharmacy] = useState(null); // New state
+  const navigate = useNavigate();
+  const [averageRating, setAverageRating] = useState(null);
+
+  
 
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
+    console.log("🧩 Stored user:", storedUser);
+    
+  
     if (storedUser) {
       fetch('http://localhost:5000/api/dashboard/user-info', {
         method: 'POST',
@@ -27,23 +32,15 @@ function DashboardTopBar() {
         body: JSON.stringify(storedUser)
       })
         .then(res => res.json())
-          .then(data => {
-            setUserInfo(data);
-
-            // 2) If the logged-in user is a patient, fetch their preferred pharmacy
-            if (storedUser.user_type === 'patient') {
-              fetch(`http://localhost:5000/api/patient-dashboard/preferred_pharmacy?user_id=${storedUser.user_id}`)
-                  .then(r => r.json())
-                  .then(pharm => setPreferredPharmacy(pharm))
-                  .catch(err => console.error('Error loading preferred pharmacy:', err));
-            }
-          })
-          .catch(err => console.error('Error fetching user info:', err));
-    }
-
-    const root = document.querySelector('.dashboard-root');
-    if (localStorage.getItem('dashboardDarkMode') === 'true' && root) {
-      root.classList.add('dark-mode');
+        .then(data => {
+          console.log("🚀 Received user info from backend:", data);
+          setUserInfo(data);
+          if (data.average_rating !== undefined) {
+            setAverageRating(data.average_rating);
+            console.log("⭐ averageRating set to:", data.average_rating);
+          }
+        })
+        .catch(err => console.error('Error fetching user info:', err));
     }
   }, []);
 
@@ -101,15 +98,7 @@ function DashboardTopBar() {
       <h2 className="dashboard-title">
         {getDashboardTitle()}
       </h2>
-
-      {/* Only show for patients once we have the preferred pharmacy */}
-      {JSON.parse(localStorage.getItem('user')).user_type === 'patient' && preferredPharmacy && (
-          <div className="preferred-pharmacy-bar">
-            <div>Preferred Pharmacy:&nbsp;</div>
-            <strong>{preferredPharmacy.name}</strong>
-            <span className="zip"> ({preferredPharmacy.zip_code})</span>
-          </div>
-      )}
+      
 
       {userInfo && (
         <div className="profile-container">
@@ -119,7 +108,11 @@ function DashboardTopBar() {
 
           {dropdownOpen && (
             <div className="profile-dropdown">
-              <p><strong>{userInfo.first_name} {userInfo.last_name}</strong></p>
+              <p><strong>
+                {JSON.parse(localStorage.getItem("user")).user_type === "pharmacist"
+                  ? userInfo.name
+                  : `${userInfo.first_name} ${userInfo.last_name}`}
+              </strong></p>
               <p>ID: {userInfo.patient_id || userInfo.doctor_id || userInfo.pharmacy_id}</p>
               <button className="dropdown-button" onClick={() => {
                 setEditableUser({
@@ -144,6 +137,35 @@ function DashboardTopBar() {
         <div className="modal-overlay" onClick={() => setShowAccountModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3>👤 Edit Account Details</h3>
+
+            {/* Doctor's rating display (only for doctors) */}
+            {JSON.parse(localStorage.getItem("user")).user_type === "doctor" && (
+              <div className="account-field">
+                <label>Average Rating:</label>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  {averageRating !== null && parseFloat(averageRating) > 0 ? (
+                    <>
+                      <span style={{ fontSize: "18px", fontWeight: "bold" }}>
+                        {parseFloat(averageRating).toFixed(1)} ⭐
+                      </span>
+                      <span style={{ fontSize: "20px", color: "#FFD700" }}>
+                        {(() => {
+                          const rating = parseFloat(averageRating);
+                          const fullStars = Math.floor(rating);
+                          const halfStar = rating % 1 >= 0.25 && rating % 1 < 0.75;
+                          const stars = "★".repeat(fullStars) + (halfStar ? "⯨" : "") + "☆".repeat(5 - fullStars - (halfStar ? 1 : 0));
+                          return stars;
+                        })()}
+                      </span>
+                    </>
+                  ) : (
+                    <span style={{ color: "#888888", fontSize: "16px" }}>
+                      No ratings yet
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="account-field">
               <label>First Name:</label>
@@ -189,7 +211,7 @@ function DashboardTopBar() {
         </div>
       )}
 
-      {showSettingsModal && (
+{showSettingsModal && (
         <div className="modal-overlay" onClick={() => setShowSettingsModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3>⚙️ Settings</h3>
