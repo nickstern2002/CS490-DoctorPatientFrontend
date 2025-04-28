@@ -194,7 +194,30 @@ function PatientDashboard() {
         }
     };
 
+    // Gets Mealplan From Doctor
+    const [assignedMealplans, setAssignedMealplans] = useState([]);
+    const [showAssignedMealModal, setShowAssignedMealModal] = useState(false);
+    const [selectedAssignedMeal, setSelectedAssignedMeal] = useState(null);
+    const fetchAssignedMealplans = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/patient-dashboard/assigned-mealplans?user_id=${user_id}`);
+            const data = await response.json();
+            if (response.ok) {
+                console.log("💬 Assigned mealplans fetched:", data);
+                setAssignedMealplans(data.mealplans || []);
+            } else {
+                console.error("Error fetching assigned mealplans:", data.error);
+            }
+        } catch (err) {
+            console.error("Fetch failed:", err);
+        }
+    };
 
+    useEffect(() => {
+        fetchAssignedMealplans();
+    }, []);
+
+    
     // Modal visibility
     const [showMetricsModal, setShowMetricsModal] = useState(false);
 
@@ -404,6 +427,8 @@ function PatientDashboard() {
 
     // Render content based on the active tab.
     const renderDashboardData = () => {
+        console.log("💬 assignedMealplans contents:", assignedMealplans);
+
         if (activeTab === "dashboard") {
             return (
                 <div>
@@ -440,9 +465,78 @@ function PatientDashboard() {
                         )}
                     </div>
 
-                    {/* Mealplan Section */}
+                    {/* Doctor Assign Patient Mealplan Section */}
                     <div style={{ marginTop: '2rem' }}>
-                        <h3>Mealplans</h3>
+                        <h3>Mealplans Assigned by Your Doctor</h3>
+
+                        {assignedMealplans.length > 0 ? (
+                            <div className="mealplans-wrapper">
+                                {assignedMealplans.map(plan => (
+                                    <div
+                                        key={plan.assignment_id}
+                                        className="meal-card"
+                                        onClick={() => {
+                                            setSelectedAssignedMeal(plan);
+                                            setShowAssignedMealModal(true);
+                                        }}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        {plan.image && (
+                                            <img
+                                                src={`http://localhost:5000/static/${plan.image}`}
+                                                alt={plan.title}
+                                                className="meal-image"
+                                            />
+                                        )}
+                                        <div className="meal-card-header">
+                                            <h4>{plan.title}</h4>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>No assigned mealplans yet.</p>
+                        )}
+
+                        {showAssignedMealModal && selectedAssignedMeal && (
+                            <div className="modal-overlay" onClick={() => setShowAssignedMealModal(false)}>
+                                <div className="modal" onClick={(e) => e.stopPropagation()}>
+                                    {selectedAssignedMeal.image && (
+                                        <img
+                                            src={`http://localhost:5000/static/${selectedAssignedMeal.image}`}
+                                            alt={selectedAssignedMeal.title}
+                                            className="meal-image"
+                                        />
+                                    )}
+                                    <h3>{selectedAssignedMeal.title}</h3>
+
+                                    {/* ⭐ NEW doctor name and date section ⭐ */}
+                                    {selectedAssignedMeal.doctor_name && (
+                                        <p><strong>Assigned by:</strong> {selectedAssignedMeal.doctor_name}</p>
+                                    )}
+                                    {selectedAssignedMeal.assigned_at && (
+                                        <p><em>Assigned on: {selectedAssignedMeal.assigned_at}</em></p>
+                                    )}
+
+                                    {/* Existing info */}
+                                    <p><strong>Description:</strong> {selectedAssignedMeal.description}</p>
+                                    <p><strong>Ingredients:</strong> {selectedAssignedMeal.ingredients}</p>
+                                    <p><strong>Instructions:</strong> {selectedAssignedMeal.instructions}</p>
+                                    <p><strong>Calories:</strong> {selectedAssignedMeal.calories}</p>
+                                    <p><strong>Fat:</strong> {selectedAssignedMeal.fat}</p>
+                                    <p><strong>Sugar:</strong> {selectedAssignedMeal.sugar}</p>
+
+                                    <button className="close-button" onClick={() => setShowAssignedMealModal(false)}>
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Patient Mealplan Section */}
+                    <div style={{ marginTop: '2rem' }}>
+                        <h3>Mealplans:</h3>
                         <button className="submit-metrics-button" onClick={() => setShowMealplanModal(true)}>
                             Create Mealplan
                         </button>
@@ -496,7 +590,7 @@ function PatientDashboard() {
                                 >
                                 {plan.image && (
                                     <img
-                                    src={`data:image/jpeg;base64,${plan.image}`}
+                                    src={`http://localhost:5000/static/${plan.image}`}
                                     alt={plan.title}
                                     className="meal-image"
                                     />
@@ -515,9 +609,9 @@ function PatientDashboard() {
                         {showMealModal && selectedMeal && (
                             <div className="modal-overlay" onClick={() => setShowMealModal(false)}>
                             <div className="modal" onClick={(e) => e.stopPropagation()}>
-                                {selectedMeal.image && (
+                            {selectedMeal.image && (
                                 <img
-                                    src={`data:image/jpeg;base64,${selectedMeal.image}`}
+                                    src={`http://localhost:5000/static/${selectedMeal.image}`}   // ✅ CORRECT
                                     alt={selectedMeal.title}
                                     className="meal-image"
                                 />

@@ -83,7 +83,7 @@
   justify-content: space-between;
   align-items: center;
   background-color: #2a8eed;
-  padding: 1.5rem 0; /* ❗ Remove side padding */
+  padding: 1.5rem 0; 
   color: white;
   border-radius: 0 0 12px 12px;
   flex-wrap: wrap;
