@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function App() {
   //
@@ -17,9 +18,21 @@ export default function App() {
   const [showMealPlanModal, setShowMealPlanModal] = useState(false);
   //
   const [replyInputs, setReplyInputs] = useState({});
-  const [activeReplyPostId, setActiveReplyPostId] = useState(null);
+  //const [activeReplyPostId, setActiveReplyPostId] = useState(null);
   //
   const [replies, setReplies] = useState({});
+  //
+  const [replyComments, setReplyComments] = useState({});
+  const [activeReplyCommentView, setActiveReplyCommentView] = useState({});
+  //
+  const [userDisplayNames, setUserDisplayNames] = useState({});
+  //
+  const [authorNames, setAuthorNames] = useState({});
+  //
+  const [activeReplyInputPostId, setActiveReplyInputPostId] = useState(null);
+  const [activeRepliesPostId, setActiveRepliesPostId] = useState(null);
+  const [activeReplyToReplyId, setActiveReplyToReplyId] = useState(null);
+  const [replyToReplyInputs, setReplyToReplyInputs] = useState({});
   // New ones for creating a meal plan
   const [newMealPlan, setNewMealPlan] = useState({
     title: '',
@@ -38,7 +51,8 @@ export default function App() {
   const user_id = user ? user.user_id : null;
   //
   const [isDoctor, setIsDoctor] = useState(false);
-  const [isPatient, setIsPatient] = useState(false);
+  //const [isPatient, setIsPatient] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchPosts();
@@ -169,7 +183,7 @@ export default function App() {
     setParsedSelectedPost(JSON.parse(post.post_content));
     //console.log("Post: ", parsedSelectedPost, "Title?: ", parsedSelectedPost.post_title)
     setShowMealPlanModal(true);
-    console.log("POST CLICKED")
+    //console.log("POST CLICKED")
   };
 
   const handleReplyChange = (postId, value) => {
@@ -186,7 +200,7 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           post_id: postId,
-          patient_id: user_id, // make sure `user_id` is the current patient
+          user_id: user_id, // make sure `user_id` is the current patient
           reply_content: replyContent,
         }),
       });
@@ -194,7 +208,17 @@ export default function App() {
       if (response.ok) {
         console.log("✅ Reply submitted!");
         setReplyInputs(prev => ({ ...prev, [postId]: '' }));
-        setActiveReplyPostId(null);
+        //
+        //setActiveReplyPostId(null);
+        setActiveReplyInputPostId(null);
+        //
+        setActiveRepliesPostId(prev => {
+          const isOpening = prev !== postId;
+          if (isOpening) {
+            fetchReplies(postId);
+          }
+          return isOpening ? postId : null;
+        });
         // optionally refetch replies or show success
       } else {
         console.error("❌ Failed to submit reply");
@@ -210,6 +234,12 @@ export default function App() {
       if (response.ok) {
         const data = await response.json();
         setReplies(prev => ({ ...prev, [postId]: data }));
+  
+        // NEW: Fetch comments for each reply
+        data.forEach(reply => {
+          fetchReplyComments(reply.reply_id);
+          //toggleReplyToReplyInput(reply.reply_id);
+        });
       } else {
         console.error("Failed to fetch replies");
       }
@@ -218,9 +248,133 @@ export default function App() {
     }
   };
 
+  // Toggle input for a specific reply
+  const toggleReplyToReplyInput = (replyId) => {
+    setActiveReplyToReplyId(prev => {
+      const isOpening = prev !== replyId;
+      if (isOpening) {
+        fetchReplyComments(replyId); // Lazy load here
+      }
+      return isOpening ? replyId : null;
+    });
+  };
+
+  // Handle text input change
+  const handleReplyToReplyChange = (replyId, value) => {
+    setReplyToReplyInputs(prev => ({
+      ...prev,
+      [replyId]: value,
+    }));
+  };
+
+  // Submit a reply-to-reply
+  const submitReplyToReply = async (replyId) => {
+    const content = replyToReplyInputs[replyId];
+    if (!content) return;
+
+    try {
+      const response = await fetch('http://localhost:5000/api/discussion/reply-comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          reply_id: replyId,
+          user_id: user_id,  
+          content: content,
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Reply to reply submitted!');
+        setActiveReplyCommentView(prev => ({
+          ...prev,
+          [replyId]: true,
+        }));
+        setActiveReplyToReplyId(null);
+        fetchReplyComments(replyId); // <- fetch updated comments here
+      }
+      else {
+        console.error('Failed to submit reply to reply');
+      }
+    } catch (error) {
+      console.error('Error submitting reply to reply:', error.message);
+    }
+  };
+
+  const fetchReplyComments = async (replyId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/discussion/reply-comments/${replyId}`);
+      const data = await response.json();
+  
+      if (response.ok) {
+        setReplyComments(prev => ({
+          ...prev,
+          [replyId]: data
+        }));
+        setActiveReplyCommentView(prev => ({
+          ...prev,
+          [replyId]: true,
+        }));
+      } 
+      else {
+        console.error("Failed to fetch reply comments", data);
+      }
+    } catch (error) {
+      console.error("Error fetching reply comments", error);
+    }
+  };
+  
+  const fetchDisplayName = async (userId) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/discussion/replies/username/${userId}`);
+      const data = await res.json();
+      const name = data.name;
+      //console.log("Name?: ", name)
+      setUserDisplayNames(prev => ({ ...prev, [userId]: name }));
+    } 
+    catch (err) {
+      console.error("Failed to fetch display name", err);
+    }
+  };
+
   const filteredPosts = posts.filter(post =>
     post.post_title.toLowerCase().includes(search.toLowerCase())
   );
+
+  useEffect(() => {
+    Object.values(replies).forEach(replyList => {
+      replyList.forEach(reply => {
+        if (reply.user_id && !userDisplayNames[reply.user_id]) {
+          fetchDisplayName(reply.user_id);
+        }
+      });
+    });
+  }, [replies]);
+
+  useEffect(() => {
+    Object.values(replyComments).forEach(commentList => {
+      commentList.forEach(comment => {
+        if (comment.user_id && !userDisplayNames[comment.user_id]) {
+          fetchDisplayName(comment.user_id);
+        }
+      });
+    });
+  }, [replyComments]);
+
+  const fetchAuthorName = async (postId) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/discussion/posts/author/${postId}`);
+      const data = await res.json();
+      setAuthorNames(prev => ({ ...prev, [postId]: data.name }));
+    } catch (err) {
+      console.error("Failed to fetch post author name", err);
+    }
+  };
+  
+  const returnToLastPlace = () => {
+    navigate(-1); 
+  };
 
   return (
     <div className="min-h-screen flex bg-white">
@@ -234,6 +388,14 @@ export default function App() {
           placeholder="Search by title"
           className="p-2 border border-gray-300 rounded"
         />
+          <div className="mt-auto pt-4">
+          <button
+            onClick={() => returnToLastPlace()} // Replace with actual handler
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+          >
+            Back to Dashboard
+          </button>
+        </div>
       </aside>
 
       {/* Main content */}
@@ -241,6 +403,9 @@ export default function App() {
         <h1 className="text-2xl font-semibold text-center mb-6">Discussion Posts</h1>
         <div className="space-y-6">
           {filteredPosts.map(post => {
+            if (!authorNames[post.post_id]) {
+              fetchAuthorName(post.post_id);
+            }          
             let parsedContent = {};
             try {
               parsedContent = JSON.parse(post.post_content);
@@ -256,31 +421,53 @@ export default function App() {
                 onClick={() => handlePostClick(post)}
               >
                 <h2 className="font-bold mb-2">{post.post_title}</h2>
+                <p className="text-sm text-gray-500 mb-2">
+                  Posted by: {authorNames[post.post_id] || "Loading..."}
+                </p>
+                {/* Meal Plan Image */}
+                {parsedContent.image && (
+                  <img
+                    src={`http://localhost:5000/static/${parsedContent.image}`}
+                    className="w-full h-48 object-cover rounded mb-4"
+                  />
+                )}
                 <p className="text-gray-800 whitespace-pre-line mb-4">
                   {parsedContent.description
                     ? parsedContent.description.substring(0, 100) + '...'
                     : "No description available."}
                 </p>
                 
-                {/* Reply button */}
-                <div className="flex justify-end">
+                {/* Two separate buttons */}
+                <div className="flex justify-end space-x-4">
+                  {/* View Replies button */}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      const isOpening = post.post_id !== activeReplyPostId;
-                      setActiveReplyPostId(isOpening ? post.post_id : null);
-                      if (isOpening) {
-                        fetchReplies(post.post_id);
-                      }
+                      setActiveRepliesPostId(prev => {
+                        const isOpening = prev !== post.post_id;
+                        if (isOpening) {
+                          fetchReplies(post.post_id);
+                        }
+                        return isOpening ? post.post_id : null;
+                      });
+                    }}
+                    className="text-green-600 font-medium hover:underline"
+                  >
+                    {activeRepliesPostId === post.post_id ? "Hide Replies" : "View Replies"}
+                  </button>
+                  {/* Reply button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveReplyInputPostId(prev => prev === post.post_id ? null : post.post_id);
                     }}
                     className="text-blue-600 font-medium hover:underline"
                   >
-                    {activeReplyPostId === post.post_id ? "Cancel" : "Reply"}
+                    {activeReplyInputPostId === post.post_id ? "Cancel Reply" : "Reply"}
                   </button>
                 </div>
-
-                {/* Reply input field */}
-                {activeReplyPostId === post.post_id && (
+                {/* WRITE REPLY */}
+                {activeReplyInputPostId === post.post_id && (
                   <div className="mt-3">
                     <textarea
                       className="w-full border p-2 rounded"
@@ -288,11 +475,11 @@ export default function App() {
                       placeholder="Write your reply..."
                       value={replyInputs[post.post_id] || ''}
                       onChange={(e) => handleReplyChange(post.post_id, e.target.value)}
-                      onClick={(e) => e.stopPropagation()} // ✅ Prevent click bubbling here too
+                      onClick={(e) => e.stopPropagation()}
                     />
                     <button
                       onClick={(e) => {
-                        e.stopPropagation(); // ✅ Prevent post detail opening
+                        e.stopPropagation();
                         submitReply(post.post_id);
                       }}
                       className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
@@ -301,19 +488,68 @@ export default function App() {
                     </button>
                   </div>
                 )}
-
-                {/* Reply view */}
-                {activeReplyPostId === post.post_id && (
+                {/* VIEW REPLIES */}
+                {activeRepliesPostId === post.post_id && (
                   <div className="mt-4">
-                    {/* Reply input (already added earlier) */}
-
-                    {/* Submitted replies */}
                     {replies[post.post_id] && replies[post.post_id].length > 0 ? (
                       <div className="mt-4 space-y-2">
                         <h3 className="font-semibold text-gray-700">Replies:</h3>
                         {replies[post.post_id].map(reply => (
-                          <div key={reply.reply_id} className="bg-gray-100 p-2 rounded text-sm">
-                            {reply.reply_content}
+                          <div key={reply.reply_id} className="bg-gray-100 p-2 rounded text-sm space-y-2">
+                            <div className="text-xs font-semibold text-gray-600">
+                              {userDisplayNames[reply.user_id] || "Loading..."}
+                            </div>
+                            <div>{reply.reply_content}</div>
+                            {/* Reply to this reply button */}
+                            <div className="flex justify-end">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleReplyToReplyInput(reply.reply_id);
+                              }}
+                              className="text-blue-600 text-xs hover:underline ml-2"
+                            >
+                              {activeReplyToReplyId === reply.reply_id ? "Cancel Reply" : "Reply to this"}
+                            </button>
+                            </div>
+                            {activeReplyCommentView[reply.reply_id] && (
+                              <div className="ml-4 mt-2 space-y-1">
+                                {replyComments[reply.reply_id] && replyComments[reply.reply_id].length > 0 ? (
+                                  replyComments[reply.reply_id].map(comment => (
+                                    <div key={comment.id} className="bg-gray-50 p-2 rounded text-xs">
+                                      <div className="font-semibold text-gray-700">
+                                        {userDisplayNames[comment.user_id] || 'Loading...'}
+                                      </div>
+                                      <div>{comment.content}</div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <div className="text-xs text-gray-500">No replies yet.</div>
+                                )}
+                              </div>
+                            )}
+                            {/* If replying to this reply */}
+                            {activeReplyToReplyId === reply.reply_id && (
+                              <div className="mt-2">
+                                <textarea
+                                  className="w-full border p-2 rounded"
+                                  rows="2"
+                                  placeholder="Write your reply to this reply..."
+                                  value={replyToReplyInputs[reply.reply_id] || ''}
+                                  onChange={(e) => handleReplyToReplyChange(reply.reply_id, e.target.value)}
+                                  onClick={(e) => e.stopPropagation()}
+                                />
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    submitReplyToReply(reply.reply_id);
+                                  }}
+                                  className="mt-2 bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs"
+                                >
+                                  Submit
+                                </button>
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -322,7 +558,8 @@ export default function App() {
                     )}
                   </div>
                 )}
-
+                
+                {/* END OF THE BIG DIV */}
               </div>
             );
           })}
