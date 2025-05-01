@@ -977,6 +977,13 @@ function PatientDashboard() {
                             Prescriptions
                         </button>
                     </li>
+                    <li>
+                    <button
+                        onClick={() => navigate('/discuss')}
+                    >
+                        Discussion Board
+                    </button>
+                    </li>
                 </ul>
                 </nav>
         

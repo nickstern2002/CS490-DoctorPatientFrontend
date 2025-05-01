@@ -379,18 +379,21 @@ export default function App() {
   return (
     <div className="min-h-screen flex bg-white">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r shadow-md flex flex-col p-4 rounded-tr-[40px] rounded-br-[40px]">
-        <label className="font-semibold mb-2">Search:</label>
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by title"
-          className="p-2 border border-gray-300 rounded"
-        />
-          <div className="mt-auto pt-4">
+      <aside className="fixed top-0 left-0 h-screen w-64 bg-white border-r shadow-md flex flex-col p-4 rounded-tr-[40px] rounded-br-[40px]">
+        <div className="flex-1 overflow-auto">
+          <label className="font-semibold mb-2 block">Search:</label>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by title"
+            className="p-2 border border-gray-300 rounded w-full"
+          />
+        </div>
+
+        <div className="pt-4">
           <button
-            onClick={() => returnToLastPlace()} // Replace with actual handler
+            onClick={() => returnToLastPlace()}
             className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
           >
             Back to Dashboard

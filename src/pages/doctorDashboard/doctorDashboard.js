@@ -670,6 +670,7 @@ function DoctorDashboard() {
                     <li><button onClick={() => setActiveTab("meal-plans")}>Official Meal Plans</button></li>
                     <li><button onClick={() => setActiveTab("payments")}>Payments</button></li>
                     <li><button onClick={() => setActiveTab("chat-history")}>Chat History</button></li>
+                    <li><button onClick={() => navigate('/discuss')}>Discussion Board</button></li>
                 </ul>
                 </nav>
         
