@@ -218,13 +218,15 @@ function PatientDashboard() {
     }, []);
 
     
+    // Metrics meal plan and calories
+    const [selectedMealIds, setSelectedMealIds] = useState([]);
+    const [extraCalories, setExtraCalories] = useState("");
     // Modal visibility
     const [showMetricsModal, setShowMetricsModal] = useState(false);
 
     // Form fields
     const [metricWeight, setMetricWeight] = useState("");
     const [metricHeight, setMetricHeight] = useState("");
-    const [metricCalories, setMetricCalories] = useState("");
 
     // Open / close
     const openMetricsModal = () => setShowMetricsModal(true);
@@ -260,42 +262,51 @@ function PatientDashboard() {
 
     // Submit handler
     const handleMetricsSubmit = () => {
-        // simple validation
-        if (!metricWeight || !metricHeight || !metricCalories) {
-            return alert("All fields are required");
+        // Validation
+        if (!metricWeight || !metricHeight) {
+          return alert("Weight and height are required.");
         }
-
+      
+        const selectedMeals = mealplans.filter(meal => selectedMealIds.includes(meal.meal_plan_id));
+        const caloriesFromMeals = selectedMeals.reduce((sum, meal) => sum + (meal.calories || 0), 0);
+        const extra = parseInt(extraCalories || "0", 10);
+        const totalCalories = caloriesFromMeals + extra;
+      
         fetch("http://localhost:5000/api/patient-dashboard/metrics/submit", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                user_id,
-                weight: parseFloat(metricWeight),
-                height: parseFloat(metricHeight),
-                caloric_intake: parseInt(metricCalories, 10)
-            })
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id,
+            weight: parseFloat(metricWeight),
+            height: parseFloat(metricHeight),
+            caloric_intake: totalCalories,       // ✅ correct calculated value
+            meal_plan_ids: selectedMealIds,
+            extra_calories: extra
+          })
         })
-            .then(res => res.json())
-            .then(json => {
-                if (json.message) {
-                    alert(json.message);
-                    // optionally re‑fetch latest height and graph data:
-                    fetch(`http://localhost:5000/api/patient-dashboard/metrics/latest-height?user_id=${user_id}`)
-                        .then(r => r.json()).then(d => setLatestHeight(d.latest_height));
-                    if (activeTab === "metrics") {
-                        fetch(`http://localhost:5000/api/patient-dashboard/metrics/graph-data?user_id=${user_id}`)
-                            .then(r => r.json()).then(d => {
-                            setWeightData(d.weight_data);
-                            setCalorieData(d.caloric_intake_data);
-                        });
-                    }
-                } else {
-                    alert("Error: " + (json.error||"Unknown"));
-                }
-            })
-            .catch(err => console.error("Error submitting metrics:", err))
-            .finally(closeMetricsModal);
-    };
+          .then(res => res.json())
+          .then(json => {
+            if (json.message) {
+              alert(json.message);
+              closeMetricsModal();
+      
+              // Refresh metrics data
+              fetch(`http://localhost:5000/api/patient-dashboard/metrics/latest-height?user_id=${user_id}`)
+                .then(r => r.json()).then(d => setLatestHeight(d.latest_height));
+      
+              if (activeTab === "metrics") {
+                fetch(`http://localhost:5000/api/patient-dashboard/metrics/graph-data?user_id=${user_id}`)
+                  .then(r => r.json()).then(d => {
+                    setWeightData(d.weight_data);
+                    setCalorieData(d.caloric_intake_data);
+                });
+              }
+            } else {
+              alert("Error: " + (json.error || "Unknown"));
+            }
+          })
+          .catch(err => console.error("Error submitting metrics:", err));
+      };
 
     // Function to perform doctor search
     const performDoctorSearch = () => {
@@ -757,39 +768,68 @@ function PatientDashboard() {
                         <CalorieChart calorieData={calorieData} />
                     </div>
                     {showMetricsModal && (
-                        <div className="modal-overlay">
-                            <div className="modal">
-                                <h4>Enter Today’s Metrics</h4>
-                                <label>
-                                    Weight (lbs):
-                                    <input
-                                        type="number"
-                                        value={metricWeight}
-                                        onChange={e => setMetricWeight(e.target.value)}
-                                    />
-                                </label>
-                                <label>
-                                    Height (inches):
-                                    <input
-                                        type="number"
-                                        value={metricHeight}
-                                        onChange={e => setMetricHeight(e.target.value)}
-                                    />
-                                </label>
-                                <label>
-                                    Calories:
-                                    <input
-                                        type="number"
-                                        value={metricCalories}
-                                        onChange={e => setMetricCalories(e.target.value)}
-                                    />
-                                </label>
-                                <div className="modal-actions">
-                                    <button onClick={handleMetricsSubmit}>Submit</button>
-                                    <button onClick={closeMetricsModal}>Cancel</button>
-                                </div>
-                            </div>
+                    <div className="modal-overlay">
+                        <div className="modal">
+                        <h4>Enter Today’s Metrics</h4>
+
+                        <label>
+                            Weight (lbs):
+                            <input
+                            type="number"
+                            value={metricWeight}
+                            onChange={e => setMetricWeight(e.target.value)}
+                            />
+                        </label>
+
+                        <label>
+                            Height (inches):
+                            <input
+                            type="number"
+                            value={metricHeight}
+                            onChange={e => setMetricHeight(e.target.value)}
+                            />
+                        </label>
+
+
+                        <h5>Select Meals You Ate:</h5>
+                        <div style={{ maxHeight: '150px', overflowY: 'auto', padding: '5px', border: '1px solid #ccc' }}>
+                            {mealplans.map(meal => (
+                            <label key={meal.meal_plan_id} style={{ display: 'block', marginBottom: '4px' }}>
+                                <input
+                                type="checkbox"
+                                value={meal.meal_plan_id}
+                                onChange={e => {
+                                    const id = parseInt(e.target.value);
+                                    setSelectedMealIds(prev =>
+                                    e.target.checked ? [...prev, id] : prev.filter(x => x !== id)
+                                    );
+                                }}
+                                />
+                                {" "}{meal.title} ({meal.calories} cal)
+                            </label>
+                            ))}
                         </div>
+
+                        <label>
+                            Extra Calories (besides meal plans):
+                            <input
+                            type="number"
+                            value={extraCalories}
+                            onChange={e => setExtraCalories(e.target.value)}
+                            />
+                        </label>
+
+                        <p><strong>Total Calories to Submit:</strong> {selectedMealIds.reduce((sum, id) => {
+                        const meal = mealplans.find(m => m.meal_plan_id === id);
+                        return sum + (meal?.calories || 0);
+                        }, 0) + parseInt(extraCalories || "0", 10)} cal</p>
+
+                        <div className="modal-actions">
+                            <button onClick={handleMetricsSubmit}>Submit</button>
+                            <button onClick={closeMetricsModal}>Cancel</button>
+                        </div>
+                        </div>
+                    </div>
                     )}
                 </div>
             );
