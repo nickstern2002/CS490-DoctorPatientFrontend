@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
-print("=Login page testing below=")
+print("=Patient page testing below=")
 
 options = webdriver.FirefoxOptions()
 driver = webdriver.Firefox(options=options)
@@ -46,18 +46,28 @@ except:
     print("The login was a failure")
     pass  # No alert present, continue
 
-#element = driver.find_element(By.LINK_TEXT, "Login Successful") This shit was just broken and wrong
-#element.click()
 print("after alert click?")
 time.sleep(2)
 
-profile = driver.find_element(By.CLASS_NAME, 'profile-avatar')
-profile.click()
-time.sleep(2)
-logout_btn = driver.find_element(By.CLASS_NAME, "logout-button")
-logout_btn.click()
+# This was just to view the dashboard buttons
+buttons = driver.find_elements(By.TAG_NAME, 'button')
+# print("Buttons?: ", buttons)
+tempVal = 0
+for b in buttons:
+    print("t: ", tempVal)
+    if tempVal != 5:
+        #print("b: ",b.text, " Type: ", type(b), "val: ", tempVal)
+        #print("b: ", b)
+        b.click()
+        time.sleep(1)
+    else:
+        b.click()
+        time.sleep(1)
+        break
+    tempVal+=1
+
 time.sleep(2)
 
 driver.quit()
 
-print("===Login page testing is now over===")
+print("===Patient page testing is now over===")

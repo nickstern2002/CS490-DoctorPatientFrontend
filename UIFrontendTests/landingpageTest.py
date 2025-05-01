@@ -12,8 +12,8 @@ driver.implicitly_wait(0.5)
 
 #text_box = driver.find_element(by=By.NAME, value="my-text")
 #submit_button = driver.find_element(by=By.CSS_SELECTOR, value="button")
-testerChoice = True
-testSignin = False
+testerChoice = False
+testSignin = True
 testLogin = False
 testC = 0
 if(testerChoice):
@@ -26,7 +26,10 @@ elif(testC == 2):
     testSignin = True
 else:
     print("other input occured(Just displaying all element a)")
+    testLogin = False
+    testSignin = False
 
+testSignin = True
 
 elements = driver.find_elements(By.TAG_NAME, 'a')
 testnum = 0
@@ -50,13 +53,13 @@ for e in elements:
         if(testnum == 5):
             time.sleep(2)
             elements[1].click()
-            time.sleep(2)
+            time.sleep(1)
     testnum+=1
     time.sleep(2)
 
-'''
-time.sleep(1)
 
+# time.sleep(1)
+'''
 signup_button = driver.find_element(by=By.CLASS_NAME, value="hero-btn")
 print("===Getting the elements===")
 time.sleep(1)
@@ -65,6 +68,24 @@ signup_button.click()
 print("===pressed the button===")
 time.sleep(1)
 '''
+
+l_button = driver.find_element(By.LINK_TEXT, "Log In")
+print("===Getting the elements===")
+time.sleep(1)
+
+l_button.click()
+print("===pressed the button===")
+time.sleep(3)
+
+ret_button = driver.find_element(By.LINK_TEXT, "Return to Home Page")
+print("===Getting the elements===", ret_button)
+time.sleep(1)
+
+ret_button.click()
+print("===pressed the button===")
+time.sleep(2)
+
+
 
 driver.quit()
 
