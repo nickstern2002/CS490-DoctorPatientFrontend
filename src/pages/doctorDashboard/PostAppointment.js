@@ -23,7 +23,6 @@ export default function PostAppointmentPage() {
     /* Meal Plan Const stuff*/
      // Assigns mealplan to patient
      const [selectedMealPlanId, setSelectedMealPlanId] = useState('');
-     const [assignPatientId, setAssignPatientId] = useState('');
      const [officialMealPlans, setOfficialMealPlans] = useState([]);
  
      const fetchOfficialMealPlans = async () => {
@@ -59,7 +58,7 @@ export default function PostAppointmentPage() {
     
             const assignMealPlanToPatient = async () => {
             
-                if (!selectedMealPlanId || !assignPatientId) {
+                if (!selectedMealPlanId) {
                     alert("Please select a mealplan and enter a patient ID.");
                     return;
                 }
@@ -70,7 +69,7 @@ export default function PostAppointmentPage() {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             user_id: user_id,
-                            patient_id: assignPatientId,
+                            patient_id: patient_id,
                             meal_plan_id: selectedMealPlanId
                         })
                     });
@@ -79,7 +78,6 @@ export default function PostAppointmentPage() {
                     if (response.ok) {
                         alert("Mealplan assigned successfully!");
                         setSelectedMealPlanId('');
-                        setAssignPatientId('');
                     } else {
                         alert("Error: " + data.error);
                     }
@@ -160,6 +158,16 @@ export default function PostAppointmentPage() {
         } catch (err) {
             console.error('Prescription error:', err);
             setError('An unexpected error occurred requesting prescription.');
+            setSubmitting(false);
+            return;
+        }
+
+        // 3) Assign Meal Plan
+        try {
+            await assignMealPlanToPatient()
+        } catch (err) {
+            console.error('Meal Plan error:', err);
+            setError('An unexpected error occurred assigning meal plans.');
             setSubmitting(false);
             return;
         }
@@ -256,7 +264,6 @@ export default function PostAppointmentPage() {
                     </div>
 
                     <div className="section">
-                        <h1>Hello from PostAppointmentPage</h1> 
                         
                         <h3 className="section-title">Assign Meal Plan</h3>
 
