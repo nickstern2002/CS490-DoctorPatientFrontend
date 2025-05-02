@@ -24,7 +24,7 @@ for e in elements:
         time.sleep(2)
     if(testnum == 1):
         print("Setting password")
-        e.send_keys("password-goes-here")
+        e.send_keys("password")
         time.sleep(2)
     testnum+=1
 
