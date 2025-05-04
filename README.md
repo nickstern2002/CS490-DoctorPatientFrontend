@@ -1,9 +1,9 @@
-#Welcome to the front end! 
+# Good Eatz Pharmacy
 
-this is using react! 
+A React Project that allows Doctors, Patients
+and Pharmacies to connect with each other
+to provide more effective service
 
-to start just do npm start to run it! 
-make sure your terminal is \cs490-DoctorPatientFrontend\doctor-patient-frontend
-just do cd \doctor-patient-frontend
-check if you have it installed using node -v
-I made it using node version 18.17.1
+This project relies on two flask backend services
+to function
+
