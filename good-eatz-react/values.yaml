@@ -25,18 +25,23 @@ service:
   port: 80
 
 ingress:
-  enabled: false
-  className: ""
-  annotations: {}
+  enabled: true
+  className: traefik           # or nginx, depending on your controller
+  annotations: {}              # any extra annotations you need
   hosts:
-    - host: chart-example.local
+    - host: localhost
       paths:
+        # 1) UI path → your React Service on port 80
         - path: /
           pathType: ImplementationSpecific
+          serviceName: good-eatz-react        # <— your frontend Service name
+          servicePort: 80
+        # 2) API path → your Flask Service on port 5000
+        - path: /api
+          pathType: ImplementationSpecific
+          serviceName: good-eatz-doctor-flask  # <— your backend Service name
+          servicePort: 5000
   tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 resources: {}
 livenessProbe:
