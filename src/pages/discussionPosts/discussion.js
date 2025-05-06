@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function App() {
   //
@@ -621,7 +621,11 @@ export default function App() {
               {mealPlans.map(plan => (
                 <li
                   key={plan.meal_plan_id}
-                  className="cursor-pointer hover:bg-gray-100 p-2 rounded"
+                  className={`cursor-pointer p-2 rounded ${
+                    selectedMealPlan?.meal_plan_id === plan.meal_plan_id
+                      ? 'bg-blue-100 border border-blue-500'
+                      : 'hover:bg-gray-100'
+                  }`}
                   onClick={() => setSelectedMealPlan(plan)}
                 >
                   {plan.title}
