@@ -30,7 +30,7 @@ function DoctorDashboard() {
 
     // Function to fetch appointments
     const fetchAppointments = () => {
-        fetch(`http://localhost:5000/api/doctor-dashboard/appointments?user_id=${user_id}`)
+        fetch(`${window.API_BASE}/api/doctor-dashboard/appointments?user_id=${user_id}`)
             .then(response => response.json())
             .then(data => setAppointments(data))
             .catch(error => console.error('Error fetching appointments:', error));
@@ -88,7 +88,7 @@ function DoctorDashboard() {
             }
         
             try {
-                const response = await fetch('http://localhost:5000/doctor-dashboard/official/create', {
+                const response = await fetch(`${window.API_BASE}/doctor-dashboard/official/create`, {
                     method: 'POST',
                     body: payload
                 });
@@ -115,7 +115,7 @@ function DoctorDashboard() {
         
             try {
                 console.log("📡 Fetching mealplans for doctor with user_id:", user_id);
-                const response = await fetch(`http://localhost:5000/doctor-dashboard/official/all?user_id=${user_id}`);
+                const response = await fetch(`${window.API_BASE}/doctor-dashboard/official/all?user_id=${user_id}`);
                 const data = await response.json();
         
                 console.log("✅ Fetched data from backend:", data);
@@ -148,7 +148,7 @@ function DoctorDashboard() {
             if (!confirmDelete) return;
 
             try {
-                const response = await fetch(`http://localhost:5000/api/doctor-dashboard/official/delete/${meal_plan_id}`, {
+                const response = await fetch(`${window.API_BASE}/api/doctor-dashboard/official/delete/${meal_plan_id}`, {
                     method: 'DELETE'
                 });
 
@@ -176,7 +176,7 @@ function DoctorDashboard() {
             }
 
             try {
-                const response = await fetch('http://localhost:5000/doctor-dashboard/assign-mealplan', {
+                const response = await fetch(`${window.API_BASE}/doctor-dashboard/assign-mealplan`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -203,7 +203,7 @@ function DoctorDashboard() {
         const [officialMealPlans, setOfficialMealPlans] = useState([]);
         const fetchOfficialMealPlans = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/doctor-dashboard/official/all?user_id=${user_id}`);
+                const response = await fetch(`${window.API_BASE}/doctor-dashboard/official/all?user_id=${user_id}`);
                 const data = await response.json();
                 if (response.ok) {
                     setOfficialMealPlans(data.mealplans || []);
@@ -222,7 +222,7 @@ function DoctorDashboard() {
     // Fetch appointments when activeTab changes to "dashboard"
     useEffect(() => {
         if (activeTab === "dashboard") {
-            fetch(`http://localhost:5000/api/doctor-dashboard/appointments?user_id=${user_id}`)
+            fetch(`${window.API_BASE}/api/doctor-dashboard/appointments?user_id=${user_id}`)
                 .then(response => response.json())
                 .then(data => setAppointments(data)) // data is a JSON array of appointments
                 .catch(error => console.error('Error fetching appointments:', error));
@@ -233,11 +233,11 @@ function DoctorDashboard() {
     useEffect(() => {
         if (activeTab === "appointments") {
             Promise.all([
-                fetch(`http://localhost:5000/api/doctor-dashboard/appointments/accepted?user_id=${user_id}`)
+                fetch(`${window.API_BASE}/api/doctor-dashboard/appointments/accepted?user_id=${user_id}`)
                     .then(response => response.json()),
-                fetch(`http://localhost:5000/api/doctor-dashboard/appointments/canceled?user_id=${user_id}`)
+                fetch(`${window.API_BASE}/api/doctor-dashboard/appointments/canceled?user_id=${user_id}`)
                     .then(response => response.json()),
-                fetch(`http://localhost:5000/api/doctor-dashboard/appointments/completed?user_id=${user_id}`)
+                fetch(`${window.API_BASE}/api/doctor-dashboard/appointments/completed?user_id=${user_id}`)
                     .then(response => response.json())
             ])
                 .then(([acceptedData, canceledData, completedData]) => {
@@ -252,7 +252,7 @@ function DoctorDashboard() {
     // Fetch payments when payments tab is active
     useEffect(() => {
         if (activeTab === "payments") {
-            fetch(`http://localhost:5000/api/doctor-dashboard/payments?user_id=${user_id}`)
+            fetch(`${window.API_BASE}/api/doctor-dashboard/payments?user_id=${user_id}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data && data.payments) {
@@ -267,7 +267,7 @@ function DoctorDashboard() {
 
     // Fetch doctor details for the top bar
     useEffect(() => {
-        fetch(`http://localhost:5000/api/doctor-dashboard/details?user_id=${user_id}`)
+        fetch(`${window.API_BASE}/api/doctor-dashboard/details?user_id=${user_id}`)
             .then(response => response.json())
             .then(data => {
                 if (data.doctor) {
@@ -281,14 +281,14 @@ function DoctorDashboard() {
         const apptId = activeChatAppointment.appointment_id;
         try {
             // 1) Mark completed in DB
-            await fetch('http://localhost:5000/api/doctor-dashboard/appointments/complete', {
+            await fetch(`${window.API_BASE}/api/doctor-dashboard/appointments/complete`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ appointment_id: apptId }),
             });
 
             // 2) Notify patient via chat
-            await fetch('http://localhost:5000/api/chat/send', {
+            await fetch(`${window.API_BASE}/api/chat/send`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -318,7 +318,7 @@ function DoctorDashboard() {
 
     // Function to respond to an appointment
     const respondAppointment = (appointment_id, accepted) => {
-        fetch('http://localhost:5000/api/doctor-dashboard/appointments/respond', {
+        fetch(`${window.API_BASE}/api/doctor-dashboard/appointments/respond`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -561,7 +561,7 @@ function DoctorDashboard() {
                                     >
                                         {plan.image && (
                                             <img
-                                                src={`http://localhost:5000/static/${plan.image}`}
+                                                src={`${window.API_BASE}/static/${plan.image}`}
                                                 alt={plan.title}
                                                 className="meal-image"
                                             />
@@ -582,7 +582,7 @@ function DoctorDashboard() {
                                 <div className="modal" onClick={(e) => e.stopPropagation()}>
                                     {selectedMeal.image && (
                                         <img
-                                            src={`http://localhost:5000/static/${selectedMeal.image}`}
+                                            src={`${window.API_BASE}/static/${selectedMeal.image}`}
                                             alt={selectedMeal.title}
                                             className="meal-image"
                                         />

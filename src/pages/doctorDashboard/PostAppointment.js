@@ -34,7 +34,7 @@ export default function PostAppointmentPage() {
                  return;
              }
  
-             const response = await fetch(`http://localhost:5000/doctor-dashboard/official/all?user_id=${user_id}`);
+             const response = await fetch(`${window.API_BASE}/doctor-dashboard/official/all?user_id=${user_id}`);
              console.log("🛠 Got fetch response:", response); // <- THIRD GUARANTEE
  
              const data = await response.json();
@@ -64,7 +64,7 @@ export default function PostAppointmentPage() {
                 }
             
                 try {
-                    const response = await fetch('http://localhost:5000/doctor-dashboard/assign-mealplan', {
+                    const response = await fetch(`${window.API_BASE}/doctor-dashboard/assign-mealplan`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -108,7 +108,7 @@ export default function PostAppointmentPage() {
         // 1) Create payment
         try {
             const payRes = await fetch(
-              'http://localhost:5000/api/doctor-dashboard/payments/create',
+              `${window.API_BASE}/api/doctor-dashboard/payments/create`,
               {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },

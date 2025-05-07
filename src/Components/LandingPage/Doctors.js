@@ -8,7 +8,7 @@ function Doctors() {
   const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/doctors/all')
+    fetch(`${window.API_BASE}/api/doctors/all`)
       .then(response => response.json())
       .then(data => {
         if (data.doctors) {

@@ -26,7 +26,7 @@ function DashboardTopBar() {
     
   
     if (storedUser) {
-      fetch('http://localhost:5000/api/dashboard/user-info', {
+      fetch(`${window.API_BASE}/api/dashboard/user-info`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(storedUser)
@@ -58,7 +58,7 @@ function DashboardTopBar() {
   const handleSave = async () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     try {
-      const response = await fetch("http://localhost:5000/api/dashboard/update-info", {
+      const response = await fetch(`${window.API_BASE}/api/dashboard/update-info`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

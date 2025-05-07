@@ -107,7 +107,7 @@ function PatientDashboard() {
         }
     
         try {
-            const response = await fetch('http://localhost:5000/api/patient-dashboard/mealplans/patient/create', {
+            const response = await fetch(`${window.API_BASE}/api/patient-dashboard/mealplans/patient/create`, {
                 method: 'POST',
                 body: payload
             });
@@ -129,7 +129,7 @@ function PatientDashboard() {
     useEffect(() => {
         if (activeTab === "prescriptions") {
             // fetch pending
-            fetch(`http://localhost:5000/api/patient-dashboard/pending-prescriptions?user_id=${user_id}`)
+            fetch(`${window.API_BASE}/api/patient-dashboard/pending-prescriptions?user_id=${user_id}`)
               .then(res => res.json())
               .then(data => {
                   if (Array.isArray(data)) setPendingPrescriptions(data);
@@ -138,7 +138,7 @@ function PatientDashboard() {
               .catch(err => console.error("Network error:", err));
 
             // fetch filled
-            fetch(`http://localhost:5000/api/patient-dashboard/prescriptions/filled?user_id=${user_id}`)
+            fetch(`${window.API_BASE}/api/patient-dashboard/prescriptions/filled?user_id=${user_id}`)
               .then(res => res.json())
               .then(data => {
                   if (Array.isArray(data)) setFilledPrescriptions(data);
@@ -155,7 +155,7 @@ function PatientDashboard() {
         if (!user_id) return;
     
         try {
-            const response = await fetch(`http://localhost:5000/api/patient-dashboard/mealplans/patient/all?user_id=${user_id}`);
+            const response = await fetch(`${window.API_BASE}/api/patient-dashboard/mealplans/patient/all?user_id=${user_id}`);
             const data = await response.json();
             if (response.ok) {
                 setMealplans(data.mealplans || []);
@@ -177,7 +177,7 @@ function PatientDashboard() {
         if (!confirmDelete) return;
     
         try {
-            const response = await fetch(`http://localhost:5000/api/patient-dashboard/mealplans/delete/${meal_plan_id}`, {
+            const response = await fetch(`${window.API_BASE}/api/patient-dashboard/mealplans/delete/${meal_plan_id}`, {
                 method: 'DELETE'
             });
     
@@ -200,7 +200,7 @@ function PatientDashboard() {
     const [selectedAssignedMeal, setSelectedAssignedMeal] = useState(null);
     const fetchAssignedMealplans = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/patient-dashboard/assigned-mealplans?user_id=${user_id}`);
+            const response = await fetch(`${window.API_BASE}/api/patient-dashboard/assigned-mealplans?user_id=${user_id}`);
             const data = await response.json();
             if (response.ok) {
                 console.log("💬 Assigned mealplans fetched:", data);
@@ -233,7 +233,7 @@ function PatientDashboard() {
     const closeMetricsModal = () => setShowMetricsModal(false);
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/patient-dashboard/details?user_id=${user_id}`)
+        fetch(`${window.API_BASE}/api/patient-dashboard/details?user_id=${user_id}`)
             .then(response => response.json())
             .then(data => {
                 if (data.patient) {
@@ -247,9 +247,9 @@ function PatientDashboard() {
     useEffect(() => {
         if (activeTab === "payments") {
             Promise.all([
-                fetch(`http://localhost:5000/api/patient-dashboard/payments/doctor?user_id=${user_id}`)
+                fetch(`${window.API_BASE}/api/patient-dashboard/payments/doctor?user_id=${user_id}`)
                     .then(response => response.json()),
-                fetch(`http://localhost:5000/api/patient-dashboard/payments/pharmacy?user_id=${user_id}`)
+                fetch(`${window.API_BASE}/api/patient-dashboard/payments/pharmacy?user_id=${user_id}`)
                     .then(response => response.json())
             ])
                 .then(([doctorData, pharmacyData]) => {
@@ -272,7 +272,7 @@ function PatientDashboard() {
         const extra = parseInt(extraCalories || "0", 10);
         const totalCalories = caloriesFromMeals + extra;
       
-        fetch("http://localhost:5000/api/patient-dashboard/metrics/submit", {
+        fetch(`${window.API_BASE}/api/patient-dashboard/metrics/submit`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -291,11 +291,11 @@ function PatientDashboard() {
               closeMetricsModal();
       
               // Refresh metrics data
-              fetch(`http://localhost:5000/api/patient-dashboard/metrics/latest-height?user_id=${user_id}`)
+              fetch(`${window.API_BASE}/api/patient-dashboard/metrics/latest-height?user_id=${user_id}`)
                 .then(r => r.json()).then(d => setLatestHeight(d.latest_height));
       
               if (activeTab === "metrics") {
-                fetch(`http://localhost:5000/api/patient-dashboard/metrics/graph-data?user_id=${user_id}`)
+                fetch(`${window.API_BASE}/api/patient-dashboard/metrics/graph-data?user_id=${user_id}`)
                   .then(r => r.json()).then(d => {
                     setWeightData(d.weight_data);
                     setCalorieData(d.caloric_intake_data);
@@ -311,7 +311,7 @@ function PatientDashboard() {
     // Function to perform doctor search
     const performDoctorSearch = () => {
         const query = `${firstName} ${lastName}`.trim();
-        fetch(`http://localhost:5000/api/patient-dashboard/search-doctors?query=${encodeURIComponent(query)}`)
+        fetch(`${window.API_BASE}/api/patient-dashboard/search-doctors?query=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => setDoctorResults(data))
             .catch(error => console.error("Error searching doctors:", error));
@@ -319,7 +319,7 @@ function PatientDashboard() {
 
     // Function to book appointment using the selected time from the modal
     const bookAppointment = (appointment_time) => {
-        fetch("http://localhost:5000/api/patient-dashboard/appointments/patient_appointment", {
+        fetch(`${window.API_BASE}/api/patient-dashboard/appointments/patient_appointment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -345,7 +345,7 @@ function PatientDashboard() {
 
     // Gets patients latest recorded height
     useEffect(() => {
-        fetch(`http://localhost:5000/api/patient-dashboard/metrics/latest-height?user_id=${user_id}`)
+        fetch(`${window.API_BASE}/api/patient-dashboard/metrics/latest-height?user_id=${user_id}`)
             .then(response => response.json())
             .then(data => {
                 if (data.latest_height) {
@@ -358,7 +358,7 @@ function PatientDashboard() {
     // Fetch metrics data when metrics tab is active
     useEffect(() => {
         if (activeTab === "metrics") {
-            fetch(`http://localhost:5000/api/patient-dashboard/metrics/graph-data?user_id=${user_id}`)
+            fetch(`${window.API_BASE}/api/patient-dashboard/metrics/graph-data?user_id=${user_id}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.weight_data) {
@@ -376,9 +376,9 @@ function PatientDashboard() {
     useEffect(() => {
         if (activeTab === "appointments" && user_id) {
             Promise.all([
-                fetch(`http://localhost:5000/api/patient-dashboard/appointments/accepted?user_id=${user_id}`).then(res => res.json()),
-                fetch(`http://localhost:5000/api/patient-dashboard/appointments/canceled?user_id=${user_id}`).then(res => res.json()),
-                fetch(`http://localhost:5000/api/patient-dashboard/appointments/completed?user_id=${user_id}`).then(res => res.json())
+                fetch(`${window.API_BASE}/api/patient-dashboard/appointments/accepted?user_id=${user_id}`).then(res => res.json()),
+                fetch(`${window.API_BASE}/api/patient-dashboard/appointments/canceled?user_id=${user_id}`).then(res => res.json()),
+                fetch(`${window.API_BASE}/api/patient-dashboard/appointments/completed?user_id=${user_id}`).then(res => res.json())
             ])
                 .then(([acceptedData, canceledData, completedData]) => {
                     setAcceptedAppointments(acceptedData);
@@ -391,7 +391,7 @@ function PatientDashboard() {
 
     // Function to cancel an appointment
     const cancelAppointment = (appointment_id) => {
-        fetch(`http://localhost:5000/api/patient-dashboard/appointments/cancel_appointment`, {
+        fetch(`${window.API_BASE}/api/patient-dashboard/appointments/cancel_appointment`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -408,9 +408,9 @@ function PatientDashboard() {
                     if(activeTab === "appointments") {
                         // Re-fetch appointments to update the lists
                         Promise.all([
-                            fetch(`http://localhost:5000/api/patient-dashboard/appointments/accepted?user_id=${user_id}`).then(res => res.json()),
-                            fetch(`http://localhost:5000/api/patient-dashboard/appointments/canceled?user_id=${user_id}`).then(res => res.json()),
-                            fetch(`http://localhost:5000/api/patient-dashboard/appointments/completed?user_id=${user_id}`).then(res => res.json())
+                            fetch(`${window.API_BASE}/api/patient-dashboard/appointments/accepted?user_id=${user_id}`).then(res => res.json()),
+                            fetch(`${window.API_BASE}/api/patient-dashboard/appointments/canceled?user_id=${user_id}`).then(res => res.json()),
+                            fetch(`${window.API_BASE}/api/patient-dashboard/appointments/completed?user_id=${user_id}`).then(res => res.json())
                         ])
                             .then(([acceptedData, canceledData, completedData]) => {
                                 setAcceptedAppointments(acceptedData);
@@ -494,7 +494,7 @@ function PatientDashboard() {
                                     >
                                         {plan.image && (
                                             <img
-                                                src={`http://localhost:5000/static/${plan.image}`}
+                                                src={`${window.API_BASE}/static/${plan.image}`}
                                                 alt={plan.title}
                                                 className="meal-image"
                                             />
@@ -514,7 +514,7 @@ function PatientDashboard() {
                                 <div className="modal" onClick={(e) => e.stopPropagation()}>
                                     {selectedAssignedMeal.image && (
                                         <img
-                                            src={`http://localhost:5000/static/${selectedAssignedMeal.image}`}
+                                            src={`${window.API_BASE}/static/${selectedAssignedMeal.image}`}
                                             alt={selectedAssignedMeal.title}
                                             className="meal-image"
                                         />
@@ -594,7 +594,7 @@ function PatientDashboard() {
                                 >
                                 {plan.image && (
                                     <img
-                                    src={`http://localhost:5000/static/${plan.image}`}
+                                    src={`${window.API_BASE}/static/${plan.image}`}
                                     alt={plan.title}
                                     className="meal-image"
                                     />
@@ -621,7 +621,7 @@ function PatientDashboard() {
                             <div className="modal" onClick={(e) => e.stopPropagation()}>
                             {selectedMeal.image && (
                                 <img
-                                    src={`http://localhost:5000/static/${selectedMeal.image}`}   // ✅ CORRECT
+                                    src={`${window.API_BASE}/static/${selectedMeal.image}`}   // ✅ CORRECT
                                     alt={selectedMeal.title}
                                     className="meal-image"
                                 />

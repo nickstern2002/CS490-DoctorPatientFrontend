@@ -27,7 +27,7 @@ const PaymentPage = () => {
       
 
       if(txnType === "pharmacy"){
-        fetch(`http://localhost:5000/api/payment/transaction/payments/pharmacy/${txnId}`)
+        fetch(`${window.API_BASE}/api/payment/transaction/payments/pharmacy/${txnId}`)
             .then(response => response.json())
             .then(data => {
               setPayment(data);
@@ -37,7 +37,7 @@ const PaymentPage = () => {
             .catch(error => console.error('Error fetching patient details:', error));
       }
       else if(txnType === "doctor"){
-        fetch(`http://localhost:5000/api/payment/transaction/payments/doctor/${txnId}`)
+        fetch(`${window.API_BASE}/api/payment/transaction/payments/doctor/${txnId}`)
             .then(response => response.json())
             .then(data => {
               setPayment(data);
@@ -105,7 +105,7 @@ const PaymentPage = () => {
           throw new Error('Invalid updatedData');
         
         console.log("Am i real?:", requestedData)
-        const response = await fetch(`http://localhost:5000/api/payment/transaction/payments/pharmacy/${payment_id}/fulfill`, {
+        const response = await fetch(`${window.API_BASE}/api/payment/transaction/payments/pharmacy/${payment_id}/fulfill`, {
           method: 'PATCH', // Use PATCH to update
           headers: {
             'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ const PaymentPage = () => {
         if (!requestedData) 
           throw new Error('Invalid updatedData');
   
-        const response = await fetch(`http://localhost:5000/api/payment/transaction/payments/doctor/${payment_id}/fulfill`, {
+        const response = await fetch(`${window.API_BASE}/api/payment/transaction/payments/doctor/${payment_id}/fulfill`, {
           method: 'PATCH', // Use PATCH to update
           headers: {
             'Content-Type': 'application/json',

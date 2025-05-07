@@ -19,7 +19,7 @@ export default function ChatHistory({ doctorId, patientId, isDoctor }) {
         if (!resolvedDoctorId || !resolvedPatientId) return;
 
         fetch(
-            `http://localhost:5000/api/chat/appointments`
+            `${window.API_BASE}/api/chat/appointments`
             + `?doctor_id=${resolvedDoctorId}`
             + `&patient_id=${resolvedPatientId}`
         )
@@ -42,7 +42,7 @@ export default function ChatHistory({ doctorId, patientId, isDoctor }) {
         }
 
         fetch(
-            `http://localhost:5000/api/chat/history`
+            `${window.API_BASE}/api/chat/history`
             + `?doctor_id=${resolvedDoctorId}`
             + `&patient_id=${resolvedPatientId}`
             + `&appointment_id=${selectedAppt}`
