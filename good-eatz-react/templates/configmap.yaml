@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "good-eatz-ui.fullname" . }}-config
+  labels:
+    {{- include "good-eatz-ui.labels" . | nindent 4 }}
+data:
+  config.json: |
+    {
+      "API_BASE": "http://{{ .Values.api.host }}:{{ .Values.api.port }}"
+    }

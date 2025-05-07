@@ -46,7 +46,7 @@ function ChatWindow({ doctorId, patientId, appointmentId, isDoctor }) {
     if (!resolvedDoctorId || !resolvedPatientId) return;
     try {
       const res = await fetch(
-          `http://localhost:5000/api/chat/history?doctor_id=${resolvedDoctorId}&patient_id=${resolvedPatientId}&appointment_id=${appointmentId}`
+          `${window.API_BASE}/api/chat/history?doctor_id=${resolvedDoctorId}&patient_id=${resolvedPatientId}&appointment_id=${appointmentId}`
       );
       const data = await res.json();
       setMessages(Array.isArray(data) ? data : []);
@@ -59,7 +59,7 @@ function ChatWindow({ doctorId, patientId, appointmentId, isDoctor }) {
   const sendMessage = async () => {
     if (!input.trim() || !resolvedDoctorId || !resolvedPatientId || !appointmentId) return;
     try {
-      await fetch('http://localhost:5000/api/chat/send', {
+      await fetch(`${window.API_BASE}/api/chat/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

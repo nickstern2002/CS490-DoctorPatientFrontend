@@ -23,7 +23,7 @@ export default function PostAppointmentReview() {
         };
 
         const res = await fetch(
-            'http://localhost:5000/api/post-appointment/ratings/rate_doctor',
+            `${window.API_BASE}/api/post-appointment/ratings/rate_doctor`,
             {
                 method: 'POST',
                 headers: { 'Content-Type':'application/json' },

@@ -68,7 +68,7 @@ const Registration = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/register/patient', {
+      const response = await fetch(`${window.API_BASE}/api/register/patient`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ const Registration = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/register/doctor', {
+      const response = await fetch(`${window.API_BASE}/api/register/doctor`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -141,7 +141,7 @@ const Registration = () => {
 
     try {
       // Sending POST request (I know that its weird right now, we might change type later)
-      const response = await fetch('http://localhost:5000/api/register/pharmacy', {
+      const response = await fetch(`${window.API_BASE}/api/register/pharmacy`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

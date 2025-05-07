@@ -9,7 +9,7 @@ function Pharmacists() {
 
   useEffect(() => {
     if (showModal) {
-      fetch('http://localhost:5000/api/pharmacies/all')
+      fetch(`${window.API_BASE}/api/pharmacies/all`)
         .then(res => res.json())
         .then(data => setPharmacies(data.pharmacies || []))
         .catch(err => console.error('Error fetching pharmacies:', err));

@@ -65,7 +65,7 @@ export default function App() {
   const fetchPosts = async () => {
     console.log("Test user: ", user_type, " user_id: ", user_id)
     try {
-        const response = await fetch('http://localhost:5000/api/discussion/posts', {
+        const response = await fetch(`${window.API_BASE}/api/discussion/posts`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ export default function App() {
 
   const fetchMealPlans = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/doctor-dashboard/official/all?user_id=${user_id}`);
+      const response = await fetch(`${window.API_BASE}/doctor-dashboard/official/all?user_id=${user_id}`);
       if (response.ok) {
         const data = await response.json();
         setMealPlans(data.mealplans);
@@ -120,7 +120,7 @@ export default function App() {
         formData.append('image', newMealPlan.image);
       }
   
-      const response = await fetch('http://localhost:5000/doctor-dashboard/official/create', {
+      const response = await fetch(`${window.API_BASE}/doctor-dashboard/official/create`, {
         method: 'POST',
         body: formData,
       });
@@ -158,7 +158,7 @@ export default function App() {
         post_content: myContent, // now sending full meal plan info
       };
   
-      const response = await fetch('http://localhost:5000/api/discussion/post', {
+      const response = await fetch(`${window.API_BASE}/api/discussion/post`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -195,7 +195,7 @@ export default function App() {
     if (!replyContent || replyContent.trim() === "") return;
   
     try {
-      const response = await fetch('http://localhost:5000/api/discussion/reply', {
+      const response = await fetch(`${window.API_BASE}/api/discussion/reply`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -230,7 +230,7 @@ export default function App() {
 
   const fetchReplies = async (postId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/discussion/replies/${postId}`);
+      const response = await fetch(`${window.API_BASE}/api/discussion/replies/${postId}`);
       if (response.ok) {
         const data = await response.json();
         setReplies(prev => ({ ...prev, [postId]: data }));
@@ -273,7 +273,7 @@ export default function App() {
     if (!content) return;
 
     try {
-      const response = await fetch('http://localhost:5000/api/discussion/reply-comments', {
+      const response = await fetch(`${window.API_BASE}/api/discussion/reply-comments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -304,7 +304,7 @@ export default function App() {
 
   const fetchReplyComments = async (replyId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/discussion/reply-comments/${replyId}`);
+      const response = await fetch(`${window.API_BASE}/api/discussion/reply-comments/${replyId}`);
       const data = await response.json();
   
       if (response.ok) {
@@ -327,7 +327,7 @@ export default function App() {
   
   const fetchDisplayName = async (userId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/discussion/replies/username/${userId}`);
+      const res = await fetch(`${window.API_BASE}/api/discussion/replies/username/${userId}`);
       const data = await res.json();
       const name = data.name;
       //console.log("Name?: ", name)
@@ -364,7 +364,7 @@ export default function App() {
 
   const fetchAuthorName = async (postId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/discussion/posts/author/${postId}`);
+      const res = await fetch(`${window.API_BASE}/api/discussion/posts/author/${postId}`);
       const data = await res.json();
       setAuthorNames(prev => ({ ...prev, [postId]: data.name }));
     } catch (err) {
@@ -430,7 +430,7 @@ export default function App() {
                 {/* Meal Plan Image */}
                 {parsedContent.image && (
                   <img
-                    src={`http://localhost:5000/static/${parsedContent.image}`}
+                    src={`${window.API_BASE}/static/${parsedContent.image}`}
                     className="w-full h-48 object-cover rounded mb-4"
                   />
                 )}
@@ -688,7 +688,7 @@ export default function App() {
             
             {parsedSelectedPost.image && (
               <img
-                src={`http://localhost:5000/static/${parsedSelectedPost.image}`}
+                src={`${window.API_BASE}/static/${parsedSelectedPost.image}`}
                 alt="Meal Plan"
                 className="w-full h-64 object-cover rounded mb-4"
               />

@@ -61,20 +61,35 @@ const router = createBrowserRouter([
   }
 ]);
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
-);
+async function loadConfigThenRender() {
+  let apiBase = 'http://localhost:5000';  // fallback
+  try {
+    const resp = await fetch('/config.json', { cache: 'no-cache' });
+    if (resp.ok) {
+      const cfg = await resp.json();
+      if (cfg.API_BASE) {
+        apiBase = cfg.API_BASE;
+      }
+    } else {
+      console.warn('config.json not found, using fallback');
+    }
+  } catch (e) {
+    console.warn('Failed to load config.json:', e);
+  }
 
-// <RouterProvider router={router} />
+  // make it globally available
+  window.API_BASE = apiBase;
 
-/*
-<BrowserRouter>
-      <LandingPage />
-    </BrowserRouter>
-*/
+  // now mount your app
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  );
+}
+
+loadConfigThenRender();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
