@@ -93,7 +93,7 @@ export default function PostAppointmentPage() {
 
     // Load the five weight-loss drugs
     useEffect(() => {
-        fetch('http://localhost:5001/api/prescriptions/drugs')
+        fetch(`${window.PHARMA_BASE}/api/prescriptions/drugs`)
           .then(res => res.json())
           .then(setDrugs)
           .catch(err => console.error('Error loading drugs:', err));
@@ -136,7 +136,7 @@ export default function PostAppointmentPage() {
         // 2) Request prescription
         try {
             const presRes = await fetch(
-              'http://localhost:5001/api/prescriptions/request',
+              `${window.PHARMA_BASE}/api/prescriptions/request`,
               {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },

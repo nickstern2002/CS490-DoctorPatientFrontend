@@ -62,13 +62,17 @@ const router = createBrowserRouter([
 ]);
 
 async function loadConfigThenRender() {
-  let apiBase = 'http://localhost:5000';  // fallback
+  let apiBase = 'http://localhost:5000';
+  let pharmaBase = 'http://localhost:5001';
   try {
     const resp = await fetch('/config.json', { cache: 'no-cache' });
     if (resp.ok) {
       const cfg = await resp.json();
       if (cfg.API_BASE) {
         apiBase = cfg.API_BASE;
+      }
+      if (cfg.PHARMA_BASE) {
+        pharmaBase = cfg.PHARMA_BASE;
       }
     } else {
       console.warn('config.json not found, using fallback');
@@ -79,6 +83,7 @@ async function loadConfigThenRender() {
 
   // make it globally available
   window.API_BASE = apiBase;
+  window.PHARMA_BASE = pharmaBase;
 
   // now mount your app
   const root = ReactDOM.createRoot(document.getElementById('root'));
