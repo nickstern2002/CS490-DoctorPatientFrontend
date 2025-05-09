@@ -8,5 +8,5 @@ data:
   config.json: |
     {
       "API_BASE": "http://{{ .Values.api.host }}:{{ .Values.api.port }}",
-      "PHARMA_BASE": "http://{{ .Values.api.host }}:{{ .Values.api.port }}"
+      "PHARMA_BASE": "http://{{ .Values.pharma.host }}:{{ .Values.pharma.port }}"
     }
