@@ -71,3 +71,7 @@ affinity: {}
 api:
   host: "10.0.0.157"
   port: "30001"
+
+pharma:
+  host: "10.0.0.157"
+  port: "30002"

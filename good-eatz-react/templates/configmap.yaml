@@ -7,5 +7,6 @@ metadata:
 data:
   config.json: |
     {
-      "API_BASE": "http://{{ .Values.api.host }}:{{ .Values.api.port }}"
+      "API_BASE": "http://{{ .Values.api.host }}:{{ .Values.api.port }}",
+      "PHARMA_BASE": "http://{{ .Values.api.host }}:{{ .Values.api.port }}"
     }

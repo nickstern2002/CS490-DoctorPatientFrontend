@@ -40,7 +40,7 @@ function PharmacyDashboard() {
     if (!user_id) return;
     try {
       const res = await axios.get(
-        `http://localhost:5001/api/pharmacy/payments?user_id=${user_id}`
+        `${window.PHARMA_BASE}/api/pharmacy/payments?user_id=${user_id}`
       );
       setPayments(res.data);
     } catch (err) {
@@ -50,13 +50,13 @@ function PharmacyDashboard() {
 
   const fetchPrices = async () => {
     const res = await axios.get(
-      `http://localhost:5001/api/prices/current-prices?user_id=${user_id}`
+      `${window.PHARMA_BASE}/api/prices/current-prices?user_id=${user_id}`
     );
     setPrices(res.data);
   };
 
   const updatePrice = async (drug_id, price) => {
-    await axios.patch(`http://localhost:5001/api/pharmacy/update`, {
+    await axios.patch(`${window.PHARMA_BASE}/api/pharmacy/update`, {
       user_id, drug_id, price
     });
     fetchPrices();
@@ -64,7 +64,7 @@ function PharmacyDashboard() {
 
   const fetchDrugs = async () => {
     try {
-      const res = await axios.get(`http://localhost:5001/api/prescriptions/drugs`);
+      const res = await axios.get(`${window.PHARMA_BASE}/api/prescriptions/drugs`);
       setDrugs(res.data);
       if (res.data.length) {
         setSelectedDrug(res.data[0].name);
@@ -79,7 +79,7 @@ function PharmacyDashboard() {
     if (!user_id) return;
     try {
       const res = await axios.get(
-        `http://localhost:5001/api/pharmacy/inventory?user_id=${user_id}`
+        `${window.PHARMA_BASE}/api/pharmacy/inventory?user_id=${user_id}`
       );
       setInventory(res.data);
       // default the dropdown to the first drug, if any
@@ -95,7 +95,7 @@ function PharmacyDashboard() {
     if (!user_id) return;
     try {
       const res = await axios.get(
-        `http://localhost:5001/api/pharmacy/prescriptions/filled?user_id=${user_id}`
+        `${window.PHARMA_BASE}/api/pharmacy/prescriptions/filled?user_id=${user_id}`
       );
       setFilledPrescriptions(res.data);
     } catch (err) {
@@ -110,7 +110,7 @@ function PharmacyDashboard() {
     setDispenseMessage("");
     try {
       const res = await axios.post(
-        `http://localhost:5001/api/pharmacy/prescriptions/${prescId}/dispense?user_id=${user_id}`
+        `${window.PHARMA_BASE}/api/pharmacy/prescriptions/${prescId}/dispense?user_id=${user_id}`
       );
       setDispenseMessage(`Dispensed ✔️ (Payment $${res.data.amount} created)`);
     } catch (err) {
@@ -126,7 +126,7 @@ function PharmacyDashboard() {
     if (!user_id || !selectedDrug || !newQuantity) return;
     try {
       await axios.post(
-        `http://localhost:5001/api/pharmacy/inventory/add`,
+        `${window.PHARMA_BASE}/api/pharmacy/inventory/add`,
         {
           user_id,
           drug_name: selectedDrug,
@@ -145,7 +145,7 @@ function PharmacyDashboard() {
     if (!user_id) return;
     try {
       const res = await axios.get(
-        `http://localhost:5001/api/pharmacy/queue?user_id=${user_id}`
+        `${window.PHARMA_BASE}/api/pharmacy/queue?user_id=${user_id}`
       );
       setQueue(res.data);
     } catch (err) {
@@ -161,7 +161,7 @@ function PharmacyDashboard() {
 
     try {
       await axios.post(
-        `http://localhost:5001/api/pharmacy/prescriptions/${prescriptionId}/fulfill?user_id=${user_id}`
+        `${window.PHARMA_BASE}/api/pharmacy/prescriptions/${prescriptionId}/fulfill?user_id=${user_id}`
       );
     } catch (err) {
       if (err.response?.status === 400 && err.response.data.error === "Out of stock") {
